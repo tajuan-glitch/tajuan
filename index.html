@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=10">
+<link rel="stylesheet" href="style.css?v=11">
 </head>
 <body>
 <a class="notice hide" id="notice" href="#latest"></a>
@@ -105,13 +105,16 @@ function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแ
 /* โพสต์จาก posts.js (แก้ไข/ลบได้ที่ admin.html) */
 const HT=typeof HIDE_TITLES!=="undefined"?HIDE_TITLES:[];
 const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(p=>p&&!HT.includes(p.title));
+const strip=t=>String(t||"").split("\n").filter(l=>!isS(l.trim())).join("\n");
+function ex(t,ti){const L=strip(t).split("\n").map(x=>x.trim()).filter(Boolean),dup=x=>ti&&ti.includes(x.slice(0,15)),l=L.find(x=>x.length>=40&&!dup(x))||L.find(x=>!dup(x))||L[0]||"";return l.length>150?l.slice(0,148).trimEnd()+"…":l}
 const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 [STORIES,NEWS].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][1]))a.splice(i,1)});
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
- (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,(p.body||"").replace(/\s+/g," ").slice(0,120),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||""])});
+ (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||""])});
 
+[...NEWS,...STORIES].forEach(n=>{n[2]=strip(n[2]);n[3]=strip(n[3])});
 /* รวมข่าว + เรื่องเล่า เรียงใหม่สุดก่อน */
 const TH=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 function dv(s){const m=String(s||"").match(/(\d+)\s*(\S+)\s*(\d{4})/);if(!m)return 0;const mo=TH.indexOf(m[2]);return mo<0?0:(+m[3])*10000+mo*100+(+m[1])}
@@ -119,20 +122,27 @@ const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื�
 
 /* การ์ด + หน้าต่างอ่านเต็ม */
 function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));return g}
-function card(n,tag){const a=el("button","card"),pic=el("div","cpic",tag==="ข่าว"?"📰":"📖"),cv=n[4]&&n[4][0];
- if(cv)pic.append(img(cv[0],n[1]));if(n[0])pic.append(el("span","cdate",n[0]));
- const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);m.append(el("span","","📁 "+tag),el("span","","อ่านต่อ →"));
- b.append(h,el("p","",n[2]),m);a.append(pic,b);a.onclick=()=>openFull(n,tag);return a}
-function feat(n,tag){const a=el("button","feat"),pic=el("div","fpic",tag==="ข่าว"?"📰":"📖"),cv=n[4]&&n[4][0];
- if(cv)pic.append(img(cv[0],n[1]));
+const isN=t=>t==="ข่าว";
+function pic(n,tag,cls){const p=el("div",cls,isN(tag)?"📰":"📖"),cv=n[4]&&n[4][0];
+ if(cv)p.append(img(cv[0],n[1]));p.append(el("span","chip"+(isN(tag)?" n":""),tag));
+ if(n[4]&&n[4].length>1)p.append(el("span","pcount","🖼 "+n[4].length));return p}
+function card(n,tag){const a=el("button","card"),p=pic(n,tag,"cpic");
+ const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);
+ m.append(el("span","cdt",[n[0],n[7]&&"โดย "+n[7]].filter(Boolean).join(" · ")),el("span","go","อ่านต่อ →"));
+ b.append(h,el("p","",n[2]),m);a.append(p,b);a.onclick=()=>openFull(n,tag);return a}
+function feat(n,tag){const a=el("button","feat"),p=pic(n,tag,"fpic");
  const b=el("div","fb"),m=el("div","dmeta"),h=el("h3");
- m.append(el("span","tag new","ล่าสุด"),el("span","tag","📁 "+tag),el("span","mute",n[0]));put(h,n[1]);
- b.append(m,h,el("p","",n[2]),el("span","more","อ่านเรื่องเต็มและดูรูป →"));a.append(pic,b);a.onclick=()=>openFull(n,tag);return a}
-function openFull(n,tag){const c=$("dbody");c.replaceChildren();
- const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag","📁 "+tag),el("span","mute",n[0]));if(n[7])m.append(el("span","mute","โดย "+n[7]));put(h,n[1]);c.append(m,h);
- const ph=n[4]||[];if(ph[0])c.append(fig(ph[0]));
- String(n[3]||n[2]).split("\n").forEach(x=>c.append(put(el("p"),x)));
- ph.slice(1).forEach(p=>c.append(fig(p)));
+ m.append(el("span","tag new","ล่าสุด"));if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);
+ b.append(m,h,el("p","",n[2]),el("span","go","อ่านเรื่องเต็มและดูรูป →"));a.append(p,b);a.onclick=()=>openFull(n,tag);return a}
+function openFull(n,tag){const c=$("dbody");c.replaceChildren();const ph=n[4]||[];
+ if(ph[0]){const hf=el("figure","dhero");hf.append(img(ph[0][0],ph[0][1]));if(ph[0][1])hf.append(el("figcaption","",ph[0][1]));c.append(hf)}
+ const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag"+(isN(tag)?" nw":""),(isN(tag)?"📢 ":"📖 ")+tag));
+ if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);c.append(m,h);
+ String(n[3]||n[2]).split("\n").map(x=>x.trim()).filter(Boolean).forEach(x=>{
+  if(/^[“"].+[”"]$/.test(x)){c.append(el("blockquote","pq",x));return}
+  if(/^(คำแนะนำ|หมายเหตุ|ข้อควรระวัง)/.test(x)){const t=el("div","tip");t.append(el("b","","💡 "),document.createTextNode(x));c.append(t);return}
+  c.append(put(el("p"),x))});
+ if(ph.length>1){c.append(el("h3","pgt","ภาพเพิ่มเติม"));const g=el("div","pgrid"+(ph.length===2?" one":""));ph.slice(1).forEach(p=>g.append(fig(p)));c.append(g)}
  const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl){pinBtns(bx,pl[2]);const sh=el("button","btn alt sm","🗺️ ดูบนแผนที่ชุมชน");sh.onclick=()=>{$("dlg").close();selPlace(PLACES.indexOf(pl));$("map").scrollIntoView()};bx.append(sh)}if(bx.children.length)c.append(bx);
  const f=el("div","follow"),sh=el("button","btn sm","📤 ส่งต่อให้เพื่อนและญาติ");
  f.append(el("p","","💚 ติดตามเรื่องราวบ้านตาจวนได้ที่เว็บนี้ ส่งต่อให้คนบ้านเราที่อยู่ไกลได้เลย"),sh);c.append(f);

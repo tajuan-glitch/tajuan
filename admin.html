@@ -2,7 +2,8 @@
 <html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>ผู้ดูแล | ตาจวนบ้านเรา</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
+<link rel="stylesheet" href="style.css?v=11">
 <style>
 [hidden]{display:none!important}
 body{font-size:1.05rem;line-height:1.7}
@@ -78,6 +79,21 @@ textarea{min-height:200px}
 .fl{display:flex;gap:8px;margin:0 0 12px}
 .fl button{flex:1;min-height:46px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:99px;font-weight:700;cursor:pointer}
 .fl button.on{background:var(--green);border-color:var(--green);color:#fff}
+.mapwrap{position:relative;margin:0 0 10px}
+#pmap{position:relative;z-index:0;isolation:isolate;height:360px;border-radius:16px;border:2px solid var(--line);background:var(--sand)}
+@media(max-width:560px){#pmap{height:320px}}
+.bar{z-index:1100}
+.seg{display:flex;gap:8px;margin:0 0 12px}
+.seg button{flex:1;min-height:44px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;font-weight:700;cursor:pointer}
+.seg button.on{background:var(--green);border-color:var(--green);color:#fff}
+@media(prefers-color-scheme:dark){.seg button.on{color:#10150f}}
+.pchips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.pchips button{min-height:40px;border:1px solid var(--line);background:var(--sand);color:var(--green);border-radius:99px;padding:0 14px;font-weight:700;cursor:pointer}
+.crow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sand);border-radius:12px;padding:10px 14px;margin:12px 0}
+.crow b{font-family:monospace;font-size:1rem}
+.crow button{min-height:40px;border:1px solid var(--line);background:var(--card);color:var(--clay);border-radius:10px;padding:0 12px;font-weight:700;cursor:pointer;margin-left:auto}
+.pinI{background:none;border:0}
+.pinI svg{filter:drop-shadow(0 3px 3px rgba(0,0,0,.35));display:block}
 details.step summary{cursor:pointer;font-weight:700;font-size:1.05rem}
 details.step[open] summary{margin-bottom:12px}
 </style></head>
@@ -232,10 +248,15 @@ details.step[open] summary{margin-bottom:12px}
 <div id="thumbs"></div></div>
 
 <div class="step"><h2><i>4</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
-<p class="help">ถ้ากำลังอยู่ที่จุดนั้น กดปุ่มข้างล่างได้เลย หรือพิมพ์ชื่อสถานที่แทน</p>
-<button class="btn alt big" id="gps">📍 ใช้ตำแหน่งที่ฉันอยู่ตอนนี้</button>
+<p class="help">แตะบนแผนที่เพื่อวางหมุด หรือกดที่หมุดค้างไว้แล้วลากไปยังจุดที่ต้องการ แผนที่จะเปิดที่ตำแหน่งที่คุณอยู่ตอนนี้ แต่ถ้าเดินออกจากจุดนั้นมาแล้ว ก็ย้ายหมุดกลับไปที่เดิมได้</p>
+<div class="mapwrap" id="pmapwrap"><div id="pmap" role="application" aria-label="แผนที่สำหรับปักหมุด"></div></div>
+<div class="seg" id="lay"><button type="button" class="on" data-l="o">🗺 แผนที่</button><button type="button" data-l="s">🛰 ภาพดาวเทียม</button></div>
+<button class="btn alt big" id="gps">📍 ปักหมุดที่ตำแหน่งที่ฉันอยู่ตอนนี้</button>
+<div class="pchips" id="pchips" hidden></div>
 <p class="st" id="gst" hidden></p>
-<input id="pname" type="text" placeholder="หรือพิมพ์ชื่อสถานที่ เช่น วัดบ้านตาจวน"></div>
+<div class="crow" id="crow" hidden><span>พิกัด</span><b id="ctxt"></b><a id="cmap" target="_blank" rel="noopener">ดูใน Google Maps</a><button type="button" id="pclr">🗑 ล้างหมุด</button></div>
+<label for="pname"><b>หรือพิมพ์ชื่อสถานที่แทน</b> <span class="mute">(ถ้าปักหมุดบนแผนที่แล้ว ระบบใช้พิกัดเป็นหลัก)</span></label>
+<input id="pname" type="text" placeholder="เช่น วัดบ้านตาจวน"></div>
 
 <div class="step"><h2><i>5</i>ลิงก์<span class="opt">ไม่ใส่ก็ได้</span></h2>
 <p class="help">เช่น ลิงก์โพสต์ Facebook หรือคลิป YouTube ที่เกี่ยวข้อง</p>
@@ -266,6 +287,7 @@ details.step[open] summary{margin-bottom:12px}
 <button class="btn alt big" id="more2">← กลับไปรายการโพสต์</button></div>
 </div></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 <script src="content.js?v=6"></script>
 <script>
 const $=i=>document.getElementById(i);
@@ -456,16 +478,52 @@ function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=mk("div"
 $("pick").onclick=()=>$("file").click();
 $("file").onchange=async e=>{$("pick").textContent="กำลังเตรียมรูป…";for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
 function msg(t,c){const s=$("gst");s.hidden=!t;s.className="st "+c;s.textContent=t}
+/* ---------- แผนที่ปักหมุด (Leaflet + OpenStreetMap) ---------- */
+let map=null,pm=null,dot=null,acc=null,baseO=null,baseS=null;
+const VILLAGE=[14.668,104.3437];
+const PIN='<svg viewBox="0 0 40 52" width="40" height="52"><path d="M20 2C10 2 2 10 2 20c0 14 18 30 18 30s18-16 18-30C38 10 30 2 20 2z" fill="#b5532f" stroke="#fff" stroke-width="3"/><circle cx="20" cy="20" r="7" fill="#fff"/></svg>';
+function showCoord(){const c=$("crow");c.hidden=!gps;if(gps){$("ctxt").textContent=gps.replace(",",", ");$("cmap").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(gps)}}
+function setPin(lat,lng,o){o=o||{};gps=(+lat).toFixed(6)+","+(+lng).toFixed(6);
+ if(!map)return showCoord();
+ if(!pm){pm=L.marker([lat,lng],{draggable:true,autoPan:true,icon:L.divIcon({className:"pinI",html:PIN,iconSize:[40,52],iconAnchor:[20,50]})}).addTo(map);
+  pm.on("dragend",()=>{const p=pm.getLatLng();setPin(p.lat,p.lng,{keep:1})})}
+ else pm.setLatLng([lat,lng]);
+ if(!o.keep)map.setView([lat,lng],Math.max(map.getZoom(),17));
+ showCoord();if(!o.quiet)msg("✓ ปักหมุดแล้ว ลากหมุดหรือแตะแผนที่จุดใหม่เพื่อย้ายได้","ok")}
+function clearPin(){gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();msg("","")}
+function youDot(lat,lng,m){if(!map)return;if(dot){dot.setLatLng([lat,lng]);acc.setLatLng([lat,lng]).setRadius(m||20)}
+ else{acc=L.circle([lat,lng],{radius:m||20,color:"#2a7de1",weight:1,fillOpacity:.12,interactive:false}).addTo(map);dot=L.circleMarker([lat,lng],{radius:8,color:"#fff",weight:3,fillColor:"#2a7de1",fillOpacity:1,interactive:false}).addTo(map)}}
+function locErr(e){const m={1:"ไม่ได้อนุญาตให้ใช้ตำแหน่ง เปิดสิทธิ์ตำแหน่งของเบราว์เซอร์ หรือแตะปักหมุดเองบนแผนที่ได้เลย",2:"หาตำแหน่งไม่เจอ ลองเปิด GPS ในมือถือ หรือแตะปักหมุดเองบนแผนที่",3:"หาตำแหน่งนานเกินไป ลองใหม่อีกครั้ง หรือแตะปักหมุดเองบนแผนที่"};return m[e&&e.code]||"หาตำแหน่งไม่ได้ แตะปักหมุดเองบนแผนที่ได้เลย"}
+function buildMap(){
+ baseO=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"});
+ baseS=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagery © Esri"});
+ map=L.map("pmap",{center:VILLAGE,zoom:16,layers:[baseO],tap:true});
+ map.on("click",e=>setPin(e.latlng.lat,e.latlng.lng,{keep:1}));
+ $("lay").onclick=e=>{const b=e.target.closest("button");if(!b)return;const sat=b.dataset.l==="s";[...$("lay").children].forEach(x=>x.classList.toggle("on",x===b));
+  if(sat){map.removeLayer(baseO);baseS.addTo(map)}else{map.removeLayer(baseS);baseO.addTo(map)}};
+ const ch=$("pchips");PLACES.forEach(p=>{const m=/^(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)$/.exec(p[2]);if(!m)return;
+  const b=mk("button","","📍 "+p[0]);b.type="button";b.onclick=()=>setPin(+m[1],+m[2]);ch.append(b)});
+ if(ch.children.length){ch.hidden=false;ch.prepend(mk("span","mute","ปักที่จุดสำคัญ:"))}}
+function openMap(){
+ if(typeof L==="undefined"){$("pmapwrap").hidden=true;$("lay").hidden=true;msg("โหลดแผนที่ไม่ได้ (ต้องต่ออินเทอร์เน็ต) ใช้ปุ่มด้านบนหรือพิมพ์ชื่อสถานที่แทนได้","bad");return}
+ $("pmapwrap").hidden=false;$("lay").hidden=false;if(!map)buildMap();
+ setTimeout(()=>{map.invalidateSize();
+  if(gps){const[a,b]=gps.split(",").map(Number);setPin(a,b,{quiet:1});map.setView([a,b],18);msg("✓ มีหมุดเดิมอยู่แล้ว ลากหมุดเพื่อย้าย หรือกด “ล้างหมุด”","ok")}
+  else{map.setView(VILLAGE,16);if(ei<0||!$("pname").value){msg("📡 กำลังหาตำแหน่งปัจจุบันของคุณ…","");
+   if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(gps)return;youDot(p.coords.latitude,p.coords.longitude,p.coords.accuracy);map.setView([p.coords.latitude,p.coords.longitude],17);msg("✓ แผนที่เลื่อนมาที่ตำแหน่งปัจจุบันแล้ว (จุดสีน้ำเงิน) กดปุ่มด้านล่างเพื่อปักหมุดตรงนี้ หรือแตะแผนที่เพื่อปักจุดอื่น","ok")},e=>{if(!gps)msg(locErr(e),"")},{timeout:9000,maximumAge:60000});else msg("เครื่องนี้หาตำแหน่งไม่ได้ แตะปักหมุดบนแผนที่ได้เลย","")}
+   else msg("","")}},60)}
 $("gps").onclick=()=>{msg("กำลังหาตำแหน่ง… ถ้ามีข้อความถาม ให้กด “อนุญาต”","");
- if(!navigator.geolocation){msg("เครื่องนี้หาตำแหน่งไม่ได้ ลองพิมพ์ชื่อสถานที่แทน","bad");return}
- navigator.geolocation.getCurrentPosition(p=>{gps=p.coords.latitude.toFixed(6)+","+p.coords.longitude.toFixed(6);msg("✓ ได้ตำแหน่งแล้ว","ok")},
-  ()=>msg("หาตำแหน่งไม่ได้ ลองเปิดตำแหน่ง (GPS) ในมือถือ หรือพิมพ์ชื่อสถานที่แทน","bad"),{enableHighAccuracy:true,timeout:20000})};
-function clear(){pics=[];gps="";["date","title","body","pname","link"].forEach(i=>$(i).value="");msg("","");setType("s")}
-$("newp").onclick=()=>{ei=-1;clear();$("date").value=today();draw();show("form")};
+ if(!navigator.geolocation){msg("เครื่องนี้หาตำแหน่งไม่ได้ แตะปักหมุดบนแผนที่แทนได้","bad");return}
+ navigator.geolocation.getCurrentPosition(p=>{const a=p.coords.latitude,b=p.coords.longitude;youDot(a,b,p.coords.accuracy);setPin(a,b,{quiet:1});
+  const m=Math.round(p.coords.accuracy||0);msg("✓ ปักหมุดที่ตำแหน่งของคุณแล้ว (คลาดเคลื่อนประมาณ "+m+" ม.)"+(m>80?" ถ้าไม่ตรง ลากหมุดไปให้ตรงจุดได้":" ลากหมุดเพื่อปรับได้"),m>80?"bad":"ok")},
+  e=>msg(locErr(e),"bad"),{enableHighAccuracy:true,timeout:20000})};
+$("pclr").onclick=clearPin;
+function clear(){pics=[];gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();["date","title","body","pname","link"].forEach(i=>$(i).value="");msg("","");setType("s")}
+$("newp").onclick=()=>{ei=-1;clear();$("date").value=today();draw();show("form");openMap()};
 function edit(i){ei=i;const p=list[i];clear();setType(p.t);$("date").value=p.date||"";$("title").value=p.title||"";$("body").value=p.body||"";
  pics=(p.photos||[]).map(x=>({src:x.src,cap:x.cap||""}));$("link").value=(p.link&&p.link.url)||"";
- if(/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(p.pin||"")){gps=p.pin;msg("✓ มีตำแหน่งเดิมอยู่แล้ว (กดปุ่มด้านบนเพื่อเปลี่ยน)","ok")}else $("pname").value=p.pin||"";
- draw();show("form")}
+ if(/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(p.pin||""))gps=p.pin;else $("pname").value=p.pin||"";
+ draw();show("form");openMap()}
 $("back").onclick=e=>{e.preventDefault();show("list")};
 $("more").onclick=()=>enter();$("more2").onclick=()=>enter();$("iback").onclick=e=>{e.preventDefault();enter()};
 const warn=()=>loaded||confirm("ยังโหลด posts.js เดิมของเว็บไม่ได้ ถ้าเคยโพสต์ผ่านหน้านี้แล้ว โพสต์เก่าอาจหายเมื่ออัปโหลดทับ\nต้องการทำต่อไหม?");
