@@ -170,6 +170,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #e9a23b;outline-offset:2p
 
 footer{background:var(--green);color:#e8efe9;text-align:center;padding:26px 0;font-size:.92rem}
 footer b{color:#fff}
+.urg{display:block;width:100%;border:0;text-align:left;background:var(--rust);color:#fff;padding:12px 20px;font-weight:700;cursor:pointer;line-height:1.5}.urg.s{cursor:default}
 </style>
 </head>
 <body>
@@ -296,11 +297,18 @@ const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(p=>p&&!HT.includes(p.title)
 const strip=t=>String(t||"").split("\n").filter(l=>!isS(l.trim())).join("\n");
 function ex(t,ti){const L=strip(t).split("\n").map(x=>plain(x.trim())).filter(Boolean),dup=x=>ti&&ti.includes(x.slice(0,15)),l=L.find(x=>x.length>=40&&!dup(x))||L.find(x=>!dup(x))||L[0]||"";return l.length>150?l.slice(0,148).trimEnd()+"…":l}
 const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
-[STORIES,NEWS].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][1]))a.splice(i,1)});
+[[STORIES,1],[NEWS,1],[VIDEOS,1],[GOODS,1],[HEROES,0],[PLACES,0]].forEach(([a,k])=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][k]))a.splice(i,1)});
+let URG=null;
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
- if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
+ if(p.t==="cfg"){Object.assign(SITE,p.v||{});return}
+ const ph0=(p.photos&&p.photos[0]&&p.photos[0].src)||"";
+ if(p.t==="v"){const id=yt((p.links&&p.links.map(l=>l[1]).find(yt))||(p.link&&p.link.url)||"");if(id)VIDEOS.unshift([id,p.title]);return}
+ if(p.t==="g"){GOODS.unshift([p.cat||"อื่น ๆ",p.title,p.body||"",p.price||"",ph0]);if(p.pin)PLACES.unshift([p.title,p.cat||"ของดี",p.pin,p.price||""]);return}
+ if(p.t==="h"){HEROES.unshift([p.title,p.body||"",ph0]);return}
+ if(p.t==="p"){PLACES.unshift([p.title,p.cat||"สถานที่",p.pin||p.title,p.body||""]);return}
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
- (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[],pl,p.by||"",1])});
+ const row=[p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),(p.links&&p.links.length?p.links.filter(l=>l&&l[1]).map(l=>[l[0]||"ดูเพิ่มเติม",fixU(l[1])]):p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[]),pl,p.by||"",1];
+ (p.t==="s"?STORIES:NEWS).unshift(row);if(p.t==="a"&&p.urgent)URG=row});
 
 [...NEWS,...STORIES].forEach(n=>{n[2]=plain(strip(n[2]));n[3]=strip(n[3])});
 /* รวมข่าว + เรื่องเล่า เรียงใหม่สุดก่อน */
@@ -346,6 +354,10 @@ $("dx").onclick=()=>$("dlg").close();
 $("dlg").addEventListener("close",()=>{$("dbody").replaceChildren();if(/^#r=/.test(location.hash))try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});
 $("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
 
+/* แถบประกาศด่วน + ช่องทางติดต่อท้ายเว็บ */
+{let b=null;if(URG){b=el("button","urg","📢 ประกาศ: "+URG[1]+"  อ่านต่อ →");b.onclick=()=>openFull(URG,"ข่าว")}else if(SITE.notice){b=el("div","urg s","📢 "+SITE.notice)}
+ if(b)$("latest").before(b);
+ [SITE.phone&&el("span","","📞 "+SITE.phone),SITE.facebookUrl&&aLink(fixU(SITE.facebookUrl),"Facebook","tl"),SITE.youtubeUrl&&aLink(fixU(SITE.youtubeUrl),"YouTube","tl"),SITE.email&&aLink("mailto:"+SITE.email,"✉ "+SITE.email,"tl")].filter(Boolean).forEach(n=>$("fs").parentNode.append(" • ",n))}
 /* ล่าสุด */
 if(FEED.length){
  if(FEED[0].n[0])$("upd").textContent="เรื่องล่าสุดลงเมื่อ "+FEED[0].n[0];

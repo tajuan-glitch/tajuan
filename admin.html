@@ -96,6 +96,12 @@ textarea{min-height:200px}
 .pinI svg{filter:drop-shadow(0 3px 3px rgba(0,0,0,.35));display:block}
 details.step summary{cursor:pointer;font-weight:700;font-size:1.05rem}
 details.step[open] summary{margin-bottom:12px}
+.tf{display:flex;gap:8px;overflow-x:auto;margin:0 0 12px;padding-bottom:4px}
+.tf button{flex:none;min-height:40px;border:1px solid var(--line);background:var(--sand);color:var(--green);border-radius:99px;padding:0 14px;font-weight:700;cursor:pointer}
+.tf button.on{background:var(--green);border-color:var(--green);color:#fff}
+.chips{grid-template-columns:repeat(auto-fit,minmax(104px,1fr))}
+.lkr{display:grid;grid-template-columns:1fr 44px;gap:0 8px;margin:0 0 6px}.lkr input{grid-column:1}.lkr button{grid-column:2;grid-row:1/3;align-self:start;min-height:52px;border:1px solid var(--line);background:var(--paper);color:var(--clay);border-radius:10px}
+@media(prefers-color-scheme:dark){.tf button.on{color:#10150f}}
 </style></head>
 <body><div class="wrap" style="padding:0 20px">
 <div class="top"><a href="index.html">← กลับหน้าเว็บ</a><b style="color:var(--green)" id="fh">ผู้ดูแล</b>
@@ -171,11 +177,13 @@ details.step[open] summary{margin-bottom:12px}
 <div id="list" hidden>
 <button class="btn big" id="newp">＋ โพสต์ใหม่</button>
 <button class="btn alt big" id="teamb">👥 จัดการผู้ดูแล</button>
+<button class="btn alt big" id="cfgb">⚙ ตั้งค่าเว็บ (แถบประกาศด่วน / ช่องทางติดต่อ)</button>
 <button class="btn alt big" id="impb">📥 รับโพสต์ที่ผู้ดูแลส่งมา</button>
 <input type="file" id="impf" accept=".txt,.json" multiple hidden>
 <div id="roleinfo" class="alert" hidden><b>คุณเป็นผู้ดูแล</b> โพสต์ได้เอง แก้ไข/ลบได้เฉพาะโพสต์ของตัวเอง เมื่อบันทึกแล้วจะได้ไฟล์ส่งให้เจ้าของเพื่อเผยแพร่ขึ้นเว็บ</div>
 <h3 style="margin:22px 0 6px">โพสต์ทั้งหมด</h3><p class="help" id="szinfo"></p>
 <div class="fl" id="flt"><button class="on" data-f="all">ทั้งหมด</button><button data-f="mine">ของฉัน</button></div>
+<input id="q" type="search" placeholder="🔍 ค้นหาโพสต์ด้วยชื่อหรือเนื้อหา"><div class="tf" id="tf"></div>
 <div id="empty" hidden style="text-align:center">
 <svg class="ill" viewBox="0 0 320 130" role="img" aria-label="ภาพประกอบ ยังไม่มีโพสต์" style="max-width:240px">
 <ellipse cx="160" cy="118" rx="100" ry="9" fill="var(--sand)"/>
@@ -188,6 +196,16 @@ details.step[open] summary{margin-bottom:12px}
 <div id="oldbox" class="alert" hidden><b>โหลดโพสต์เดิมจากเว็บไม่ได้</b><br>ถ้าเคยโพสต์แล้ว ให้เลือกไฟล์ <b>posts.js</b> เดิมของเว็บ เพื่อไม่ให้โพสต์เก่าหาย (ถ้าเพิ่งเริ่มโพสต์ครั้งแรก ข้ามได้)
 <input id="oldf" type="file" accept=".js" style="margin-top:10px;width:100%"></div>
 </div>
+
+<!-- ตั้งค่าเว็บ (เจ้าของ) -->
+<div id="cfg" hidden><p><a href="#" id="cback">← กลับไปรายการโพสต์</a></p>
+<div class="step"><h2>⚙ ตั้งค่าเว็บ</h2><p class="help">ใส่เฉพาะที่ต้องการ ช่องที่ว่างจะไม่แสดงบนเว็บ</p>
+<label for="c_notice"><b>แถบประกาศด่วนบนสุด</b></label><textarea id="c_notice" style="min-height:90px"></textarea>
+<label for="c_phone"><b>เบอร์โทรติดต่อ</b></label><input id="c_phone" type="text">
+<label for="c_email"><b>อีเมลรับข่าว/รูป</b></label><input id="c_email" type="text">
+<label for="c_facebookUrl"><b>ลิงก์เพจ Facebook</b></label><input id="c_facebookUrl" type="url">
+<label for="c_youtubeUrl"><b>ลิงก์ช่อง YouTube</b></label><input id="c_youtubeUrl" type="url">
+<button class="btn big" id="csave">✓ บันทึกการตั้งค่า</button></div></div>
 
 <!-- จัดการผู้ดูแล (เจ้าของเท่านั้น) -->
 <div id="team" hidden>
@@ -231,21 +249,28 @@ details.step[open] summary{margin-bottom:12px}
 <div class="step"><h2><i>1</i>จะโพสต์เรื่องอะไร</h2><p class="help">แตะเลือก 1 อย่าง</p>
 <div class="chips" id="types">
 <button data-t="s" class="on"><b>📖</b>เรื่องเล่า<br>ภูมิปัญญา</button>
-<button data-t="n"><b>📢</b>ข่าว<br>ประกาศ</button>
+<button data-t="n"><b>📰</b>ข่าว<br>ประชาสัมพันธ์</button>
+<button data-t="a"><b>📢</b>ประกาศ<br>แจ้งชาวบ้าน</button>
+<button data-t="v"><b>▶️</b>คลิป<br>YouTube</button>
+<button data-t="g"><b>🧺</b>ของดี<br>สินค้าชุมชน</button>
+<button data-t="h"><b>🏅</b>คนดี<br>ศรีตาจวน</button>
 <button data-t="p"><b>📍</b>สถานที่<br>ปักหมุด</button></div></div>
 
 <div class="step"><h2><i>2</i>เขียนเรื่อง</h2>
 <label for="date"><b>วันที่</b></label><input id="date" type="text">
 <label for="title"><b>หัวข้อ</b></label><input id="title" type="text" placeholder="เช่น เทะ ตะแวลย์ ของว่างชาวกวย">
-<label for="body"><b>เนื้อเรื่อง</b></label><textarea id="body" placeholder="พิมพ์ หรือวางข้อความจาก Facebook ที่นี่"></textarea></div>
+<label for="body"><b>เนื้อเรื่อง</b></label><textarea id="body" placeholder="พิมพ์ หรือวางข้อความจาก Facebook ที่นี่"></textarea>
+<div id="fx"><label for="cat"><b>หมวด</b></label><input id="cat" type="text" list="cats" placeholder="เลือกหรือพิมพ์เอง"><datalist id="cats"></datalist>
+<div id="pricew"><label for="price"><b>ราคา / ช่องทางติดต่อ</b></label><input id="price" type="text" placeholder="เช่น 50 บาท โทร 081-234-5678"></div></div>
+<label class="chk" id="fu"><input type="checkbox" id="urg"> 🔴 แสดงเป็นแถบประกาศด่วนบนสุดของเว็บ (เจ้าของเว็บเป็นผู้อนุมัติ)</label></div>
 
-<div class="step"><h2><i>3</i>ใส่รูปประกอบ<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<div class="step" id="stpic"><h2><i>3</i>ใส่รูปประกอบ<span class="opt">ไม่ใส่ก็ได้</span></h2>
 <p class="help">เลือกได้หลายรูปพร้อมกัน (สูงสุด 12 รูป) รูปแรกจะเป็นรูปปกของโพสต์ ใส่คำบรรยายใต้รูปได้ และกดลูกศรเพื่อเรียงลำดับ</p>
 <button class="btn alt big" id="pick">📷 เลือกรูปจากเครื่อง</button>
 <input type="file" id="file" accept="image/*" multiple hidden>
 <div id="thumbs"></div></div>
 
-<div class="step"><h2><i>4</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<div class="step" id="stmap"><h2><i>4</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
 <p class="help">แตะบนแผนที่เพื่อวางหมุด หรือกดที่หมุดค้างไว้แล้วลากไปยังจุดที่ต้องการ แผนที่จะเปิดที่ตำแหน่งที่คุณอยู่ตอนนี้ แต่ถ้าเดินออกจากจุดนั้นมาแล้ว ก็ย้ายหมุดกลับไปที่เดิมได้</p>
 <div class="mapwrap" id="pmapwrap"><div id="pmap" role="application" aria-label="แผนที่สำหรับปักหมุด"></div></div>
 <div class="seg" id="lay"><button type="button" class="on" data-l="o">🗺 แผนที่</button><button type="button" data-l="s">🛰 ภาพดาวเทียม</button></div>
@@ -256,9 +281,9 @@ details.step[open] summary{margin-bottom:12px}
 <label for="pname"><b>หรือพิมพ์ชื่อสถานที่แทน</b> <span class="mute">(ถ้าปักหมุดบนแผนที่แล้ว ระบบใช้พิกัดเป็นหลัก)</span></label>
 <input id="pname" type="text" placeholder="เช่น วัดบ้านตาจวน"></div>
 
-<div class="step"><h2><i>5</i>ลิงก์<span class="opt">ไม่ใส่ก็ได้</span></h2>
-<p class="help">เช่น ลิงก์โพสต์ Facebook หรือคลิป YouTube ที่เกี่ยวข้อง</p>
-<input id="link" type="url" inputmode="url" placeholder="วางลิงก์ที่นี่"></div>
+<div class="step" id="stlk"><h2><i>5</i>ลิงก์<span class="opt">ใส่ได้หลายอัน</span></h2>
+<p class="help" id="lkhelp">ลิงก์โพสต์ Facebook คลิป YouTube หรือบทความเว็บอื่น (คลิป YouTube จะเล่นในหน้าเรื่องให้เลย)</p>
+<div id="lks"></div><button type="button" class="btn alt big" id="addl">＋ เพิ่มลิงก์</button></div>
 
 <div class="bar"><button class="btn big" id="save">✓ บันทึกโพสต์</button></div>
 </div>
@@ -289,11 +314,28 @@ details.step[open] summary{margin-bottom:12px}
 <script src="content.js?v=6"></script>
 <script>
 const $=i=>document.getElementById(i);
-const VIEWS=["login","setup","request","reqdone","list","form","team","inbox","done"];
+const VIEWS=["login","setup","request","reqdone","list","form","team","inbox","cfg","done"];
 let T="s",pics=[],gps="",list=[],loaded=false,ei=-1,admins=[],me=null,last=null,onlyMine=false,inbox=[],lastSub=null,avFor=null;
 const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
 const NAME={s:"เรื่องเล่า",n:"ข่าว",p:"สถานที่"};
-const HEAD={login:"เข้าสู่ระบบ",setup:"ตั้งค่าครั้งแรก",request:"ขอเป็นผู้ดูแล",reqdone:"ส่งคำขอ",team:"ผู้ดูแลเว็บ",inbox:"โพสต์จากผู้ดูแล"};
+/* ประเภทโพสต์: f = ช่องที่ใช้ (d วันที่ b เนื้อหา i รูป m แผนที่ x หมวด/ราคา u ด่วน l ลิงก์) */
+const TY={s:{n:"เรื่องเล่า",e:"📖",f:"dbiml"},n:{n:"ข่าว",e:"📰",f:"dbiml"},a:{n:"ประกาศ",e:"📢",f:"dbimlu"},v:{n:"คลิป",e:"▶️",f:"dbl"},g:{n:"ของดี",e:"🧺",f:"bixml"},h:{n:"คนดีศรีตาจวน",e:"🏅",f:"bi"},p:{n:"สถานที่",e:"📍",f:"bimxl"}};
+const TL={s:["หัวข้อ","เนื้อเรื่อง"],n:["หัวข้อข่าว","เนื้อข่าว"],a:["หัวข้อประกาศ","รายละเอียดประกาศ"],v:["ชื่อคลิป","คำอธิบายคลิป (ไม่ใส่ก็ได้)"],g:["ชื่อสินค้า / ของดี","รายละเอียด"],h:["ชื่อ","เรื่องที่ชื่นชม (ขออนุญาตเจ้าตัวก่อนลงทุกครั้ง)"],p:["ชื่อสถานที่","คำอธิบาย"]};
+const CATS={g:["อาหารพื้นบ้าน","ผลิตภัณฑ์ชุมชน","พืชผลเกษตร","จุดเช็คอิน","ร้านอาหาร / กาแฟ"],p:["หมู่บ้าน","วัด","โรงเรียน","ศูนย์เรียนรู้","จุดเรียนรู้","แจ้งเหตุ"]};
+let LK=[],ft="all",fq="";
+const ytId=u=>{const m=String(u||"").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#\s]*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);return m&&m[1]};
+$("tf").append(...[["all","ทั้งหมด"],...Object.entries(TY).map(([k,v])=>[k,v.e+" "+v.n])].map(([k,t])=>{const b=mk("button",k==="all"?"on":"",t);b.dataset.k=k;return b}));
+$("tf").onclick=e=>{const b=e.target.closest("button");if(!b)return;ft=b.dataset.k;[...$("tf").children].forEach(x=>x.classList.toggle("on",x===b));renderList()};
+$("q").oninput=e=>{fq=e.target.value.trim().toLowerCase();renderList()};
+function drawL(){$("lks").replaceChildren(...LK.map((x,k)=>{const d=mk("div","lkr"),n=mk("input"),u=mk("input"),r=mk("button","","✕");n.type="text";n.placeholder="ชื่อปุ่ม (ไม่ใส่ก็ได้) เช่น อ่านต่อ";n.value=x[0];n.oninput=()=>x[0]=n.value;
+ u.type="url";u.inputMode="url";u.placeholder="วางลิงก์ YouTube / Facebook / เว็บอื่น";u.value=x[1];u.oninput=()=>x[1]=u.value;r.type="button";r.setAttribute("aria-label","เอาลิงก์ออก");r.onclick=()=>{LK.splice(k,1);drawL()};d.append(n,r,u);return d}))}
+$("addl").onclick=()=>{LK.push(["",""]);drawL()};
+/* ตั้งค่าเว็บ */
+const CF=["notice","phone","email","facebookUrl","youtubeUrl"];
+$("cfgb").onclick=()=>{const r=list.find(p=>p.t==="cfg"),v=(r&&r.v)||{};CF.forEach(k=>$("c_"+k).value=v[k]!=null?v[k]:(SITE[k]||""));show("cfg")};
+$("cback").onclick=e=>{e.preventDefault();show("list")};
+$("csave").onclick=()=>{if(!warn())return;const v={};CF.forEach(k=>v[k]=$("c_"+k).value.trim());const r=list.find(p=>p.t==="cfg");if(r)r.v=v;else list.unshift({t:"cfg",v});finishOwner()};
+const HEAD={login:"เข้าสู่ระบบ",setup:"ตั้งค่าครั้งแรก",request:"ขอเป็นผู้ดูแล",reqdone:"ส่งคำขอ",team:"ผู้ดูแลเว็บ",inbox:"โพสต์จากผู้ดูแล",cfg:"ตั้งค่าเว็บ"};
 const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 function mk(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -352,8 +394,15 @@ const getT=u=>fetch(u+"?"+Date.now()).then(r=>r.ok?r.text():Promise.reject());
 function imp(rows,t){rows.forEach(n=>{if(list.some(p=>p.orig===n[1]||p.title===n[1]))return;
  const pl=n[6]&&PLACES.find(x=>x[0]===n[6]);
  list.push({t,date:n[0],title:n[1],body:n[3]||n[2],photos:(n[4]||[]).map(x=>({src:x[0],cap:x[1]||""})),link:{url:(n[5]&&n[5][0]&&n[5][0][1])||""},pin:pl?pl[2]:"",orig:n[1]})})}
-Promise.all([getT("posts.js").then(parseP).catch(()=>{$("oldbox").hidden=false}),getT("admins.js").then(parseA).catch(()=>{})]).then(()=>{imp(STORIES,"s");imp(NEWS,"n");route()});
-$("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseP(t);imp(STORIES,"s");imp(NEWS,"n");renderList();alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
+function impX(){const has=k=>list.some(p=>p.orig===k||p.title===k),base={date:"",body:"",photos:[],link:{url:""}};
+ const ph=s=>s?[{src:s,cap:""}]:[],sm=s=>/^ตัวอย่าง:/.test(s||"");
+ VIDEOS.forEach(v=>{if(!has(v[1])){const u="https://www.youtube.com/watch?v="+v[0];list.push({...base,t:"v",title:v[1],link:{url:u},links:[["",u]],orig:v[1]})}});
+ GOODS.forEach(g=>{if(!sm(g[1])&&!has(g[1]))list.push({...base,t:"g",cat:g[0],title:g[1],body:g[2],price:g[3],photos:ph(g[4]),orig:g[1]})});
+ HEROES.forEach(h=>{if(!sm(h[0])&&!has(h[0]))list.push({...base,t:"h",title:h[0],body:h[1],photos:ph(h[2]),orig:h[0]})});
+ PLACES.forEach(p=>{if(!has(p[0]))list.push({...base,t:"p",cat:p[1],title:p[0],body:p[3],pin:p[2],orig:p[0]})})}
+const impAll=()=>{imp(STORIES,"s");imp(NEWS,"n");impX()};
+Promise.all([getT("posts.js").then(parseP).catch(()=>{$("oldbox").hidden=false}),getT("admins.js").then(parseA).catch(()=>{})]).then(()=>{impAll();route()});
+$("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseP(t);impAll();renderList();alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
 $("adf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseA(t);route()}catch(x){alert("ไฟล์นี้ไม่ใช่ admins.js ของเว็บ")}})};
 
 /* ---------- เข้าสู่ระบบ / จำรหัส ---------- */
@@ -367,7 +416,7 @@ function route(){if(!admins.length){show("setup");return}
 function syncUser(){const a=byId($("lname").value);$("luser").value=a?a.name:""}
 $("lname").onchange=syncUser;
 function enter(){const w=$("wn");w.replaceChildren(avatar(me,28),document.createTextNode(me.name+(me.role==="owner"?" (เจ้าของ)":"")));
- $("teamb").hidden=me.role!=="owner";$("impb").hidden=me.role!=="owner";$("roleinfo").hidden=me.role==="owner";renderList();show("list")}
+ $("teamb").hidden=me.role!=="owner";$("impb").hidden=me.role!=="owner";$("cfgb").hidden=me.role!=="owner";$("roleinfo").hidden=me.role==="owner";renderList();show("list")}
 function lerr(t,k){const e=$("lerr");e.hidden=!t;e.textContent=t;e.style.borderLeftColor=k==="ok"?"var(--green)":"var(--clay)"}
 async function diagnose(a,pw){
  if(TH_RE.test(pw)){if(await hp(th2en(pw),a.salt)===a.hash)return"th";return"hasth"}
@@ -449,16 +498,22 @@ const can=p=>me&&(me.role==="owner"||p.byId===me.id);
 $("flt").onclick=e=>{const b=e.target.closest("button");if(!b)return;onlyMine=b.dataset.f==="mine";[...$("flt").children].forEach(x=>x.classList.toggle("on",x===b));renderList()};
 function renderList(){const box=$("items");box.replaceChildren();
  {const mb=JSON.stringify(list).length/1048576;$("szinfo").textContent="ไฟล์ posts.js ตอนนี้ประมาณ "+mb.toFixed(1)+" MB"+(mb>3?" ⚠ เริ่มใหญ่ หน้าเว็บจะโหลดช้าบนมือถือ ควรลดรูป หรือแยกไฟล์รูปออกจาก posts.js":"")}
- const vis=list.map((p,i)=>[p,i]).filter(x=>x[0].t!=="x"&&!(typeof HIDE_TITLES!=="undefined"&&HIDE_TITLES.includes(x[0].title))&&(!onlyMine||(me&&x[0].byId===me.id)));$("empty").hidden=vis.length>0;
- vis.forEach(([p,i])=>{const r=mk("div","it2"),im=mk("div","im",p.t==="n"?"📰":p.t==="p"?"📍":"📖");
+ const vis=list.map((p,i)=>[p,i]).filter(x=>x[0].t!=="x"&&x[0].t!=="cfg"&&(ft==="all"||x[0].t===ft)&&(!fq||(x[0].title+" "+(x[0].body||"")).toLowerCase().includes(fq))&&!(typeof HIDE_TITLES!=="undefined"&&HIDE_TITLES.includes(x[0].title))&&(!onlyMine||(me&&x[0].byId===me.id)));$("empty").hidden=vis.length>0;
+ vis.forEach(([p,i])=>{const r=mk("div","it2"),im=mk("div","im",(TY[p.t]||TY.s).e);
   if(p.photos&&p.photos[0]){const g=new Image();g.src=p.photos[0].src;g.onerror=()=>g.remove();im.append(g)}
-  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",NAME[p.t]+(p.date?" · "+p.date:"")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")+(p.by?" · โดย "+p.by:"")));r.append(im,tx);
+  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",(TY[p.t]||TY.s).n+(p.cat?" · "+p.cat:"")+(p.pin?" · 📍":"")+((p.links&&p.links.length)||(p.link&&p.link.url)?" · 🔗":"")+(p.urgent?" · 🔴 ด่วน":"")+(p.date?" · "+p.date:"")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")+(p.by?" · โดย "+p.by:"")));r.append(im,tx);
   if(can(p)){const ac=mk("div","ac"),ed=mk("button","","✏ แก้ไข"),de=mk("button","del","🗑 ลบ");ed.onclick=()=>edit(i);de.onclick=()=>del(i);ac.append(ed,de);r.append(ac)}
   else r.append(mk("p","mute","โพสต์ของผู้ดูแลท่านอื่น (แก้ไขได้เฉพาะเจ้าของ)"));
   box.append(r)})}
 
 /* ---------- ฟอร์ม + รูปประกอบ ---------- */
-function setType(t){T=t;[...$("types").children].forEach(x=>x.classList.toggle("on",x.dataset.t===t))}
+function setType(t){T=t;[...$("types").children].forEach(x=>x.classList.toggle("on",x.dataset.t===t));const f=TY[t].f,l=TL[t];
+ const hs=(id,k)=>{const e=$(id);e.hidden=!f.includes(k);const b=e.previousElementSibling;if(b&&b.tagName==="LABEL")b.hidden=e.hidden};
+ hs("date","d");$("stpic").hidden=!f.includes("i");$("stmap").hidden=!f.includes("m");$("fx").hidden=!f.includes("x");$("fu").hidden=!f.includes("u");$("stlk").hidden=!f.includes("l");$("pricew").hidden=t!=="g";
+ $("title").previousElementSibling.querySelector("b").textContent=l[0];$("body").previousElementSibling.querySelector("b").textContent=l[1];
+ $("cats").replaceChildren(...(CATS[t]||[]).map(c=>{const o=mk("option");o.value=c;return o}));
+ $("lkhelp").textContent=t==="v"?"วางลิงก์คลิป YouTube ของเรื่องนี้ (ต้องใส่) ใส่ลิงก์อื่นเพิ่มได้":"ลิงก์โพสต์ Facebook คลิป YouTube หรือบทความเว็บอื่น (คลิป YouTube จะเล่นในหน้าเรื่องให้เลย)";
+ if(t==="v"&&!LK.length){LK.push(["",""]);drawL()}}
 $("types").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset.t)};
 function shrink(f,max,sq){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const c=document.createElement("canvas"),x=c.getContext("2d");
  if(sq){const s=Math.min(i.width,i.height);c.width=c.height=max||160;x.drawImage(i,(i.width-s)/2,(i.height-s)/2,s,s,0,0,c.width,c.height)}
@@ -515,10 +570,10 @@ $("gps").onclick=()=>{msg("กำลังหาตำแหน่ง… ถ้�
   const m=Math.round(p.coords.accuracy||0);msg("✓ ปักหมุดที่ตำแหน่งของคุณแล้ว (คลาดเคลื่อนประมาณ "+m+" ม.)"+(m>80?" ถ้าไม่ตรง ลากหมุดไปให้ตรงจุดได้":" ลากหมุดเพื่อปรับได้"),m>80?"bad":"ok")},
   e=>msg(locErr(e),"bad"),{enableHighAccuracy:true,timeout:20000})};
 $("pclr").onclick=clearPin;
-function clear(){pics=[];gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();["date","title","body","pname","link"].forEach(i=>$(i).value="");msg("","");setType("s")}
+function clear(){pics=[];gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();["date","title","body","pname","cat","price"].forEach(i=>$(i).value="");$("urg").checked=false;LK=[];drawL();msg("","");setType("s")}
 $("newp").onclick=()=>{ei=-1;clear();$("date").value=today();draw();show("form");openMap()};
 function edit(i){ei=i;const p=list[i];clear();setType(p.t);$("date").value=p.date||"";$("title").value=p.title||"";$("body").value=p.body||"";
- pics=(p.photos||[]).map(x=>({src:x.src,cap:x.cap||""}));$("link").value=(p.link&&p.link.url)||"";
+ pics=(p.photos||[]).map(x=>({src:x.src,cap:x.cap||""}));LK=(p.links&&p.links.length?p.links:(p.link&&p.link.url?[["",p.link.url]]:[])).map(x=>[x[0]||"",x[1]||""]);drawL();$("cat").value=p.cat||"";$("price").value=p.price||"";$("urg").checked=!!p.urgent;
  if(/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(p.pin||""))gps=p.pin;else $("pname").value=p.pin||"";
  draw();show("form");openMap()}
 $("back").onclick=e=>{e.preventDefault();show("list")};
@@ -536,7 +591,8 @@ $("subShare").onclick=async()=>{const [n,c]=subFile(lastSub),f=new File([c],n,{t
 $("subPosts").onclick=()=>{dlFile("posts.js","window.POSTS="+JSON.stringify(list)+";")};
 $("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อในข้อ 2 ก่อนนะครับ");$("title").focus();return}
  if(ei>=0&&!can(list[ei]))return;
- const post={t:T,date:$("date").value.trim()||today(),title,body:$("body").value.trim(),photos:pics.map(p=>({src:p.src,cap:p.cap.trim()})),link:{url:$("link").value.trim()},pin:gps||$("pname").value.trim()};
+ if(T==="v"&&!LK.some(x=>ytId(x[1]))){alert("ใส่ลิงก์ YouTube ของคลิปในข้อ 5 ก่อนนะครับ");return}
+ const post={t:T,date:$("date").value.trim()||today(),title,body:$("body").value.trim(),photos:(TY[T].f.includes("i")?pics:[]).map(p=>({src:p.src,cap:p.cap.trim()})),links:LK.filter(x=>x[1].trim()).map(x=>[x[0].trim(),x[1].trim()]),link:{url:(LK.find(x=>x[1].trim())||["",""])[1].trim()},cat:TY[T].f.includes("x")?$("cat").value.trim():"",price:T==="g"?$("price").value.trim():"",urgent:T==="a"&&$("urg").checked,pin:TY[T].f.includes("m")?(gps||$("pname").value.trim()):""};
  const o=ei>=0?list[ei]:null;
  if(o){if(o.orig)post.orig=o.orig;if(o.by){post.by=o.by;post.byId=o.byId}post.id=o.id||uid("p")}
  else{post.by=me.name;post.byId=me.id;post.id=uid("p")}
@@ -548,9 +604,9 @@ function del(i){const p=list[i];if(!can(p)||!confirm("ลบโพสต์น�
 
 /* ---------- เจ้าของรับโพสต์จากผู้ดูแล ---------- */
 const S=(x,n)=>String(x==null?"":x).slice(0,n);
-function clean(p,a){return{id:S(p.id,40),t:["s","n","p"].includes(p.t)?p.t:"s",date:S(p.date,40),title:S(p.title,200),body:S(p.body,20000),
+function clean(p,a){return{id:S(p.id,40),t:Object.keys(TY).includes(p.t)?p.t:"s",date:S(p.date,40),title:S(p.title,200),body:S(p.body,20000),
  photos:(Array.isArray(p.photos)?p.photos:[]).slice(0,12).filter(x=>x&&/^data:image\/(jpeg|png|webp|gif);base64,/.test(x.src)).map(x=>({src:x.src,cap:S(x.cap,200)})),
- link:{url:/^https?:\/\//i.test((p.link&&p.link.url)||"")?S(p.link.url,500):""},pin:S(p.pin,200),by:a.name,byId:a.id}}
+ link:{url:/^https?:\/\//i.test((p.link&&p.link.url)||"")?S(p.link.url,500):""},pin:S(p.pin,200),cat:S(p.cat,60),price:S(p.price,120),urgent:!!p.urgent&&a.role==="owner",links:(Array.isArray(p.links)?p.links:[]).slice(0,8).filter(l=>Array.isArray(l)&&/^https?:\/\//i.test(l[1])).map(l=>[S(l[0],60),S(l[1],500)]),by:a.name,byId:a.id}}
 function check(en){const a=byId(en.sub.byId);if(!a||a.name!==en.sub.by)return"ไม่รู้จักผู้ส่งคนนี้ (ยังไม่ได้เป็นผู้ดูแล)";
  const o=en.op,id=o.op==="put"?(o.post&&o.post.id):o.id;if(!id)return"ข้อมูลไม่ครบ";
  const ex=list.find(p=>p.id===id);
@@ -566,7 +622,7 @@ $("impf").onchange=async e=>{inbox=[];let bad=0;
  e.target.value="";if(bad)alert("มี "+bad+" ไฟล์ที่ไม่ใช่ไฟล์โพสต์ของเว็บนี้");if(!inbox.length)return;renderInbox();show("inbox")};
 function renderInbox(){const box=$("ilist");box.replaceChildren();
  inbox.forEach(en=>{const why=en.state==="wait"?check(en):"",o=en.op,p=o.op==="put"?o.post||{}:{title:o.title||"(ลบโพสต์)"};
-  const r=mk("div","it2"),im=mk("div","im",o.op==="del"?"🗑":p.t==="n"?"📰":p.t==="p"?"📍":"📖");
+  const r=mk("div","it2"),im=mk("div","im",o.op==="del"?"🗑":(TY[p.t]||TY.s).e);
   if(p.photos&&p.photos[0]&&/^data:image/.test(p.photos[0].src)){const g=new Image();g.src=p.photos[0].src;im.append(g)}
   const a=byId(en.sub.byId),tx=mk("div","tx");tx.append(mk("b","",S(p.title,120)||"(ไม่มีหัวข้อ)"),mk("span","",(a?a.name:en.sub.by)+" · "+(o.op==="del"?"ขอลบโพสต์":o.post&&list.some(x=>x.id===o.post.id)?"แก้ไขโพสต์":"โพสต์ใหม่")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")));r.append(im,tx);
   if(o.op==="put"&&p.body)r.append(Object.assign(mk("p","mute",S(p.body,160)+(p.body.length>160?"…":"")),{style:"grid-column:1/-1;margin:0"}));
