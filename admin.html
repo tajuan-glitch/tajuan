@@ -1,583 +1,130 @@
 <!DOCTYPE html>
-<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>ผู้ดูแล | ตาจวนบ้านเรา</title>
-<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css">
-<link rel="stylesheet" href="style.css?v=11">
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>ผู้ดูแล | ตาจวนบ้านเรา</title>
 <style>
-[hidden]{display:none!important}
-body{font-size:1.05rem;line-height:1.7}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;flex-wrap:wrap}
-.top a{font-weight:700}
-#who{display:flex;align-items:center;gap:8px;font-size:.95rem}
-#wn{display:flex;align-items:center;gap:8px}
-#who button{min-height:40px;padding:0 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;cursor:pointer}
-.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 18px}
-.step h2{font-size:1.25rem;margin:0 0 4px;display:flex;align-items:center;gap:10px}
-.step h2 i{font-style:normal;flex:none;width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font:700 1rem "Sarabun"}
-.opt{font:700 .75rem "Sarabun";background:var(--sand);color:var(--mute);border-radius:99px;padding:1px 10px;margin-left:auto}
-.help{margin:0 0 14px;color:var(--mute);font-size:.95rem}
-input[type=text],input[type=url],input[type=password],input:not([type]),textarea,select{width:100%;font:inherit;font-size:1.05rem;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);margin:0 0 12px}
-input:focus,textarea:focus,select:focus{border-color:var(--green);outline:0}
+:root{--g:#2f4a3a;--l:#e6dcc8}
+body{margin:0;font:18px/1.6 "Sarabun",system-ui,sans-serif;background:#faf5ec;color:#2a2a26}
+.box{max-width:720px;margin:0 auto;padding:20px}
+h1{font-size:1.6rem;color:var(--g);margin:.2em 0}
+label{display:block;font-weight:700;margin:14px 0 4px}
+input,textarea,select{width:100%;font:inherit;padding:10px 12px;border:1.5px solid var(--l);border-radius:12px;background:#fff;box-sizing:border-box}
 textarea{min-height:200px}
-.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.chips button{min-height:84px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;font-weight:700;line-height:1.35;padding:8px 4px}
-.chips button b{display:block;font-size:1.6rem;line-height:1.2}
-.chips button.on{border-color:var(--green);background:var(--green);color:#fff}
-@media(prefers-color-scheme:dark){.step h2 i,.chips button.on{color:#10150f}}
-.big{width:100%;justify-content:center;cursor:pointer;font-size:1.1rem;margin:0 0 12px}
-#thumbs{display:grid;gap:12px;margin:14px 0 0}
-.th{display:grid;grid-template-columns:84px 1fr 44px;gap:10px;align-items:center}
-.th img{width:84px;height:84px;object-fit:cover;border-radius:10px}
-.th input{margin:0!important}
-.th button{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;font-size:1.1rem}
-.st{margin:12px 0 0;font-weight:700}.st.ok{color:var(--green)}.st.bad{color:var(--clay)}
-.bar{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));margin:0 -20px;display:block}
-.bar .big{margin:0}
-.nums{counter-reset:n;list-style:none;padding:0;margin:0 0 16px}
-.nums li{counter-increment:n;display:flex;gap:12px;margin:12px 0}
-.nums li::before{content:counter(n);flex:none;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700}
-.it2{display:grid;grid-template-columns:72px 1fr;gap:6px 14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;margin:0 0 12px}
-.it2 .im{position:relative;width:72px;height:72px;border-radius:12px;background:var(--sand);display:grid;place-items:center;font-size:1.8rem;overflow:hidden}
-.it2 .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.it2 .im.round{border-radius:50%}
-.it2 .tx b{display:block;line-height:1.4}.it2 .tx span{color:var(--mute);font-size:.88rem}
-.ac{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap}
-.ac button{flex:1;min-width:110px;min-height:46px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;font-weight:700;cursor:pointer}
-.ac button.del{color:var(--clay)}
-.ac button.yes{background:var(--green);border-color:var(--green);color:#fff}
-@media(prefers-color-scheme:dark){.ac button.yes{color:#10150f}}
-.badge{display:inline-block;background:var(--sand);color:var(--green);border-radius:99px;padding:0 10px;font-size:.78rem;font-weight:700;margin-left:6px}
-.badge.owner{background:var(--clay);color:#fff}
+button,.b{font:inherit;font-weight:700;border:0;border-radius:999px;padding:11px 20px;background:var(--g);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+.alt{background:#fff;color:var(--g);border:1.5px solid var(--g)}.red{background:#a33}
+.hide{display:none!important}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.card,.ph{background:#fff;border-radius:14px;padding:10px 14px;margin:10px 0;box-shadow:0 2px 10px rgba(0,0,0,.07);display:flex;gap:10px;align-items:center}
+.card b{flex:1;min-width:0}.card small{display:block;color:#6b6a60;font-weight:400}
+.ph{flex-wrap:wrap}.ph img{width:84px;height:64px;object-fit:cover;border-radius:8px}.ph input{flex:1;min-width:140px}
+.chk{display:flex;gap:8px;align-items:center;font-weight:400;margin:10px 0}.chk input{width:auto}
+.h{color:#6b6a60;font-size:.9rem;font-weight:400}
+#msg{position:sticky;bottom:10px;background:#fff;border-left:6px solid var(--g);padding:10px 14px;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,.25);margin:14px 20px}
+#msg.err{border-color:#a33}
+iframe{width:100%;height:240px;border:0;border-radius:12px;margin-top:8px}
+</style></head><body>
 
-/* ภาพประกอบ */
-.ill{display:block;margin:0 auto 10px;max-width:320px;width:100%;height:auto}
-.flow{display:flex;align-items:flex-start;justify-content:center;gap:4px;margin:8px 0 18px}
-.flow .f{flex:1;max-width:96px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:.82rem;font-weight:700;line-height:1.35}
-.flow .c{width:56px;height:56px;border-radius:50%;background:var(--sand);border:2px solid var(--green);display:grid;place-items:center;font-size:1.65rem}
-.flow .ar{flex:none;margin-top:14px;color:var(--clay);font-weight:700;font-size:1.3rem}
-.role2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 4px}
-.role2>div{background:var(--sand);border-radius:14px;padding:12px 14px;font-size:.92rem}
-.role2 b{display:block;margin-bottom:2px}
-@media(max-width:560px){.role2{grid-template-columns:1fr}}
-
-/* ช่องรหัสผ่าน */
-.pw{display:flex;gap:8px;align-items:stretch}
-.pw input{margin:0;flex:1;min-width:0}
-.eye{flex:none;min-width:96px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;font-weight:700;cursor:pointer}
-.pwn{margin:6px 0 12px;font-size:.92rem;min-height:1.5em;font-weight:700;color:var(--mute)}
-.pwn.warn{color:var(--clay)}.pwn.ok{color:var(--green)}
-.vh{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
-.chk{display:flex;align-items:center;gap:10px;margin:2px 0 14px;font-weight:700;cursor:pointer}
-.chk input{width:24px;height:24px;margin:0;accent-color:var(--green)}
-.linkb{background:none;border:0;color:var(--green);font-weight:700;text-decoration:underline;padding:10px 0;cursor:pointer;font-size:1rem}
-.vcode{font:700 2.4rem/1.2 "Sarabun",monospace;letter-spacing:.14em;text-align:center;background:var(--sand);color:var(--green);border-radius:14px;padding:10px;margin:8px 0 14px}
-.codebox{font:.8rem/1.4 monospace;min-height:110px;word-break:break-all}
-.reqc{border:2px solid var(--green);border-radius:16px;padding:14px;margin:12px 0 0;background:var(--paper)}
-.av2{flex:none;border-radius:50%;background:var(--sand);display:grid;place-items:center;overflow:hidden;font-size:.9em}
-.av2 img{width:100%;height:100%;object-fit:cover}
-.fl{display:flex;gap:8px;margin:0 0 12px}
-.fl button{flex:1;min-height:46px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:99px;font-weight:700;cursor:pointer}
-.fl button.on{background:var(--green);border-color:var(--green);color:#fff}
-.mapwrap{position:relative;margin:0 0 10px}
-#pmap{position:relative;z-index:0;isolation:isolate;height:360px;border-radius:16px;border:2px solid var(--line);background:var(--sand)}
-@media(max-width:560px){#pmap{height:320px}}
-.bar{z-index:1100}
-.seg{display:flex;gap:8px;margin:0 0 12px}
-.seg button{flex:1;min-height:44px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;font-weight:700;cursor:pointer}
-.seg button.on{background:var(--green);border-color:var(--green);color:#fff}
-@media(prefers-color-scheme:dark){.seg button.on{color:#10150f}}
-.pchips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
-.pchips button{min-height:40px;border:1px solid var(--line);background:var(--sand);color:var(--green);border-radius:99px;padding:0 14px;font-weight:700;cursor:pointer}
-.crow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--sand);border-radius:12px;padding:10px 14px;margin:12px 0}
-.crow b{font-family:monospace;font-size:1rem}
-.crow button{min-height:40px;border:1px solid var(--line);background:var(--card);color:var(--clay);border-radius:10px;padding:0 12px;font-weight:700;cursor:pointer;margin-left:auto}
-.pinI{background:none;border:0}
-.pinI svg{filter:drop-shadow(0 3px 3px rgba(0,0,0,.35));display:block}
-details.step summary{cursor:pointer;font-weight:700;font-size:1.05rem}
-details.step[open] summary{margin-bottom:12px}
-</style></head>
-<body><div class="wrap" style="padding:0 20px">
-<div class="top"><a href="index.html">← กลับหน้าเว็บ</a><b style="color:var(--green)" id="fh">ผู้ดูแล</b>
-<span id="who" hidden><span id="wn"></span><button id="out">ออกจากระบบ</button></span></div>
-
-<!-- เข้าสู่ระบบ -->
-<div id="login" hidden>
-<svg class="ill" viewBox="0 0 320 150" role="img" aria-label="ภาพประกอบ แม่กุญแจและกุญแจ">
-<ellipse cx="160" cy="132" rx="125" ry="12" fill="var(--sand)"/>
-<circle cx="64" cy="74" r="36" fill="var(--sand)"/><circle cx="268" cy="44" r="24" fill="var(--sand)"/>
-<path d="M135 68V52a25 25 0 0 1 50 0v16" fill="none" stroke="var(--green)" stroke-width="10" stroke-linecap="round"/>
-<rect x="116" y="64" width="88" height="66" rx="14" fill="var(--green)"/>
-<circle cx="160" cy="90" r="9" fill="var(--paper)"/><rect x="156" y="94" width="8" height="18" rx="3" fill="var(--paper)"/>
-<g transform="translate(236 104) rotate(-28)"><circle r="12" fill="none" stroke="var(--clay)" stroke-width="6"/><rect x="10" y="-3" width="46" height="6" rx="3" fill="var(--clay)"/><rect x="40" y="3" width="6" height="12" rx="2" fill="var(--clay)"/><rect x="28" y="3" width="6" height="9" rx="2" fill="var(--clay)"/></g>
-<path d="M40 118c0-14 12-22 24-22-2 14-10 22-24 22z" fill="var(--green-2)" opacity=".55"/>
-</svg>
-<form id="lf" class="step" autocomplete="on"><h2>เข้าสู่ระบบผู้ดูแล</h2><p class="help">เลือกชื่อของคุณ แล้วใส่รหัสผ่าน กด “แสดง” เพื่อดูว่าพิมพ์ถูกหรือไม่</p>
-<label for="lname"><b>ชื่อ</b></label><select id="lname"></select>
-<input class="vh" type="text" id="luser" name="username" autocomplete="username" tabindex="-1" aria-hidden="true">
-<label for="lpw"><b>รหัสผ่าน</b></label>
-<div class="pw"><input id="lpw" name="password" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div>
-<p class="pwn" aria-live="polite"></p>
-<label class="chk" for="lrem"><input type="checkbox" id="lrem"> จำฉันไว้ในเครื่องนี้ (30 วัน)</label>
-<p class="help" style="margin-top:-8px">ใช้เฉพาะมือถือหรือคอมของตัวเอง ไม่ควรติ๊กในเครื่องที่ใช้ร่วมกับคนอื่น</p>
-<div id="lerr" class="alert" hidden role="alert"></div>
-<button class="btn big" id="lgo" type="submit">เข้าสู่ระบบ</button>
-<button type="button" class="linkb" id="reqlink">ยังไม่มีบัญชี? ขอเป็นผู้ดูแลใหม่ →</button></form></div>
-
-<!-- ตั้งค่าครั้งแรก -->
-<div id="setup" hidden>
-<svg class="ill" viewBox="0 0 320 150" role="img" aria-label="ภาพประกอบ บ้านและมงกุฎเจ้าของเว็บ">
-<ellipse cx="160" cy="134" rx="130" ry="10" fill="var(--sand)"/>
-<polygon points="160,52 92,100 228,100" fill="var(--clay)"/><rect x="104" y="98" width="112" height="36" fill="var(--green)"/>
-<rect x="150" y="108" width="20" height="26" rx="4" fill="var(--paper)"/><rect x="116" y="108" width="22" height="16" rx="3" fill="var(--paper)" opacity=".85"/><rect x="182" y="108" width="22" height="16" rx="3" fill="var(--paper)" opacity=".85"/>
-<polygon points="136,40 142,18 152,32 160,12 168,32 178,18 184,40" fill="#e3b341"/><rect x="136" y="38" width="48" height="8" rx="3" fill="#c99a2a"/>
-<circle cx="52" cy="96" r="20" fill="var(--green-2)" opacity=".5"/><rect x="49" y="112" width="6" height="22" fill="var(--green)"/>
-<circle cx="272" cy="90" r="24" fill="var(--green-2)" opacity=".5"/><rect x="269" y="108" width="6" height="26" fill="var(--green)"/>
-</svg>
-<div class="step"><h2>ตั้งค่าครั้งแรก</h2><p class="help">ยังไม่มีผู้ดูแล สร้างบัญชี <b>เจ้าของเว็บ</b> ก่อน เจ้าของเป็นคนอนุมัติผู้ดูแลคนอื่นได้ภายหลัง</p>
-<label for="sn"><b>ชื่อเจ้าของ</b></label><input id="sn" type="text" placeholder="เช่น ผู้ใหญ่บ้าน หรือชื่อของคุณ">
-<label for="sp"><b>ตั้งรหัสผ่าน</b> (อย่างน้อย 6 ตัว ใช้ภาษาอังกฤษ/ตัวเลข)</label>
-<div class="pw"><input id="sp" type="password" data-new="1" autocomplete="new-password" autocapitalize="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div><p class="pwn" aria-live="polite"></p>
-<label for="sp2"><b>พิมพ์รหัสผ่านอีกครั้ง</b></label>
-<div class="pw"><input id="sp2" type="password" data-new="1" data-match="#sp" autocomplete="new-password" autocapitalize="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div><p class="pwn" aria-live="polite"></p>
-<button class="btn big" id="sgo" style="margin-top:6px">สร้างบัญชีเจ้าของ</button>
-<p class="help" style="margin-top:14px">เคยตั้งค่าไว้แล้ว? เลือกไฟล์ <b>admins.js</b> เดิมของเว็บ: <input id="adf" type="file" accept=".js" style="margin-top:8px"></p></div></div>
-
-<!-- ขอเป็นผู้ดูแล (ผู้สมัคร) -->
-<div id="request" hidden>
-<p><a href="#" id="rback">← กลับไปหน้าเข้าสู่ระบบ</a></p>
-<div class="step"><h2>ขอเป็นผู้ดูแลใหม่</h2>
-<div class="flow" data-s="📝|ตั้งชื่อและรหัส;📲|ส่งรหัสคำขอให้เจ้าของ;👑|เจ้าของกดยอมรับ;✏️|โพสต์ได้เลย"></div>
-<label for="rn"><b>ชื่อที่จะให้แสดง</b></label><input id="rn" type="text" placeholder="เช่น สมชาย" maxlength="40">
-<label for="rp"><b>ตั้งรหัสผ่านของคุณ</b> (อย่างน้อย 6 ตัว ภาษาอังกฤษ/ตัวเลข)</label>
-<div class="pw"><input id="rp" type="password" data-new="1" autocomplete="new-password" autocapitalize="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div><p class="pwn" aria-live="polite"></p>
-<label for="rp2"><b>พิมพ์รหัสผ่านอีกครั้ง</b></label>
-<div class="pw"><input id="rp2" type="password" data-new="1" data-match="#rp" autocomplete="new-password" autocapitalize="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div><p class="pwn" aria-live="polite"></p>
-<p class="help">ระบบไม่ส่งรหัสผ่านจริงไปไหน ได้เป็น “รหัสคำขอ” ที่เข้ารหัสแล้ว เจ้าของอ่านรหัสผ่านของคุณไม่ได้</p>
-<button class="btn big" id="rgo">สร้างรหัสคำขอ</button></div></div>
-
-<!-- ส่งคำขอแล้ว -->
-<div id="reqdone" hidden>
-<div class="step"><h2 style="color:var(--green)">✓ สร้างรหัสคำขอแล้ว</h2>
-<div class="flow" data-s="✅|สร้างรหัสแล้ว;📲|ส่งให้เจ้าของ;🗣️|บอกรหัสตรวจสอบ;👑|รอเจ้าของยอมรับ"></div>
-<p class="help"><b>รหัสตรวจสอบของคุณ</b> บอกเจ้าของทางโทรศัพท์หรือเมื่อเจอกัน เพื่อให้เจ้าของมั่นใจว่าคำขอนี้เป็นของคุณจริง</p>
-<div class="vcode" id="vc">---</div>
-<p class="help"><b>รหัสคำขอ</b> ส่งข้อความนี้ให้เจ้าของทาง LINE / Facebook / อีเมล</p>
-<textarea id="rcode" class="codebox" readonly></textarea>
-<button class="btn big" id="rcopy">📋 คัดลอกรหัสคำขอ</button>
-<button class="btn alt big" id="rshare">📤 ส่งให้เจ้าของ (LINE ฯลฯ)</button>
-<ol class="nums"><li><span>ส่งรหัสคำขอให้เจ้าของเว็บ</span></li><li><span>บอกรหัสตรวจสอบ (ตัวใหญ่ด้านบน) ให้เจ้าของเทียบกับที่ขึ้นบนหน้าจอของเขา</span></li><li><span>เจ้าของกดยอมรับและอัปโหลดไฟล์ผู้ดูแลขึ้นเว็บ แล้วคุณเข้าสู่ระบบด้วยชื่อและรหัสผ่านที่ตั้งไว้ได้เลย</span></li></ol>
-<button class="btn alt big" id="rdone">← กลับไปหน้าเข้าสู่ระบบ</button></div></div>
-
-<!-- รายการโพสต์ -->
-<div id="list" hidden>
-<button class="btn big" id="newp">＋ โพสต์ใหม่</button>
-<button class="btn alt big" id="teamb">👥 จัดการผู้ดูแล</button>
-<button class="btn alt big" id="impb">📥 รับโพสต์ที่ผู้ดูแลส่งมา</button>
-<input type="file" id="impf" accept=".txt,.json" multiple hidden>
-<div id="roleinfo" class="alert" hidden><b>คุณเป็นผู้ดูแล</b> โพสต์ได้เอง แก้ไข/ลบได้เฉพาะโพสต์ของตัวเอง เมื่อบันทึกแล้วจะได้ไฟล์ส่งให้เจ้าของเพื่อเผยแพร่ขึ้นเว็บ</div>
-<h3 style="margin:22px 0 12px">โพสต์ทั้งหมด</h3>
-<div class="fl" id="flt"><button class="on" data-f="all">ทั้งหมด</button><button data-f="mine">ของฉัน</button></div>
-<div id="empty" hidden style="text-align:center">
-<svg class="ill" viewBox="0 0 320 130" role="img" aria-label="ภาพประกอบ ยังไม่มีโพสต์" style="max-width:240px">
-<ellipse cx="160" cy="118" rx="100" ry="9" fill="var(--sand)"/>
-<rect x="96" y="14" width="112" height="98" rx="10" fill="var(--card)" stroke="var(--line)" stroke-width="3"/>
-<rect x="112" y="34" width="80" height="8" rx="4" fill="var(--line)"/><rect x="112" y="54" width="64" height="8" rx="4" fill="var(--line)"/><rect x="112" y="74" width="72" height="8" rx="4" fill="var(--line)"/>
-<g transform="translate(236 40) rotate(35)"><rect width="14" height="70" rx="3" fill="var(--clay)"/><polygon points="0,70 14,70 7,86" fill="#e3b341"/></g>
-</svg>
-<p class="mute">ยังไม่มีโพสต์ กด “โพสต์ใหม่” ได้เลย</p></div>
-<div id="items"></div>
-<div id="oldbox" class="alert" hidden><b>โหลดโพสต์เดิมจากเว็บไม่ได้</b><br>ถ้าเคยโพสต์แล้ว ให้เลือกไฟล์ <b>posts.js</b> เดิมของเว็บ เพื่อไม่ให้โพสต์เก่าหาย (ถ้าเพิ่งเริ่มโพสต์ครั้งแรก ข้ามได้)
-<input id="oldf" type="file" accept=".js" style="margin-top:10px;width:100%"></div>
+<div id="lg" class="box">
+ <h1>🔑 เข้าสู่ระบบผู้ดูแล</h1>
+ <p class="h">ใส่โทเค็น GitHub ครั้งเดียว ระบบจะจำไว้ในเครื่องนี้ได้ 30 วัน โทเค็นถูกส่งไปที่ GitHub เท่านั้น ใครไม่มีโทเค็นก็โพสต์ไม่ได้</p>
+ <label for="tk">โทเค็น GitHub</label><input id="tk" type="password" autocomplete="off">
+ <label class="chk"><input id="rm" type="checkbox" checked> จำไว้ในเครื่องนี้ 30 วัน (อย่าติ๊กถ้าใช้เครื่องสาธารณะ)</label>
+ <details><summary>ที่เก็บเว็บ (ปกติไม่ต้องแก้)</summary>
+  <label for="o">เจ้าของ</label><input id="o"><label for="r">ชื่อ repo</label><input id="r"></details>
+ <details><summary>วิธีสร้างโทเค็น</summary><p class="h">GitHub → รูปโปรไฟล์ → Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token<br>เลือก Only select repositories → repo เว็บนี้ · Permissions → Contents = Read and write · ตั้งวันหมดอายุ 1 ปี แล้วคัดลอกมาวาง</p></details>
+ <div class="row"><button id="go">เข้าสู่ระบบ</button></div>
 </div>
 
-<!-- จัดการผู้ดูแล (เจ้าของเท่านั้น) -->
-<div id="team" hidden>
-<p><a href="#" id="tback">← กลับไปรายการโพสต์</a></p>
-<div class="step"><h2>👑 รับผู้ดูแลใหม่</h2>
-<div class="flow" data-s="📲|ผู้ดูแลส่งรหัสคำขอมา;🔎|เทียบรหัสตรวจสอบ;👑|กดยอมรับ;⬆️|อัปโหลด admins.js"></div>
-<p class="help">วางรหัสคำขอที่ผู้ดูแลส่งมา แล้วกด “ตรวจคำขอ”</p>
-<textarea id="rin" class="codebox" placeholder="วางรหัสคำขอ (ขึ้นต้นด้วย TJ-REQ:) ที่นี่" style="min-height:100px"></textarea>
-<button class="btn big" id="rchk">🔎 ตรวจคำขอ</button>
-<div id="rres" hidden></div></div>
+<div id="ap" class="box hide">
+ <div class="row" style="justify-content:space-between"><h1>จัดการเว็บตาจวนบ้านเรา</h1><div class="row"><a class="b alt" href="./" target="_blank">ดูเว็บ</a><button class="alt" id="lo">ออกจากระบบ</button></div></div>
 
-<div class="step"><h2>สิทธิ์ของแต่ละบทบาท</h2>
-<div class="role2"><div><b>👑 เจ้าของ</b>จัดการได้ทุกอย่าง ทุกโพสต์ อนุมัติ/ลบผู้ดูแล เปลี่ยนรหัสและรูป รับโพสต์จากผู้ดูแล</div>
-<div><b>✏️ ผู้ดูแล</b>โพสต์ได้ตลอด แก้ไข/ลบได้เฉพาะโพสต์ของตัวเอง ส่วนอื่นดูได้อย่างเดียว</div></div></div>
+ <div id="lv"><div class="row"><button id="nw">＋ เขียนโพสต์ใหม่</button></div><div id="ls"></div></div>
 
-<h3 style="margin:8px 0 12px">ผู้ดูแลทั้งหมด</h3>
-<div id="tlist"></div>
-<input type="file" id="avf" accept="image/*" hidden>
-<details class="step"><summary>ตั้งรหัสให้ผู้ดูแลเองโดยตรง (ทางเลือก)</summary>
-<p class="help">ถ้าไม่สะดวกให้ส่งรหัสคำขอ เจ้าของตั้งชื่อและรหัสผ่านให้เองได้เลย</p>
-<label for="tn"><b>ชื่อ</b></label><input id="tn" type="text" placeholder="เช่น สมชาย">
-<label for="tp"><b>ตั้งรหัสผ่านให้ (อย่างน้อย 6 ตัว)</b></label>
-<div class="pw"><input id="tp" type="password" data-new="1" autocomplete="new-password" autocapitalize="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div><p class="pwn" aria-live="polite"></p>
-<button class="btn big" id="tadd">＋ เพิ่มผู้ดูแล</button></details>
-<div id="abar" class="alert" hidden><b>มีการเปลี่ยนแปลง</b> กดปุ่มด้านล่าง แล้วเอาไฟล์ <b>admins.js</b> ไปอัปโหลดขึ้นเว็บทับของเดิม ผู้ดูแลจึงจะเข้าใช้งานได้
-<button class="btn big" id="adl" style="margin:12px 0 0">⬇ ดาวน์โหลด admins.js</button></div>
-<p class="help">หมายเหตุ: รหัสผ่านใช้แยกบทบาทในหน้านี้เท่านั้น คนที่ <b>อัปโหลดไฟล์ขึ้นเว็บได้จริง</b> คือคนที่มีสิทธิ์เข้าที่เก็บไฟล์ของเว็บ จึงควรให้สิทธิ์นั้นเฉพาะคนที่ไว้ใจ</p>
+ <div id="ev" class="hide">
+  <label for="ty">ประเภท</label><select id="ty"><option value="n">ข่าว / ประกาศ</option><option value="s">เรื่องเล่า</option><option value="p">สถานที่ (ปักหมุดบนแผนที่)</option></select>
+  <label for="ti">ชื่อเรื่อง</label><input id="ti">
+  <div class="row"><div style="flex:1"><label for="dt">วันที่</label><input id="dt"></div><div style="flex:1"><label for="by">ผู้เขียน</label><input id="by"></div></div>
+  <label for="bd">เนื้อหา</label><textarea id="bd"></textarea>
+  <p class="h">วางลิงก์ได้เลย กดเปิดได้ · ลิงก์ YouTube ไว้บรรทัดเดียว จะเล่นในหน้าเว็บ · ตั้งชื่อปุ่มได้แบบ [อ่านต่อ](https://...)</p>
+
+  <label>รูปภาพ</label>
+  <select id="sz"><option value="1600">ขนาดปกติ (แนะนำ ภาพคมและโหลดเร็ว)</option><option value="1000">ขนาดเล็ก (ประหยัดเน็ตที่สุด)</option><option value="0">ต้นฉบับ (ไฟล์ใหญ่)</option></select>
+  <p class="h">ระบบย่อรูปให้อัตโนมัติ และสร้างรูปเล็กสำหรับหน้าแรก แตะรูปในเว็บเพื่อดูภาพใหญ่</p>
+  <input id="fi" type="file" accept="image/*" multiple><div id="pl"></div>
+
+  <label for="lk">ลิงก์เพิ่มเติม (ถ้ามี)</label><input id="lk" inputmode="url">
+
+  <label for="pin">ปักหมุด (ถ้ามี)</label>
+  <div class="row" style="margin:0"><input id="pin" style="flex:1" placeholder="พิมพ์ชื่อสถานที่ หรือวางพิกัด / ลิงก์ Google Maps"><button class="alt" id="ps">🔍 ค้นหา</button><button class="alt" id="me">📍 ที่ที่ฉันอยู่</button></div>
+  <label class="chk"><input id="nb" type="checkbox" checked> ค้นหาแถวบ้านตาจวน (ไพรบึง ศรีสะเกษ) ก่อน</label>
+  <div id="pr"></div><iframe id="pf" class="hide" title="ตัวอย่างแผนที่"></iframe>
+
+  <div class="row"><button id="sv">เผยแพร่ขึ้นเว็บ</button><button class="alt" id="cn">ยกเลิก</button></div>
+ </div>
 </div>
+<div id="msg" class="hide"></div>
 
-<!-- รับโพสต์จากผู้ดูแล (เจ้าของ) -->
-<div id="inbox" hidden>
-<p><a href="#" id="iback">← กลับไปรายการโพสต์</a></p>
-<div class="flow" data-s="✏️|ผู้ดูแลเขียนโพสต์;📤|ส่งไฟล์มา;👑|เจ้าของตรวจและรับ;🌐|อัปโหลด posts.js"></div>
-<div id="ilist"></div>
-<div class="bar"><button class="btn alt big" id="iall" style="margin-bottom:8px">✓ ยอมรับทั้งหมดที่ตรวจผ่าน</button><button class="btn big" id="igo">⬇ สร้าง posts.js จากที่ยอมรับแล้ว</button></div>
-</div>
-
-<!-- ฟอร์มโพสต์ -->
-<div id="form" hidden>
-<p><a href="#" id="back">← กลับไปรายการโพสต์</a></p>
-<div class="step"><h2><i>1</i>จะโพสต์เรื่องอะไร</h2><p class="help">แตะเลือก 1 อย่าง</p>
-<div class="chips" id="types">
-<button data-t="s" class="on"><b>📖</b>เรื่องเล่า<br>ภูมิปัญญา</button>
-<button data-t="n"><b>📢</b>ข่าว<br>ประกาศ</button>
-<button data-t="p"><b>📍</b>สถานที่<br>ปักหมุด</button></div></div>
-
-<div class="step"><h2><i>2</i>เขียนเรื่อง</h2>
-<label for="date"><b>วันที่</b></label><input id="date" type="text">
-<label for="title"><b>หัวข้อ</b></label><input id="title" type="text" placeholder="เช่น เทะ ตะแวลย์ ของว่างชาวกวย">
-<label for="body"><b>เนื้อเรื่อง</b></label><textarea id="body" placeholder="พิมพ์ หรือวางข้อความจาก Facebook ที่นี่"></textarea></div>
-
-<div class="step"><h2><i>3</i>ใส่รูปประกอบ<span class="opt">ไม่ใส่ก็ได้</span></h2>
-<p class="help">เลือกได้หลายรูปพร้อมกัน (สูงสุด 12 รูป) รูปแรกจะเป็นรูปปกของโพสต์ ใส่คำบรรยายใต้รูปได้ และกดลูกศรเพื่อเรียงลำดับ</p>
-<button class="btn alt big" id="pick">📷 เลือกรูปจากเครื่อง</button>
-<input type="file" id="file" accept="image/*" multiple hidden>
-<div id="thumbs"></div></div>
-
-<div class="step"><h2><i>4</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
-<p class="help">แตะบนแผนที่เพื่อวางหมุด หรือกดที่หมุดค้างไว้แล้วลากไปยังจุดที่ต้องการ แผนที่จะเปิดที่ตำแหน่งที่คุณอยู่ตอนนี้ แต่ถ้าเดินออกจากจุดนั้นมาแล้ว ก็ย้ายหมุดกลับไปที่เดิมได้</p>
-<div class="mapwrap" id="pmapwrap"><div id="pmap" role="application" aria-label="แผนที่สำหรับปักหมุด"></div></div>
-<div class="seg" id="lay"><button type="button" class="on" data-l="o">🗺 แผนที่</button><button type="button" data-l="s">🛰 ภาพดาวเทียม</button></div>
-<button class="btn alt big" id="gps">📍 ปักหมุดที่ตำแหน่งที่ฉันอยู่ตอนนี้</button>
-<div class="pchips" id="pchips" hidden></div>
-<p class="st" id="gst" hidden></p>
-<div class="crow" id="crow" hidden><span>พิกัด</span><b id="ctxt"></b><a id="cmap" target="_blank" rel="noopener">ดูใน Google Maps</a><button type="button" id="pclr">🗑 ล้างหมุด</button></div>
-<label for="pname"><b>หรือพิมพ์ชื่อสถานที่แทน</b> <span class="mute">(ถ้าปักหมุดบนแผนที่แล้ว ระบบใช้พิกัดเป็นหลัก)</span></label>
-<input id="pname" type="text" placeholder="เช่น วัดบ้านตาจวน"></div>
-
-<div class="step"><h2><i>5</i>ลิงก์<span class="opt">ไม่ใส่ก็ได้</span></h2>
-<p class="help">เช่น ลิงก์โพสต์ Facebook หรือคลิป YouTube ที่เกี่ยวข้อง</p>
-<input id="link" type="url" inputmode="url" placeholder="วางลิงก์ที่นี่"></div>
-
-<div class="bar"><button class="btn big" id="save">✓ บันทึกโพสต์</button></div>
-</div>
-
-<!-- เสร็จ -->
-<div id="done" hidden>
-<div id="doneOwner" class="step" style="margin-top:20px"><h2 style="color:var(--green)">✓ ได้ไฟล์ <span id="dn">posts.js</span> แล้ว ขั้นสุดท้าย</h2>
-<div class="flow" data-s="⬇️|ได้ไฟล์แล้ว;⬆️|อัปโหลดทับไฟล์เดิม;🌐|เปิดหน้าเว็บดู"></div>
-<ol class="nums">
-<li><span>เครื่องดาวน์โหลดไฟล์ให้แล้ว (ถ้าไม่เห็น กดปุ่มด้านล่าง)</span></li>
-<li><span>เอาไฟล์ <b id="dn2">posts.js</b> ไปอัปโหลดขึ้นเว็บ <b>ทับไฟล์เดิม</b></span></li>
-<li><span>รอสักครู่ แล้วเปิดหน้าเว็บดู</span></li></ol>
-<button class="btn alt big" id="again">⬇ ดาวน์โหลดอีกครั้ง</button>
-<button class="btn big" id="more">← กลับไปรายการโพสต์</button></div>
-
-<div id="doneAdm" class="step" style="margin-top:20px" hidden><h2 style="color:var(--green)">✓ บันทึกโพสต์แล้ว ขั้นสุดท้าย</h2>
-<div class="flow" data-s="✅|บันทึกแล้ว;📤|ส่งไฟล์ให้เจ้าของ;👑|เจ้าของตรวจและรับ;🌐|ขึ้นเว็บ"></div>
-<p class="help">โพสต์ของคุณจะขึ้นเว็บเมื่อเจ้าของรับไฟล์นี้ ส่งไฟล์ให้เจ้าของทาง LINE / Facebook / อีเมล</p>
-<button class="btn big" id="subShare">📤 ส่งไฟล์โพสต์ให้เจ้าของ</button>
-<button class="btn alt big" id="subDl">⬇ ดาวน์โหลดไฟล์โพสต์</button>
-<details style="margin:0 0 12px"><summary style="cursor:pointer;font-weight:700">ฉันมีสิทธิ์อัปโหลดไฟล์ขึ้นเว็บเอง</summary>
-<p class="help" style="margin-top:8px">ดาวน์โหลด posts.js ที่รวมโพสต์ทั้งหมดไปอัปโหลดทับได้เลย (ระวังถ้ามีคนอื่นโพสต์พร้อมกัน โพสต์ของเขาอาจหาย แนะนำให้ส่งให้เจ้าของแทน)</p>
-<button class="btn alt big" id="subPosts">⬇ ดาวน์โหลด posts.js</button></details>
-<button class="btn alt big" id="more2">← กลับไปรายการโพสต์</button></div>
-</div></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
-<script src="content.js?v=6"></script>
 <script>
-const $=i=>document.getElementById(i);
-const VIEWS=["login","setup","request","reqdone","list","form","team","inbox","done"];
-let T="s",pics=[],gps="",list=[],loaded=false,ei=-1,admins=[],me=null,last=null,onlyMine=false,inbox=[],lastSub=null,avFor=null;
-const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
-const NAME={s:"เรื่องเล่า",n:"ข่าว",p:"สถานที่"};
-const HEAD={login:"เข้าสู่ระบบ",setup:"ตั้งค่าครั้งแรก",request:"ขอเป็นผู้ดูแล",reqdone:"ส่งคำขอ",team:"ผู้ดูแลเว็บ",inbox:"โพสต์จากผู้ดูแล"};
-const uid=p=>p+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
-const wait=ms=>new Promise(r=>setTimeout(r,ms));
-function mk(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
-function show(v){VIEWS.forEach(x=>$(x).hidden=x!==v);$("fh").textContent=v==="form"?(ei>=0?"แก้ไขโพสต์":"โพสต์ใหม่"):(HEAD[v]||"จัดการโพสต์");$("who").hidden=!me;scrollTo(0,0)}
-function avatar(a,px){const d=mk("div","av2");d.style.width=d.style.height=px+"px";d.style.fontSize=Math.round(px*.55)+"px";
- if(a&&a.pic){const i=new Image();i.src=a.pic;i.alt="";d.append(i)}else d.textContent=a&&a.role==="owner"?"👑":"👤";return d}
-const byId=id=>admins.find(a=>a.id===id);
+const $=i=>document.getElementById(i),K="tj_admin",TH=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."],TY={n:"ข่าว",s:"เรื่องเล่า",p:"สถานที่",x:"ซ่อน"};
+let S,vars={},posts=[],ed=-1,ph=[];
+const say=(t,e)=>{const m=$("msg");m.textContent=t;m.className=e?"err":"";},hush=()=>$("msg").className="hide";
+const today=()=>{const d=new Date();return d.getDate()+" "+TH[d.getMonth()]+" "+(d.getFullYear()+543)};
+function btn(t,c,f){const b=document.createElement("button");b.textContent=t;b.className=c;b.onclick=f;return b}
+async function api(p,o={}){const r=await fetch("https://api.github.com"+p,{method:o.method,body:o.body,cache:"no-store",headers:{Authorization:"Bearer "+S.t,Accept:o.raw?"application/vnd.github.raw+json":"application/vnd.github+json",...(o.body?{"Content-Type":"application/json"}:{})}});
+ if(!r.ok){let m="";try{m=(await r.json()).message}catch(e){}throw Error(r.status+" "+m)}return o.raw?r.text():r.json()}
 
-/* ---------- ภาพประกอบแบบขั้นตอน ---------- */
-document.querySelectorAll(".flow[data-s]").forEach(f=>{
- f.dataset.s.split(";").forEach((s,i)=>{const [e,t]=s.split("|");if(i)f.append(mk("span","ar","→"));
-  const d=mk("div","f"),c=mk("div","c",e);d.append(c,mk("span","",t));f.append(d)})});
+/* ล็อก/จำการเข้าสู่ระบบ 30 วัน */
+const h=location.hostname.match(/^(.+)\.github\.io$/),seg=location.pathname.split("/")[1]||"";
+$("o").value=h?h[1]:"";$("r").value=h?(seg&&!seg.includes(".")?seg:h[1]+".github.io"):"";
+async function enter(sv){S=sv;const r=await api("/repos/"+S.o+"/"+S.r);if(!r.permissions||!r.permissions.push)throw Error("โทเค็นนี้ไม่มีสิทธิ์แก้ไขเว็บ");S.b=S.b||r.default_branch;
+ $("lg").classList.add("hide");$("ap").classList.remove("hide");await load()}
+$("go").onclick=async()=>{try{say("กำลังตรวจสอบ…");const sv={t:$("tk").value.trim(),o:$("o").value.trim(),r:$("r").value.trim(),b:""};await enter(sv);
+ sv.b=S.b;sv.exp=Date.now()+30*864e5;($("rm").checked?localStorage:sessionStorage).setItem(K,JSON.stringify(sv));$("tk").value="";hush()}catch(e){say("เข้าสู่ระบบไม่ได้: "+e.message,1)}};
+$("lo").onclick=()=>{localStorage.removeItem(K);sessionStorage.removeItem(K);location.reload()};
+(function(){let s=null;try{s=JSON.parse(localStorage.getItem(K)||sessionStorage.getItem(K))}catch(e){}
+ if(s&&s.exp>Date.now())enter(s).catch(e=>{localStorage.removeItem(K);sessionStorage.removeItem(K);$("lg").classList.remove("hide");$("ap").classList.add("hide");say("ต้องเข้าสู่ระบบใหม่: "+e.message,1)})})();
 
-/* ---------- ช่องรหัสผ่าน: แสดง/ซ่อน + เตือนภาษา + Caps Lock ---------- */
-const TH_RE=/[\u0E00-\u0E7F]/;
-const EN_UN="`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./",TH_UN="_ๅ/-ภถุึคตจขชๆไำพะัีรนยบลฃฟหกดเ้่าสวงผปแอิืทมใฝ";
-const EN_SH='~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:"ZXCVBNM<>?',TH_SH='%+๑๒๓๔ู฿๕๖๗๘๙๐"ฎฑธํ๊ณฯญฐ,ฅฤฆฏโฌ็๋ษศซ.()ฉฮฺ์?ฒฬฦ';
-const KM={};[...TH_UN].forEach((c,i)=>KM[c]=EN_UN[i]);[...TH_SH].forEach((c,i)=>{if(!(c in KM))KM[c]=EN_SH[i]});
-const th2en=s=>[...s].map(c=>KM[c]!==undefined?KM[c]:c).join("");
-const swapCase=s=>[...s].map(c=>c===c.toLowerCase()?c.toUpperCase():c.toLowerCase()).join("");
-function initPw(){document.querySelectorAll(".pw").forEach(w=>{
- const i=w.querySelector("input"),b=w.querySelector(".eye"),n=w.nextElementSibling;
- b.onclick=()=>{const s=i.type==="password";i.type=s?"text":"password";b.textContent=s?"🙈 ซ่อน":"👁 แสดง";b.setAttribute("aria-pressed",s)};
- const upd=e=>{const v=i.value,caps=e&&e.getModifierState&&e.getModifierState("CapsLock"),isNew=!!i.dataset.new;let t="",c="";
-  if(caps){t="⚠ Caps Lock เปิดอยู่ (กำลังพิมพ์ตัวพิมพ์ใหญ่)";c="warn"}
-  else if(TH_RE.test(v)){t=isNew?"⚠ พิมพ์เป็นภาษาไทยอยู่ รหัสผ่านต้องเป็นภาษาอังกฤษ/ตัวเลข กดสลับเป็น EN ก่อน":"⚠ พิมพ์เป็นภาษาไทยอยู่ ถ้ารหัสของคุณเป็นภาษาอังกฤษ ให้สลับเป็น EN แล้วพิมพ์ใหม่";c="warn"}
-  else if(i.dataset.match){const o=$(i.dataset.match.slice(1)).value;if(v){if(v===o){t="✓ ตรงกับช่องบน";c="ok"}else{t="✗ ยังไม่ตรงกับช่องบน";c="warn"}}}
-  else if(v){if(isNew&&v.length<6){t="ยังสั้นไป ต้องมีอย่างน้อย 6 ตัว (ตอนนี้ "+v.length+")";c="warn"}else{t="✓ พิมพ์เป็นภาษาอังกฤษ/ตัวเลข"+(isNew?" ความยาวพอแล้ว":"");c="ok"}}
-  n.textContent=t;n.className="pwn "+c;
-  document.querySelectorAll('[data-match="#'+i.id+'"]').forEach(x=>x.dispatchEvent(new Event("input")))};
- ["input","keyup","keydown"].forEach(ev=>i.addEventListener(ev,upd))})}
-initPw();
-function pwProblem(p){if(p.length<6)return"รหัสผ่านต้องมีอย่างน้อย 6 ตัว";if(TH_RE.test(p))return"รหัสผ่านต้องเป็นภาษาอังกฤษ ตัวเลข หรือสัญลักษณ์ (ไม่ใช้ตัวอักษรไทย) เพราะสลับภาษาแล้วพิมพ์ผิดง่าย";if(/\s/.test(p))return"รหัสผ่านห้ามมีช่องว่าง";return""}
+/* อ่าน/เขียน posts.js */
+async function load(){let t="";try{t=await api("/repos/"+S.o+"/"+S.r+"/contents/posts.js?ref="+S.b,{raw:1})}catch(e){if(!/^404/.test(e.message))throw e}
+ const nm=[...new Set([...t.matchAll(/(?:var|let|const)\s+([A-Za-z_$][\w$]*)\s*=/g)].map(m=>m[1]))];
+ vars=nm.length?new Function(t+"\nreturn {"+nm.map(n=>n+':typeof '+n+'!=="undefined"?'+n+':undefined').join(",")+"}")():{};
+ posts=Array.isArray(vars.POSTS)?vars.POSTS:[];delete vars.POSTS;draw()}
+const ser=np=>{const o={POSTS:np,HIDE_TITLES:[],...vars};return"/* posts.js — จัดการผ่าน admin.html */\n"+Object.keys(o).filter(k=>o[k]!==undefined).map(k=>"var "+k+"="+JSON.stringify(o[k],null,1)+";").join("\n")+"\n"};
+function draw(){const L=$("ls");L.replaceChildren();posts.forEach((p,i)=>{const d=document.createElement("div"),b=document.createElement("b"),s=document.createElement("small");d.className="card";
+ b.textContent=(TY[p.t]||p.t)+" · "+p.title;s.textContent=[p.date,p.by].filter(Boolean).join(" · ");b.append(s);d.append(b,btn("แก้ไข","alt",()=>edit(i)),btn("ลบ","red",()=>del(i)));L.append(d)});if(!posts.length)L.textContent="ยังไม่มีโพสต์"}
 
-/* ---------- แฮชรหัสผ่าน (เก็บเป็นค่าแฮช ไม่เก็บรหัสจริง) ---------- */
-const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
-const unhex=s=>new Uint8Array(s.match(/../g).map(x=>parseInt(x,16)));
-const okCrypto=()=>{if(window.crypto&&crypto.subtle)return true;alert("ฟังก์ชันรหัสผ่านใช้ได้เมื่อเปิดผ่านเว็บจริง (https) เท่านั้น");return false};
-async function hp(pw,salt){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveBits"]);return hex(await crypto.subtle.deriveBits({name:"PBKDF2",salt:unhex(salt),iterations:150000,hash:"SHA-256"},k,256))}
-async function mkAdmin(name,pw,role){const salt=hex(crypto.getRandomValues(new Uint8Array(16)));return{id:uid("a"),name,role,salt,hash:await hp(pw,salt),since:new Date().toISOString().slice(0,10)}}
-async function vcode(o){const d=new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(o.id+"|"+o.salt+"|"+o.hash)));const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let s="";for(let i=0;i<6;i++)s+=A[d[i]&31];return s.slice(0,3)+"-"+s.slice(3)}
-const b64=s=>btoa(unescape(encodeURIComponent(s)));
-const unb64=s=>decodeURIComponent(escape(atob(s)));
+/* เผยแพร่: รวมโพสต์+รูปเป็น commit เดียว */
+async function pub(np,files,msg){try{say("กำลังเผยแพร่… อย่าปิดหน้านี้");const R="/repos/"+S.o+"/"+S.r,c=[...files,{path:"posts.js",b64:btoa(unescape(encodeURIComponent(ser(np))))}],tree=[];
+ const base=(await api(R+"/git/ref/heads/"+S.b)).object.sha,cm=await api(R+"/git/commits/"+base);
+ for(const f of c){const bl=await api(R+"/git/blobs",{method:"POST",body:JSON.stringify({content:f.b64,encoding:"base64"})});tree.push({path:f.path,mode:"100644",type:"blob",sha:bl.sha})}
+ const tr=await api(R+"/git/trees",{method:"POST",body:JSON.stringify({base_tree:cm.tree.sha,tree})}),nc=await api(R+"/git/commits",{method:"POST",body:JSON.stringify({message:msg,tree:tr.sha,parents:[base]})});
+ await api(R+"/git/refs/heads/"+S.b,{method:"PATCH",body:JSON.stringify({sha:nc.sha})});posts=np;draw();back();say("เผยแพร่แล้ว ✓ รอ 1–2 นาที แล้วเปิดเว็บเพื่อดูผล")}catch(e){say("เผยแพร่ไม่สำเร็จ: "+e.message,1)}}
+function del(i){if(confirm("ลบโพสต์ “"+posts[i].title+"” ?"))pub(posts.filter((_,k)=>k!==i),[],"ลบโพสต์: "+posts[i].title)}
 
-/* ---------- ดาวน์โหลด/แชร์ไฟล์ ---------- */
-function dlFile(n,c,type){last=[n,c,type];const b=new Blob([c],{type:type||"text/javascript"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;document.body.append(a);a.click();a.remove();$("dn").textContent=n;$("dn2").textContent=n}
-const dlPosts=()=>dlFile("posts.js","window.POSTS="+JSON.stringify(list)+";");
-const dlAdmins=()=>dlFile("admins.js","window.ADMINS="+JSON.stringify(admins)+";");
-$("again").onclick=()=>last&&dlFile(last[0],last[1],last[2]);
-$("adl").onclick=()=>{dlAdmins();$("adl").textContent="✓ ดาวน์โหลดแล้ว: เอาไปอัปโหลดทับ admins.js (กดอีกครั้งถ้าไม่เห็นไฟล์)"};
+/* ฟอร์มโพสต์ */
+const back=()=>{$("ev").classList.add("hide");$("lv").classList.remove("hide");scrollTo(0,0)};
+function edit(i){ed=i;const p=i<0?{t:"n",date:today(),by:localStorage.getItem("tj_by")||""}:posts[i];
+ $("ty").value=p.t==="x"?"n":p.t;$("ti").value=p.title||"";$("dt").value=p.date||"";$("by").value=p.by||"";$("bd").value=p.body||"";$("lk").value=(p.link&&p.link.url)||"";$("pin").value=p.pin||"";$("pr").replaceChildren();
+ ph=(p.photos||[]).map(x=>({...x}));drawPh();sp($("pin").value.trim());$("lv").classList.add("hide");$("ev").classList.remove("hide");hush();scrollTo(0,0)}
+$("nw").onclick=()=>edit(-1);$("cn").onclick=back;
+const b64=b=>new Promise(r=>{const f=new FileReader();f.onload=()=>r(f.result.split(",")[1]);f.readAsDataURL(b)});
+async function shrink(f,mx,q){const b=await createImageBitmap(f,{imageOrientation:"from-image"}),r=Math.min(1,mx/Math.max(b.width,b.height)),c=document.createElement("canvas");c.width=Math.round(b.width*r);c.height=Math.round(b.height*r);c.getContext("2d").drawImage(b,0,0,c.width,c.height);return new Promise(ok=>c.toBlob(ok,"image/jpeg",q))}
+$("fi").onchange=async e=>{say("กำลังเตรียมรูป…");for(const f of e.target.files){const mx=+$("sz").value;try{const th=await shrink(f,480,.75),bl=mx?await shrink(f,mx,.82):f;ph.push({blob:bl,th,cap:"",ext:mx?"jpg":(f.name.split(".").pop()||"jpg").toLowerCase()})}catch(x){say("อ่านรูป "+f.name+" ไม่ได้",1);return}}e.target.value="";hush();drawPh()};
+function drawPh(){const L=$("pl");L.replaceChildren();ph.forEach((x,i)=>{const d=document.createElement("div"),im=new Image(),c=document.createElement("input");d.className="ph";im.alt="";im.src=x.th&&x.blob?URL.createObjectURL(x.th):(x.th||x.src);
+ c.placeholder="คำบรรยายภาพ (ถ้ามี)";c.value=x.cap||"";c.oninput=()=>x.cap=c.value;d.append(im,c);if(i)d.append(btn("ใช้เป็นภาพปก","alt",()=>{ph.unshift(ph.splice(i,1)[0]);drawPh()}));d.append(btn("ลบรูป","red",()=>{ph.splice(i,1);drawPh()}));L.append(d)})}
+$("sv").onclick=async()=>{const title=$("ti").value.trim();if(!title)return say("กรุณาใส่ชื่อเรื่อง",1);
+ say("กำลังเตรียมไฟล์…");const files=[],pre="photos/"+new Date().toISOString().slice(0,7)+"/",out=[];let n=0;
+ for(const x of ph){if(x.blob){const id=Date.now().toString(36)+(n++),s=pre+id+"."+x.ext,th=pre+id+"-s.jpg";files.push({path:s,b64:await b64(x.blob)},{path:th,b64:await b64(x.th)});out.push({src:s,cap:x.cap,th})}else out.push({src:x.src,cap:x.cap,...(x.th?{th:x.th}:{})})}
+ const p={...(ed>=0?posts[ed]:{}),t:$("ty").value,title,date:$("dt").value.trim(),by:$("by").value.trim(),body:$("bd").value.trim()},u=$("lk").value.trim(),pn=$("pin").value.trim();
+ if(out.length)p.photos=out;else delete p.photos;if(u)p.link={url:u};else delete p.link;if(pn)p.pin=pn;else delete p.pin;
+ localStorage.setItem("tj_by",p.by);const np=posts.slice();if(ed>=0)np[ed]=p;else np.unshift(p);pub(np,files,"โพสต์: "+title)};
 
-/* ---------- โหลดข้อมูล ---------- */
-const parseP=t=>{list=JSON.parse(t.match(/POSTS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/)[1]);loaded=true;$("oldbox").hidden=true};
-const parseA=t=>{admins=JSON.parse(t.match(/ADMINS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/)[1])};
-const getT=u=>fetch(u+"?"+Date.now()).then(r=>r.ok?r.text():Promise.reject());
-function imp(rows,t){rows.forEach(n=>{if(list.some(p=>p.orig===n[1]||p.title===n[1]))return;
- const pl=n[6]&&PLACES.find(x=>x[0]===n[6]);
- list.push({t,date:n[0],title:n[1],body:n[3]||n[2],photos:(n[4]||[]).map(x=>({src:x[0],cap:x[1]||""})),link:{url:(n[5]&&n[5][0]&&n[5][0][1])||""},pin:pl?pl[2]:"",orig:n[1]})})}
-Promise.all([getT("posts.js").then(parseP).catch(()=>{$("oldbox").hidden=false}),getT("admins.js").then(parseA).catch(()=>{})]).then(()=>{imp(STORIES,"s");imp(NEWS,"n");route()});
-$("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseP(t);imp(STORIES,"s");imp(NEWS,"n");renderList();alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
-$("adf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseA(t);route()}catch(x){alert("ไฟล์นี้ไม่ใช่ admins.js ของเว็บ")}})};
-
-/* ---------- เข้าสู่ระบบ / จำรหัส ---------- */
-function setSess(a,rem){try{sessionStorage.setItem("tj_me",a.id)}catch(e){}
- try{localStorage.setItem("tj_last",a.id);if(rem)localStorage.setItem("tj_rem",JSON.stringify({id:a.id,h:a.hash,exp:Date.now()+30*864e5}));else localStorage.removeItem("tj_rem")}catch(e){}}
-function clrSess(){try{sessionStorage.removeItem("tj_me");localStorage.removeItem("tj_rem")}catch(e){}}
-function stored(){let id="",a;try{id=sessionStorage.getItem("tj_me")}catch(e){}a=admins.find(x=>x.id===id);if(a)return a;
- try{const r=JSON.parse(localStorage.getItem("tj_rem")||"null");if(r&&r.exp>Date.now()){a=admins.find(x=>x.id===r.id&&x.hash===r.h);if(a){try{sessionStorage.setItem("tj_me",a.id)}catch(e){}return a}}}catch(e){}return null}
-function route(){if(!admins.length){show("setup");return}
- $("lname").replaceChildren(...admins.map(a=>{const o=mk("option","",a.name);o.value=a.id;return o}));
- try{const l=localStorage.getItem("tj_last");if(l&&admins.some(a=>a.id===l))$("lname").value=l}catch(e){}
- syncUser();me=stored();me?enter():show("login")}
-function syncUser(){const a=byId($("lname").value);$("luser").value=a?a.name:""}
-$("lname").onchange=syncUser;
-function enter(){const w=$("wn");w.replaceChildren(avatar(me,28),document.createTextNode(me.name+(me.role==="owner"?" (เจ้าของ)":"")));
- $("teamb").hidden=me.role!=="owner";$("impb").hidden=me.role!=="owner";$("roleinfo").hidden=me.role==="owner";renderList();show("list")}
-function lerr(t,k){const e=$("lerr");e.hidden=!t;e.textContent=t;e.style.borderLeftColor=k==="ok"?"var(--green)":"var(--clay)"}
-async function diagnose(a,pw){
- if(TH_RE.test(pw)){if(await hp(th2en(pw),a.salt)===a.hash)return"th";return"hasth"}
- if(await hp(swapCase(pw),a.salt)===a.hash)return"caps";
- if(pw!==pw.trim()&&await hp(pw.trim(),a.salt)===a.hash)return"space";
- return"bad"}
-let fails=0;
-$("lf").onsubmit=async e=>{e.preventDefault();if(!okCrypto())return;const a=byId($("lname").value);if(!a)return;const pw=$("lpw").value;
- if(!pw){lerr("กรอกรหัสผ่านก่อนนะครับ");return}
- $("lgo").disabled=true;$("lgo").textContent="กำลังตรวจสอบ…";lerr("");
- const h=await hp(pw,a.salt);
- if(h===a.hash){fails=0;me=a;setSess(a,$("lrem").checked);$("lpw").value="";$("lpw").type="password";document.querySelector("#lf .eye").textContent="👁 แสดง";document.querySelector("#lf .pwn").textContent="";$("lgo").disabled=false;$("lgo").textContent="เข้าสู่ระบบ";enter();return}
- fails++;await wait(Math.min(600*fails,4000));
- const d=await diagnose(a,pw);
- const M={th:["✗ รหัสถูกต้อง แต่คุณพิมพ์ตอนคีย์บอร์ดเป็นภาษาไทย สลับเป็น EN (Alt+Shift หรือ ⌘+Space หรือปุ่มโลกบนมือถือ) แล้วพิมพ์ใหม่","ok"],
-  caps:["✗ รหัสถูกต้อง แต่ Caps Lock เปิดอยู่ กดปิดแล้วพิมพ์ใหม่","ok"],
-  space:["✗ รหัสถูกต้อง แต่มีช่องว่างเกินหน้าหรือหลังรหัส (มือถือมักเติมให้เอง) ลบช่องว่างออก","ok"],
-  hasth:["✗ รหัสผ่านไม่ถูกต้อง และในช่องมีตัวอักษรไทย ลองสลับคีย์บอร์ดเป็น EN แล้วพิมพ์ใหม่","bad"],
-  bad:["✗ รหัสผ่านไม่ถูกต้อง กด “แสดง” เพื่อดูว่าพิมพ์ตรงไหมและเลือกชื่อถูกคนหรือยัง"+(fails>=3?" ถ้าลืมรหัส ให้เจ้าของเว็บเปลี่ยนรหัสให้ที่เมนูจัดการผู้ดูแล":""),"bad"]}[d];
- lerr(M[0],M[1]);$("lgo").disabled=false;$("lgo").textContent="เข้าสู่ระบบ"};
-$("out").onclick=()=>{me=null;clrSess();$("lerr").hidden=true;route()};
-
-/* ---------- ตั้งค่าครั้งแรก (เจ้าของ) ---------- */
-$("sgo").onclick=async()=>{const n=$("sn").value.trim(),p=$("sp").value;
- if(!n){alert("ใส่ชื่อก่อนนะครับ");return}const pr=pwProblem(p);if(pr){alert(pr);return}if(p!==$("sp2").value){alert("รหัสผ่านสองครั้งไม่ตรงกัน");return}
- if(!okCrypto())return;admins=[await mkAdmin(n,p,"owner")];me=admins[0];setSess(me,false);
- $("sp").value=$("sp2").value="";dlAdmins();enter();$("doneOwner").hidden=false;$("doneAdm").hidden=true;show("done")};
-
-/* ---------- ขอเป็นผู้ดูแล (ผู้สมัคร) ---------- */
-$("reqlink").onclick=()=>show("request");
-$("rback").onclick=e=>{e.preventDefault();show("login")};
-$("rdone").onclick=()=>show("login");
-$("rgo").onclick=async()=>{const n=$("rn").value.trim(),p=$("rp").value;
- if(!n){alert("ใส่ชื่อก่อนนะครับ");return}if(admins.some(a=>a.name.toLowerCase()===n.toLowerCase())){alert("มีชื่อนี้อยู่ในระบบแล้ว ลองใช้ชื่ออื่น");return}
- const pr=pwProblem(p);if(pr){alert(pr);return}if(p!==$("rp2").value){alert("รหัสผ่านสองครั้งไม่ตรงกัน");return}
- if(!okCrypto())return;$("rgo").disabled=true;$("rgo").textContent="กำลังสร้างรหัส…";
- const a=await mkAdmin(n,p,"admin"),o={v:1,id:a.id,name:a.name,salt:a.salt,hash:a.hash,ts:Date.now()};
- $("rcode").value="TJ-REQ:"+b64(JSON.stringify(o));$("vc").textContent=await vcode(o);
- $("rp").value=$("rp2").value="";$("rgo").disabled=false;$("rgo").textContent="สร้างรหัสคำขอ";show("reqdone")};
-$("rcopy").onclick=async()=>{const t=$("rcode").value;try{await navigator.clipboard.writeText(t)}catch(e){$("rcode").select();document.execCommand("copy")}$("rcopy").textContent="✓ คัดลอกแล้ว นำไปวางส่งให้เจ้าของได้เลย"};
-$("rshare").onclick=()=>{const t="คำขอเป็นผู้ดูแลตาจวนบ้านเรา\nรหัสตรวจสอบ: "+$("vc").textContent+"\n\n"+$("rcode").value;
- if(navigator.share)navigator.share({title:"คำขอเป็นผู้ดูแล",text:t}).catch(()=>{});else{$("rcopy").click()}};
-
-/* ---------- จัดการผู้ดูแล (เจ้าของ) ---------- */
-function renderTeam(){const box=$("tlist");box.replaceChildren();
- admins.forEach((a,i)=>{const r=mk("div","it2"),im=mk("div","im round"),tx=mk("div","tx"),b=mk("b","",a.name),bd=mk("span","badge"+(a.role==="owner"?" owner":""),a.role==="owner"?"เจ้าของ":"ผู้ดูแล");
-  if(a.pic){const g=new Image();g.src=a.pic;g.alt="";im.append(g)}else im.textContent=a.role==="owner"?"👑":"👤";
-  b.append(bd);const n=list.filter(p=>p.byId===a.id&&p.t!=="x").length;tx.append(b,mk("span","","โพสต์ "+n+" เรื่อง"+(a.since?" · เข้าร่วม "+a.since:"")));
-  const ac=mk("div","ac"),ph=mk("button","","📷 รูปโปรไฟล์"),pw=mk("button","","🔑 เปลี่ยนรหัส");
-  ph.onclick=()=>{avFor=a;$("avf").click()};
-  pw.onclick=async()=>{const p=prompt("รหัสผ่านใหม่ของ "+a.name+" (อย่างน้อย 6 ตัว ภาษาอังกฤษ/ตัวเลข)");if(!p)return;const pr=pwProblem(p);if(pr){alert(pr);return}if(!okCrypto())return;a.salt=hex(crypto.getRandomValues(new Uint8Array(16)));a.hash=await hp(p,a.salt);$("abar").hidden=false;alert("เปลี่ยนรหัสแล้ว อย่าลืมดาวน์โหลด admins.js ไปอัปโหลด")};
-  ac.append(ph,pw);
-  if(a.id!==me.id){const d=mk("button","del","🗑 ลบ");d.onclick=()=>{if(confirm("ลบผู้ดูแล “"+a.name+"” ใช่ไหม?\n(โพสต์ที่เขาเคยทำจะยังอยู่ เจ้าของจัดการได้)")){admins.splice(i,1);$("abar").hidden=false;renderTeam()}};ac.append(d)}
-  r.append(im,tx,ac);box.append(r)})}
-$("avf").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f||!avFor)return;const s=await shrink(f,160,true);if(!s){alert("เปิดรูปนี้ไม่ได้");return}avFor.pic=s;$("abar").hidden=false;if(avFor.id===me.id)enter(),show("team");renderTeam()};
-$("teamb").onclick=()=>{renderTeam();$("rres").hidden=true;show("team")};
-$("tback").onclick=e=>{e.preventDefault();renderList();show("list")};
-$("tadd").onclick=async()=>{const n=$("tn").value.trim(),p=$("tp").value;
- if(!n){alert("ใส่ชื่อก่อนนะครับ");return}const pr=pwProblem(p);if(pr){alert(pr);return}
- if(admins.some(a=>a.name.toLowerCase()===n.toLowerCase())){alert("มีชื่อนี้อยู่แล้ว");return}if(!okCrypto())return;
- admins.push(await mkAdmin(n,p,"admin"));$("tn").value=$("tp").value="";$("abar").hidden=false;renderTeam()};
-
-/* ตรวจและยอมรับคำขอ */
-$("rchk").onclick=async()=>{const box=$("rres");box.replaceChildren();box.hidden=false;
- const bad=t=>{box.append(mk("p","st bad",t))};
- let o;try{o=JSON.parse(unb64($("rin").value.trim().replace(/^TJ-REQ:/i,"").replace(/\s+/g,"")))}catch(e){bad("อ่านรหัสคำขอไม่ได้ ลองคัดลอกมาใหม่ให้ครบทั้งข้อความ");return}
- if(!o||o.v!==1||typeof o.name!=="string"||!o.name.trim()||o.name.length>40||!/^a[a-z0-9]{6,30}$/.test(o.id||"")||!/^[0-9a-f]{32}$/.test(o.salt||"")||!/^[0-9a-f]{64}$/.test(o.hash||"")){bad("รหัสคำขอไม่ถูกต้อง");return}
- if(admins.some(a=>a.id===o.id)){bad("คำขอนี้เป็นผู้ดูแลอยู่ในระบบแล้ว");return}
- if(admins.some(a=>a.name.toLowerCase()===o.name.trim().toLowerCase())){bad("มีผู้ดูแลชื่อ “"+o.name+"” อยู่แล้ว ให้ผู้ขอสร้างคำขอใหม่ด้วยชื่ออื่น");return}
- if(!okCrypto())return;const vc=await vcode(o),c=mk("div","reqc");
- c.append(mk("b","",o.name),mk("p","help","ขอเป็นผู้ดูแล · สร้างเมื่อ "+new Date(o.ts||Date.now()).toLocaleString("th-TH")),mk("p","help","รหัสตรวจสอบของคำขอนี้ (ให้ผู้ขอบอกรหัสของเขา ต้องตรงกัน)"),mk("div","vcode",vc));
- const ac=mk("div","ac"),y=mk("button","yes","✓ ยอมรับเป็นผู้ดูแล"),n=mk("button","del","✕ ไม่ยอมรับ");
- y.onclick=()=>{admins.push({id:o.id,name:o.name.trim(),role:"admin",salt:o.salt,hash:o.hash,since:new Date().toISOString().slice(0,10)});$("rin").value="";box.replaceChildren(mk("p","st ok","✓ ยอมรับ “"+o.name.trim()+"” แล้ว กดดาวน์โหลด admins.js ด้านล่างแล้วอัปโหลดขึ้นเว็บ ผู้ดูแลจึงจะเข้าใช้ได้"));$("abar").hidden=false;renderTeam()};
- n.onclick=()=>{box.hidden=true;$("rin").value=""};
- ac.append(y,n);c.append(ac);box.append(c)};
-
-/* ---------- รายการโพสต์ ---------- */
-const can=p=>me&&(me.role==="owner"||p.byId===me.id);
-$("flt").onclick=e=>{const b=e.target.closest("button");if(!b)return;onlyMine=b.dataset.f==="mine";[...$("flt").children].forEach(x=>x.classList.toggle("on",x===b));renderList()};
-function renderList(){const box=$("items");box.replaceChildren();
- const vis=list.map((p,i)=>[p,i]).filter(x=>x[0].t!=="x"&&!(typeof HIDE_TITLES!=="undefined"&&HIDE_TITLES.includes(x[0].title))&&(!onlyMine||(me&&x[0].byId===me.id)));$("empty").hidden=vis.length>0;
- vis.forEach(([p,i])=>{const r=mk("div","it2"),im=mk("div","im",p.t==="n"?"📰":p.t==="p"?"📍":"📖");
-  if(p.photos&&p.photos[0]){const g=new Image();g.src=p.photos[0].src;g.onerror=()=>g.remove();im.append(g)}
-  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",NAME[p.t]+(p.date?" · "+p.date:"")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")+(p.by?" · โดย "+p.by:"")));r.append(im,tx);
-  if(can(p)){const ac=mk("div","ac"),ed=mk("button","","✏ แก้ไข"),de=mk("button","del","🗑 ลบ");ed.onclick=()=>edit(i);de.onclick=()=>del(i);ac.append(ed,de);r.append(ac)}
-  else r.append(mk("p","mute","โพสต์ของผู้ดูแลท่านอื่น (แก้ไขได้เฉพาะเจ้าของ)"));
-  box.append(r)})}
-
-/* ---------- ฟอร์ม + รูปประกอบ ---------- */
-function setType(t){T=t;[...$("types").children].forEach(x=>x.classList.toggle("on",x.dataset.t===t))}
-$("types").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset.t)};
-function shrink(f,max,sq){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const c=document.createElement("canvas"),x=c.getContext("2d");
- if(sq){const s=Math.min(i.width,i.height);c.width=c.height=max||160;x.drawImage(i,(i.width-s)/2,(i.height-s)/2,s,s,0,0,c.width,c.height)}
- else{const s=Math.min(1,(max||1000)/Math.max(i.width,i.height));c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);x.drawImage(i,0,0,c.width,c.height)}
- URL.revokeObjectURL(u);r(c.toDataURL("image/jpeg",.72))};i.onerror=()=>r(null);i.src=u})}
-function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=mk("div","th"),im=new Image();im.src=p.src;
- const c=mk("input");c.type="text";c.placeholder=k===0?"คำบรรยายรูปปก (ไม่ใส่ก็ได้)":"คำบรรยายรูป (ไม่ใส่ก็ได้)";c.value=p.cap;c.oninput=()=>p.cap=c.value;
- const mid=mk("div");mid.append(c);const row=mk("div");row.style.cssText="display:flex;gap:8px";
- const up=mk("button","","↑"),dn=mk("button","","↓"),x=mk("button","","✕");up.setAttribute("aria-label","เลื่อนขึ้น");dn.setAttribute("aria-label","เลื่อนลง");x.setAttribute("aria-label","เอารูปออก");
- up.disabled=k===0;dn.disabled=k===pics.length-1;
- up.onclick=()=>{[pics[k-1],pics[k]]=[pics[k],pics[k-1]];draw()};dn.onclick=()=>{[pics[k+1],pics[k]]=[pics[k],pics[k+1]];draw()};x.onclick=()=>{pics.splice(k,1);draw()};
- row.append(up,dn);if(k===0)row.append(mk("span","badge","รูปปก"));mid.append(row);d.style.gridTemplateColumns="84px 1fr 44px";d.append(im,mid,x);return d}));
- $("pick").textContent=pics.length?"📷 เพิ่มรูปอีก (มี "+pics.length+" รูป)":"📷 เลือกรูปจากเครื่อง"}
-$("pick").onclick=()=>$("file").click();
-$("file").onchange=async e=>{$("pick").textContent="กำลังเตรียมรูป…";for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
-function msg(t,c){const s=$("gst");s.hidden=!t;s.className="st "+c;s.textContent=t}
-/* ---------- แผนที่ปักหมุด (Leaflet + OpenStreetMap) ---------- */
-let map=null,pm=null,dot=null,acc=null,baseO=null,baseS=null;
-const VILLAGE=[14.668,104.3437];
-const PIN='<svg viewBox="0 0 40 52" width="40" height="52"><path d="M20 2C10 2 2 10 2 20c0 14 18 30 18 30s18-16 18-30C38 10 30 2 20 2z" fill="#b5532f" stroke="#fff" stroke-width="3"/><circle cx="20" cy="20" r="7" fill="#fff"/></svg>';
-function showCoord(){const c=$("crow");c.hidden=!gps;if(gps){$("ctxt").textContent=gps.replace(",",", ");$("cmap").href="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(gps)}}
-function setPin(lat,lng,o){o=o||{};gps=(+lat).toFixed(6)+","+(+lng).toFixed(6);
- if(!map)return showCoord();
- if(!pm){pm=L.marker([lat,lng],{draggable:true,autoPan:true,icon:L.divIcon({className:"pinI",html:PIN,iconSize:[40,52],iconAnchor:[20,50]})}).addTo(map);
-  pm.on("dragend",()=>{const p=pm.getLatLng();setPin(p.lat,p.lng,{keep:1})})}
- else pm.setLatLng([lat,lng]);
- if(!o.keep)map.setView([lat,lng],Math.max(map.getZoom(),17));
- showCoord();if(!o.quiet)msg("✓ ปักหมุดแล้ว ลากหมุดหรือแตะแผนที่จุดใหม่เพื่อย้ายได้","ok")}
-function clearPin(){gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();msg("","")}
-function youDot(lat,lng,m){if(!map)return;if(dot){dot.setLatLng([lat,lng]);acc.setLatLng([lat,lng]).setRadius(m||20)}
- else{acc=L.circle([lat,lng],{radius:m||20,color:"#2a7de1",weight:1,fillOpacity:.12,interactive:false}).addTo(map);dot=L.circleMarker([lat,lng],{radius:8,color:"#fff",weight:3,fillColor:"#2a7de1",fillOpacity:1,interactive:false}).addTo(map)}}
-function locErr(e){const m={1:"ไม่ได้อนุญาตให้ใช้ตำแหน่ง เปิดสิทธิ์ตำแหน่งของเบราว์เซอร์ หรือแตะปักหมุดเองบนแผนที่ได้เลย",2:"หาตำแหน่งไม่เจอ ลองเปิด GPS ในมือถือ หรือแตะปักหมุดเองบนแผนที่",3:"หาตำแหน่งนานเกินไป ลองใหม่อีกครั้ง หรือแตะปักหมุดเองบนแผนที่"};return m[e&&e.code]||"หาตำแหน่งไม่ได้ แตะปักหมุดเองบนแผนที่ได้เลย"}
-function buildMap(){
- baseO=L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"});
- baseS=L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",{maxZoom:19,attribution:"Imagery © Esri"});
- map=L.map("pmap",{center:VILLAGE,zoom:16,layers:[baseO],tap:true});
- map.on("click",e=>setPin(e.latlng.lat,e.latlng.lng,{keep:1}));
- $("lay").onclick=e=>{const b=e.target.closest("button");if(!b)return;const sat=b.dataset.l==="s";[...$("lay").children].forEach(x=>x.classList.toggle("on",x===b));
-  if(sat){map.removeLayer(baseO);baseS.addTo(map)}else{map.removeLayer(baseS);baseO.addTo(map)}};
- const ch=$("pchips");PLACES.forEach(p=>{const m=/^(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)$/.exec(p[2]);if(!m)return;
-  const b=mk("button","","📍 "+p[0]);b.type="button";b.onclick=()=>setPin(+m[1],+m[2]);ch.append(b)});
- if(ch.children.length){ch.hidden=false;ch.prepend(mk("span","mute","ปักที่จุดสำคัญ:"))}}
-function openMap(){
- if(typeof L==="undefined"){$("pmapwrap").hidden=true;$("lay").hidden=true;msg("โหลดแผนที่ไม่ได้ (ต้องต่ออินเทอร์เน็ต) ใช้ปุ่มด้านบนหรือพิมพ์ชื่อสถานที่แทนได้","bad");return}
- $("pmapwrap").hidden=false;$("lay").hidden=false;if(!map)buildMap();
- setTimeout(()=>{map.invalidateSize();
-  if(gps){const[a,b]=gps.split(",").map(Number);setPin(a,b,{quiet:1});map.setView([a,b],18);msg("✓ มีหมุดเดิมอยู่แล้ว ลากหมุดเพื่อย้าย หรือกด “ล้างหมุด”","ok")}
-  else{map.setView(VILLAGE,16);if(ei<0||!$("pname").value){msg("📡 กำลังหาตำแหน่งปัจจุบันของคุณ…","");
-   if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{if(gps)return;youDot(p.coords.latitude,p.coords.longitude,p.coords.accuracy);map.setView([p.coords.latitude,p.coords.longitude],17);msg("✓ แผนที่เลื่อนมาที่ตำแหน่งปัจจุบันแล้ว (จุดสีน้ำเงิน) กดปุ่มด้านล่างเพื่อปักหมุดตรงนี้ หรือแตะแผนที่เพื่อปักจุดอื่น","ok")},e=>{if(!gps)msg(locErr(e),"")},{timeout:9000,maximumAge:60000});else msg("เครื่องนี้หาตำแหน่งไม่ได้ แตะปักหมุดบนแผนที่ได้เลย","")}
-   else msg("","")}},60)}
-$("gps").onclick=()=>{msg("กำลังหาตำแหน่ง… ถ้ามีข้อความถาม ให้กด “อนุญาต”","");
- if(!navigator.geolocation){msg("เครื่องนี้หาตำแหน่งไม่ได้ แตะปักหมุดบนแผนที่แทนได้","bad");return}
- navigator.geolocation.getCurrentPosition(p=>{const a=p.coords.latitude,b=p.coords.longitude;youDot(a,b,p.coords.accuracy);setPin(a,b,{quiet:1});
-  const m=Math.round(p.coords.accuracy||0);msg("✓ ปักหมุดที่ตำแหน่งของคุณแล้ว (คลาดเคลื่อนประมาณ "+m+" ม.)"+(m>80?" ถ้าไม่ตรง ลากหมุดไปให้ตรงจุดได้":" ลากหมุดเพื่อปรับได้"),m>80?"bad":"ok")},
-  e=>msg(locErr(e),"bad"),{enableHighAccuracy:true,timeout:20000})};
-$("pclr").onclick=clearPin;
-function clear(){pics=[];gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();["date","title","body","pname","link"].forEach(i=>$(i).value="");msg("","");setType("s")}
-$("newp").onclick=()=>{ei=-1;clear();$("date").value=today();draw();show("form");openMap()};
-function edit(i){ei=i;const p=list[i];clear();setType(p.t);$("date").value=p.date||"";$("title").value=p.title||"";$("body").value=p.body||"";
- pics=(p.photos||[]).map(x=>({src:x.src,cap:x.cap||""}));$("link").value=(p.link&&p.link.url)||"";
- if(/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(p.pin||""))gps=p.pin;else $("pname").value=p.pin||"";
- draw();show("form");openMap()}
-$("back").onclick=e=>{e.preventDefault();show("list")};
-$("more").onclick=()=>enter();$("more2").onclick=()=>enter();$("iback").onclick=e=>{e.preventDefault();enter()};
-const warn=()=>loaded||confirm("ยังโหลด posts.js เดิมของเว็บไม่ได้ ถ้าเคยโพสต์ผ่านหน้านี้แล้ว โพสต์เก่าอาจหายเมื่ออัปโหลดทับ\nต้องการทำต่อไหม?");
-
-/* ---------- บันทึก: เจ้าของ = posts.js / ผู้ดูแล = ไฟล์ส่งให้เจ้าของ ---------- */
-function finishOwner(){dlPosts();renderList();$("doneOwner").hidden=false;$("doneAdm").hidden=true;show("done")}
-function subFile(sub){return["tjpost-"+sub.by.replace(/[^\w\u0E00-\u0E7F-]/g,"")+"-"+Date.now().toString(36)+".txt",JSON.stringify(sub)]}
-function finishAdm(sub){lastSub=sub;renderList();$("doneOwner").hidden=true;$("doneAdm").hidden=false;show("done")}
-function dlSub(){const [n,c]=subFile(lastSub);lastSub.fn=lastSub.fn||n;const b=new Blob([c],{type:"text/plain"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=lastSub.fn;document.body.append(a);a.click();a.remove()}
-$("subDl").onclick=dlSub;
-$("subShare").onclick=async()=>{const [n,c]=subFile(lastSub),f=new File([c],n,{type:"text/plain"});
- if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"โพสต์ใหม่ถึงเจ้าของเว็บ",text:"โพสต์จาก "+lastSub.by})}catch(e){}}else{dlSub();alert("ดาวน์โหลดไฟล์แล้ว ส่งไฟล์นี้ให้เจ้าของทาง LINE / Facebook / อีเมล")}};
-$("subPosts").onclick=()=>{dlFile("posts.js","window.POSTS="+JSON.stringify(list)+";")};
-$("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อในข้อ 2 ก่อนนะครับ");$("title").focus();return}
- if(ei>=0&&!can(list[ei]))return;
- const post={t:T,date:$("date").value.trim()||today(),title,body:$("body").value.trim(),photos:pics.map(p=>({src:p.src,cap:p.cap.trim()})),link:{url:$("link").value.trim()},pin:gps||$("pname").value.trim()};
- const o=ei>=0?list[ei]:null;
- if(o){if(o.orig)post.orig=o.orig;if(o.by){post.by=o.by;post.byId=o.byId}post.id=o.id||uid("p")}
- else{post.by=me.name;post.byId=me.id;post.id=uid("p")}
- if(me.role==="owner"){if(!warn())return;if(ei>=0)list[ei]=post;else list.unshift(post);finishOwner()}
- else{if(ei>=0)list[ei]=post;else list.unshift(post);finishAdm({v:1,byId:me.id,by:me.name,ts:Date.now(),ops:[{op:"put",post}]})}};
-function del(i){const p=list[i];if(!can(p)||!confirm("ลบโพสต์นี้ใช่ไหม?\n\n"+p.title))return;
- if(me.role==="owner"){if(!warn())return;if(p.orig)list[i]={t:"x",orig:p.orig};else list.splice(i,1);finishOwner()}
- else{if(!p.id){alert("ลบโพสต์นี้ไม่ได้");return}list.splice(i,1);finishAdm({v:1,byId:me.id,by:me.name,ts:Date.now(),ops:[{op:"del",id:p.id,title:p.title}]})}}
-
-/* ---------- เจ้าของรับโพสต์จากผู้ดูแล ---------- */
-const S=(x,n)=>String(x==null?"":x).slice(0,n);
-function clean(p,a){return{id:S(p.id,40),t:["s","n","p"].includes(p.t)?p.t:"s",date:S(p.date,40),title:S(p.title,200),body:S(p.body,20000),
- photos:(Array.isArray(p.photos)?p.photos:[]).slice(0,12).filter(x=>x&&/^data:image\/(jpeg|png|webp|gif);base64,/.test(x.src)).map(x=>({src:x.src,cap:S(x.cap,200)})),
- link:{url:/^https?:\/\//i.test((p.link&&p.link.url)||"")?S(p.link.url,500):""},pin:S(p.pin,200),by:a.name,byId:a.id}}
-function check(en){const a=byId(en.sub.byId);if(!a||a.name!==en.sub.by)return"ไม่รู้จักผู้ส่งคนนี้ (ยังไม่ได้เป็นผู้ดูแล)";
- const o=en.op,id=o.op==="put"?(o.post&&o.post.id):o.id;if(!id)return"ข้อมูลไม่ครบ";
- const ex=list.find(p=>p.id===id);
- if(o.op==="put"){if(!o.post||!String(o.post.title||"").trim())return"ไม่มีหัวข้อ";if(ex&&ex.byId!==a.id)return"โพสต์นี้ไม่ใช่ของผู้ส่ง (แก้ได้เฉพาะของตัวเอง)";return""}
- if(o.op==="del"){if(!ex)return"ไม่พบโพสต์นี้ในรายการ (อาจถูกลบไปแล้ว)";if(ex.byId!==a.id)return"โพสต์นี้ไม่ใช่ของผู้ส่ง";return""}
- return"คำสั่งไม่รู้จัก"}
-function apply(en){const a=byId(en.sub.byId),o=en.op;
- if(o.op==="put"){const p=clean(o.post,a),k=list.findIndex(x=>x.id===p.id);if(k>=0){const old=list[k];if(old.orig)p.orig=old.orig;list[k]=p}else list.unshift(p)}
- else{const k=list.findIndex(x=>x.id===o.id);if(k>=0)list.splice(k,1)}}
-$("impb").onclick=()=>$("impf").click();
-$("impf").onchange=async e=>{inbox=[];let bad=0;
- for(const f of e.target.files){try{const s=JSON.parse(await f.text());if(s.v!==1||!Array.isArray(s.ops)||typeof s.by!=="string")throw 0;s.ops.slice(0,50).forEach(op=>inbox.push({sub:s,op,state:"wait"}))}catch(x){bad++}}
- e.target.value="";if(bad)alert("มี "+bad+" ไฟล์ที่ไม่ใช่ไฟล์โพสต์ของเว็บนี้");if(!inbox.length)return;renderInbox();show("inbox")};
-function renderInbox(){const box=$("ilist");box.replaceChildren();
- inbox.forEach(en=>{const why=en.state==="wait"?check(en):"",o=en.op,p=o.op==="put"?o.post||{}:{title:o.title||"(ลบโพสต์)"};
-  const r=mk("div","it2"),im=mk("div","im",o.op==="del"?"🗑":p.t==="n"?"📰":p.t==="p"?"📍":"📖");
-  if(p.photos&&p.photos[0]&&/^data:image/.test(p.photos[0].src)){const g=new Image();g.src=p.photos[0].src;im.append(g)}
-  const a=byId(en.sub.byId),tx=mk("div","tx");tx.append(mk("b","",S(p.title,120)||"(ไม่มีหัวข้อ)"),mk("span","",(a?a.name:en.sub.by)+" · "+(o.op==="del"?"ขอลบโพสต์":o.post&&list.some(x=>x.id===o.post.id)?"แก้ไขโพสต์":"โพสต์ใหม่")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")));r.append(im,tx);
-  if(o.op==="put"&&p.body)r.append(Object.assign(mk("p","mute",S(p.body,160)+(p.body.length>160?"…":"")),{style:"grid-column:1/-1;margin:0"}));
-  if(en.state==="ok")r.append(mk("p","st ok","✓ รับแล้ว"));else if(en.state==="no")r.append(mk("p","st bad","✕ ไม่รับ"));
-  else if(why)r.append(mk("p","st bad","⚠ "+why));
-  else{const ac=mk("div","ac"),y=mk("button","yes","✓ ยอมรับ"),n=mk("button","del","✕ ไม่รับ");y.onclick=()=>{if(check(en))return;apply(en);en.state="ok";renderInbox()};n.onclick=()=>{en.state="no";renderInbox()};ac.append(y,n);r.append(ac)}
-  box.append(r)});
- $("igo").textContent="⬇ สร้าง posts.js จากที่ยอมรับแล้ว ("+inbox.filter(x=>x.state==="ok").length+")"}
-$("iall").onclick=()=>{inbox.forEach(en=>{if(en.state==="wait"&&!check(en)){apply(en);en.state="ok"}});renderInbox()};
-$("igo").onclick=()=>{if(!inbox.some(x=>x.state==="ok")){alert("ยังไม่ได้ยอมรับโพสต์ไหนเลย");return}if(!warn())return;finishOwner()};
+/* ค้นหา/ปักหมุด */
+const sp=q=>{$("pf").classList.toggle("hide",!q);$("pf").src=q?"https://www.google.com/maps?q="+encodeURIComponent(q)+"&z=17&output=embed":"about:blank"};
+const geo=q=>fetch("https://nominatim.openstreetmap.org/search?format=jsonv2&limit=6&accept-language=th&countrycodes=th&q="+encodeURIComponent(q)).then(r=>r.json());
+$("ps").onclick=async()=>{const q=$("pin").value.trim(),R=$("pr");R.replaceChildren();if(!q)return say("พิมพ์ชื่อสถานที่ก่อน",1);
+ const m=q.match(/(-?\d{1,3}\.\d+)\s*,\s*(-?\d{1,3}\.\d+)/);if(m){$("pin").value=m[1]+","+m[2];return sp($("pin").value)}
+ try{say("กำลังค้นหา…");const nb=$("nb").checked;let a=await geo(q+(nb?" ไพรบึง ศรีสะเกษ":""));if(!a.length&&nb)a=await geo(q);if(!a.length)return say("ไม่พบสถานที่นี้ ลองคำอื่น หรือวางพิกัดจาก Google Maps",1);hush();
+  a.forEach(x=>R.append(btn(x.display_name.slice(0,90),"alt",()=>{$("pin").value=(+x.lat).toFixed(6)+","+(+x.lon).toFixed(6);R.replaceChildren();sp($("pin").value)})))}catch(e){say("ค้นหาไม่ได้ ลองวางพิกัดจาก Google Maps แทน",1)}};
+$("pin").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();$("ps").click()}};
+$("me").onclick=()=>navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{$("pin").value=p.coords.latitude.toFixed(6)+","+p.coords.longitude.toFixed(6);sp($("pin").value)},()=>say("เปิดตำแหน่งที่ตั้งไม่ได้ (ต้องอนุญาตในเบราว์เซอร์)",1));
 </script></body></html>
