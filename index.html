@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=7">
+<link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
 <a class="notice hide" id="notice" href="#latest"></a>
@@ -36,16 +36,6 @@
 </header>
 
 <main id="top">
-  <div class="wrap hero">
-    <h1 id="hn"></h1>
-    <p id="hi"></p>
-    <div class="upd" id="upd"></div>
-    <div class="btns">
-      <a class="btn" href="#latest">ดูเรื่องล่าสุด</a>
-      <a class="btn alt" href="#map">ดูแผนที่บ้านเรา</a>
-    </div>
-  </div>
-
   <section id="latest"><div class="wrap">
     <div class="eyebrow">เกิดอะไรขึ้นที่บ้านเรา</div>
     <h2>ล่าสุดจากบ้านตาจวน</h2>
@@ -119,7 +109,6 @@ const mq=encodeURIComponent;
 /* หัวและท้ายเว็บ */
 document.title=SITE.name+" | เว็บชุมชนบ้านตาจวน";
 $("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan||"";
-$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
 
@@ -169,7 +158,6 @@ $("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
 if(FEED.length){
  $("feat").append(feat(FEED[0].n,FEED[0].tag));
  FEED.slice(1).forEach(f=>$("feed").append(card(f.n,f.tag)));
- if(FEED[0].n[0])$("upd").textContent="อัปเดตล่าสุด "+FEED[0].n[0];
 }else $("feat").append(el("p","mute","ยังไม่มีเรื่องใหม่ แวะมาติดตามได้เสมอ"));
 if(SITE.notice){const nb=$("notice");nb.textContent="📢 "+SITE.notice;nb.classList.remove("hide");
  const nw=FEED.find(f=>f.tag==="ข่าว");if(nw)nb.onclick=e=>{e.preventDefault();openFull(nw.n,"ข่าว")}}
