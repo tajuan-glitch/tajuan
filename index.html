@@ -12,19 +12,148 @@
 <meta property="og:title" content="ตาจวนบ้านเรา | เว็บชุมชนบ้านตาจวน">
 <meta property="og:description" content="ข่าวสาร ภูมิปัญญาชาวกวย ของดี และเรื่องเล่าของคนบ้านตาจวน ต.สำโรงพลัน อ.ไพรบึง จ.ศรีสะเกษ">
 <meta property="og:url" content="https://YOUR-DOMAIN/">
-<meta property="og:image" content="https://YOUR-DOMAIN/share.jpg">
-<meta property="og:image:width" content="1200">
-<meta property="og:image:height" content="630">
+<meta property="og:image" content="https://YOUR-DOMAIN/hero.jpg">
+<meta property="og:image:width" content="1392">
+<meta property="og:image:height" content="708">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BE%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#2f4a3a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=11">
+<style>
+:root{--fs:1;--green:#2f4a3a;--green2:#3d5f4a;--rust:#b5502d;--cream:#faf5ec;--sand:#f1e8d8;--ink:#2a2a26;--mute:#6b6a60;--line:#e6dcc8;--r:20px}
+*{box-sizing:border-box}
+html{font-size:calc(17px*var(--fs));scroll-behavior:smooth;scroll-padding-top:70px;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:"Sarabun",system-ui,sans-serif;color:var(--ink);background:var(--cream);line-height:1.7}
+h1,h2,h3,h4{margin:0;line-height:1.3}
+h1,h2,h3{font-family:"Noto Serif Thai","Sarabun",serif;font-weight:700}
+button{font:inherit;color:inherit}
+.hide{display:none!important}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ---------- header ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:30;transition:background .3s,box-shadow .3s}
+header.solid{background:rgba(250,245,236,.96);backdrop-filter:blur(8px);box-shadow:0 1px 0 var(--line)}
+.bar{max-width:1080px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:10px}
+.brand{margin-right:auto;text-decoration:none;color:var(--green);display:flex;flex-direction:column;line-height:1.2;opacity:0;transform:translateY(-6px);transition:.3s;pointer-events:none}
+header.solid .brand{opacity:1;transform:none;pointer-events:auto}
+.brand span{font-family:"Noto Serif Thai",serif;font-weight:700;font-size:1.25rem}
+.brand small{font-size:.75rem;color:var(--mute)}
+.admb,.sz button{border:1px solid rgba(255,255,255,.55);background:rgba(20,35,27,.38);color:#fff;border-radius:12px;padding:6px 12px;font-weight:700;cursor:pointer;text-decoration:none;backdrop-filter:blur(6px);font-size:.85rem;min-height:40px;display:inline-flex;align-items:center}
+header.solid .admb,header.solid .sz button{background:#fff;color:var(--ink);border-color:var(--line)}
+.admb span{margin-left:4px}
+.sz{display:flex;gap:6px}
+.sz button:disabled{opacity:.4;cursor:default}
+@media(max-width:480px){.admb span{display:none}}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:min(92vh,760px);display:flex;align-items:flex-end;color:#fff;background:#4c6a57 url(hero.jpg) center 62%/cover no-repeat;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,38,28,.62) 0%,rgba(20,38,28,.18) 38%,rgba(20,38,28,.55) 78%,rgba(20,38,28,.82) 100%)}
+.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:56px;background:var(--cream);border-radius:48px 48px 0 0}
+.hin{position:relative;z-index:2;width:100%;padding:130px 20px 110px}
+.hin .eyebrow{color:#ffd9c2;letter-spacing:.04em}
+.hero h1{font-size:clamp(3.2rem,12vw,6.4rem);line-height:1.08;text-shadow:0 3px 24px rgba(0,0,0,.45);margin:8px 0 12px}
+.hero .sl{font-size:clamp(1.1rem,3vw,1.5rem);max-width:30ch;opacity:.95;text-shadow:0 2px 12px rgba(0,0,0,.5);margin:0 0 26px}
+.hero .btns{gap:12px}
+.hero .btn{background:var(--rust);color:#fff;border-color:var(--rust);font-size:1rem;padding:12px 22px}
+.hero .btn.alt{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.7);color:#fff;backdrop-filter:blur(6px)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.hin>*{animation:up .8s both}.hin h1{animation-delay:.1s}.hin .sl{animation-delay:.2s}.hin .btns{animation-delay:.3s}
+@media(prefers-reduced-motion:reduce){.hin>*{animation:none}html{scroll-behavior:auto}}
+
+/* ---------- sections ---------- */
+section{padding:34px 0 40px}
+section.soft{background:var(--sand)}
+.eyebrow{color:var(--rust);font-weight:700;font-size:.95rem}
+section h2{font-size:clamp(1.5rem,4vw,2rem);color:var(--green);margin:2px 0 6px}
+section h3{color:var(--green);font-size:1.3rem;margin:34px 0 4px}
+.lead{color:var(--mute);margin:0 0 20px}
+.mute{color:var(--mute)}
+#upd{display:inline-block;margin:-10px 0 18px;font-size:.85rem;color:var(--green);background:#e4eee6;border-radius:999px;padding:2px 12px}
+#upd:empty{display:none}
+
+/* ---------- feed ---------- */
+.card,.feat{display:block;border:0;padding:0;text-align:left;cursor:pointer;background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px rgba(60,50,30,.09);transition:transform .2s,box-shadow .2s}
+.card:hover,.feat:hover{transform:translateY(-3px);box-shadow:0 8px 26px rgba(60,50,30,.16)}
+.feat{display:grid;grid-template-columns:1.05fr 1fr;margin-bottom:22px}
+.fpic,.cpic{position:relative;background:linear-gradient(135deg,#d9cdb2,#c8d6c4);display:flex;align-items:center;justify-content:center;font-size:3rem;overflow:hidden}
+.fpic{min-height:320px}.cpic{aspect-ratio:16/10}
+.fpic img,.cpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.chip{position:absolute;top:12px;left:12px;background:var(--green);color:#fff;font-size:.8rem;font-weight:700;border-radius:999px;padding:2px 12px}
+.chip.n{background:var(--rust)}
+.pcount{position:absolute;right:12px;bottom:12px;background:rgba(0,0,0,.65);color:#fff;font-size:.8rem;font-weight:700;border-radius:999px;padding:2px 10px}
+.fb{padding:26px 26px 24px;display:flex;flex-direction:column;justify-content:center;gap:10px}
+.fb h3{margin:0;font-size:clamp(1.3rem,3vw,1.7rem);color:var(--green)}
+.fb p{margin:0;color:var(--mute)}
+.dmeta{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:.9rem}
+.tag{background:var(--green);color:#fff;border-radius:999px;padding:1px 12px;font-weight:700;font-size:.85rem}
+.tag.new,.tag.nw{background:var(--rust)}
+.go{display:inline-block;align-self:flex-start;border:1.5px solid var(--green);color:var(--green);border-radius:999px;padding:6px 18px;font-weight:700;font-size:.92rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.card{display:flex;flex-direction:column}
+.cb{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cb h4{font-size:1.05rem;color:var(--green)}
+.cb p{margin:0;color:var(--mute);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cmeta{margin-top:auto;display:flex;justify-content:space-between;gap:8px;font-size:.82rem;color:var(--mute);padding-top:6px}
+.cmeta .go{border:0;padding:0;color:var(--rust)}
+.sample{background:#eee;color:#777;font-size:.7rem;border-radius:6px;padding:0 6px;margin-right:6px;vertical-align:middle}
+@media(max-width:760px){.feat{grid-template-columns:1fr}.fpic{min-height:0;aspect-ratio:16/10}.fb{padding:18px}}
+
+/* ---------- gallery / goods / videos ---------- */
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.it{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 2px 12px rgba(60,50,30,.08);text-decoration:none;color:inherit;display:block;position:relative;padding-bottom:12px}
+.it .pic{position:relative;aspect-ratio:4/3;background:linear-gradient(135deg,#e1d6bc,#cfdccb);display:flex;align-items:center;justify-content:center;color:var(--green);font-weight:700;overflow:hidden}
+.it .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.it h4{padding:10px 14px 0;font-size:1rem;color:var(--green)}
+.it p{margin:2px 14px 0;color:var(--mute);font-size:.9rem}
+.play{position:absolute;right:10px;bottom:10px;background:rgba(0,0,0,.7);color:#fff;font-size:.8rem;font-weight:700;border-radius:999px;padding:2px 12px}
+.pr{display:inline-block;margin:8px 14px 0;background:#fbe8dd;color:var(--rust);font-weight:700;border-radius:999px;padding:1px 12px;font-size:.9rem}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.tabs button{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:5px 16px;cursor:pointer;font-weight:700}
+.tabs button.on{background:var(--green);color:#fff;border-color:var(--green)}
+
+/* ---------- map ---------- */
+.mapbox{display:grid;grid-template-columns:280px 1fr;gap:18px}
+.plist{display:flex;flex-direction:column;gap:8px;max-height:460px;overflow:auto;padding-right:4px}
+.pbtn{text-align:left;border:1.5px solid var(--line);background:#fff;border-radius:14px;padding:10px 14px;cursor:pointer;display:flex;flex-direction:column}
+.pbtn span{font-size:.8rem;color:var(--mute)}
+.pbtn.on{border-color:var(--green);background:#e4eee6}
+.mview{background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 2px 12px rgba(60,50,30,.1)}
+.mview iframe{display:block;width:100%;height:340px;border:0}
+.pinfo{padding:14px 18px 18px}.pinfo h3{margin:0 0 4px;font-size:1.2rem}.pinfo p{margin:0 0 10px;color:var(--mute)}
+@media(max-width:760px){.mapbox{grid-template-columns:1fr}.plist{flex-direction:row;max-height:none;overflow-x:auto;padding-bottom:6px}.pbtn{min-width:150px}}
+
+/* ---------- buttons ---------- */
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--green);background:var(--green);color:#fff;border-radius:999px;padding:9px 18px;font-weight:700;cursor:pointer;text-decoration:none}
+.btn.alt{background:#fff;color:var(--green)}
+.btn.sm{padding:5px 14px;font-size:.9rem}
+
+/* ---------- dialog ---------- */
+dialog{width:min(780px,94vw);max-height:92vh;border:0;border-radius:24px;padding:0;background:var(--cream);color:var(--ink);box-shadow:0 20px 60px rgba(0,0,0,.35)}
+dialog::backdrop{background:rgba(20,30,24,.6)}
+.dtop{position:sticky;top:0;z-index:5;display:flex;justify-content:flex-end;padding:10px 14px;background:linear-gradient(var(--cream) 70%,transparent)}
+.dbody{padding:0 24px 28px}
+.dbody h2{font-size:clamp(1.4rem,4vw,1.9rem);color:var(--green);margin:8px 0 14px}
+.dbody p{margin:0 0 14px}
+.dhero,.ph{margin:0 0 18px}
+.dhero img,.ph img{width:100%;display:block;border-radius:16px}
+figcaption{font-size:.85rem;color:var(--mute);margin-top:6px}
+.pq{margin:16px 0;padding:10px 18px;border-left:4px solid var(--rust);background:#fff;border-radius:0 12px 12px 0;font-family:"Noto Serif Thai",serif}
+.tip{background:#fff6dc;border-radius:12px;padding:10px 14px;margin:0 0 14px}
+.pgt{margin:24px 0 10px!important}
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pgrid.one{grid-template-columns:1fr}
+.pgrid .ph{margin:0}
+.lk{margin:18px 0}
+.follow{margin-top:22px;background:#e4eee6;border-radius:16px;padding:14px 18px}.follow p{margin:0 0 10px}
+@media(max-width:560px){.pgrid{grid-template-columns:1fr}.dbody{padding:0 16px 22px}}
+
+footer{background:var(--green);color:#e8efe9;text-align:center;padding:26px 0;font-size:.92rem}
+footer b{color:#fff}
+</style>
 </head>
 <body>
-<a class="notice hide" id="notice" href="#latest"></a>
 <header>
   <div class="bar">
     <a class="brand" href="#top"><span id="bn"></span><small id="bs"></small></a>
@@ -36,11 +165,22 @@
   </div>
 </header>
 
-<main id="top">
+<main>
+  <section class="hero" id="top"><div class="hin wrap">
+    <div class="eyebrow">ชุมชนชาวกวย · ต.สำโรงพลัน อ.ไพรบึง จ.ศรีสะเกษ</div>
+    <h1 id="hn">ตาจวนบ้านเรา</h1>
+    <p class="sl" id="hs"></p>
+    <div class="btns">
+      <a class="btn" href="#latest">📰 อ่านเรื่องล่าสุด</a>
+      <a class="btn alt" href="#map">🗺️ แผนที่หมู่บ้าน</a>
+    </div>
+  </div></section>
+
   <section id="latest"><div class="wrap">
     <div class="eyebrow">เกิดอะไรขึ้นที่บ้านเรา</div>
     <h2>ล่าสุดจากบ้านตาจวน</h2>
     <p class="lead">ข่าว ประกาศ และเรื่องเล่าที่เพิ่งลงใหม่ แตะที่เรื่องเพื่ออ่านเต็มและดูรูปทั้งหมด</p>
+    <span id="upd"></span>
     <div id="feat"></div>
     <div class="cards" id="feed"></div>
   </div></section>
@@ -83,8 +223,10 @@
 
 <noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
 
-<script src="content.js?v=6"></script>
-<script src="posts.js?v=5"></script>
+<!-- โหลดข้อมูลสดใหม่ทุกครั้ง (ใส่เวลาต่อท้ายชื่อไฟล์ ไม่ต้องแก้เลข ?v= อีกต่อไป) -->
+<script>
+(function(){var t=Date.now();["content.js","posts.js"].forEach(function(f){document.write('<script src="'+f+'?t='+t+'"><\/script>')})})();
+</script>
 <script>
 const $=i=>document.getElementById(i);
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -96,7 +238,7 @@ const mq=encodeURIComponent;
 
 /* หัวและท้ายเว็บ */
 document.title=SITE.name+" | เว็บชุมชนบ้านตาจวน";
-$("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan||"";
+$("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan||"";$("hn").textContent=SITE.name;$("hs").textContent=SITE.slogan||"ทุกเรื่องราวที่มี ที่…ตาจวนบ้านเรา";
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 
 function links(box,L){(L||[]).forEach(l=>box.append(ext(el("a","btn alt sm",l[0]),l[1])))}
@@ -112,13 +254,19 @@ const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
- (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||""])});
+ (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||"",1])});
 
 [...NEWS,...STORIES].forEach(n=>{n[2]=strip(n[2]);n[3]=strip(n[3])});
 /* รวมข่าว + เรื่องเล่า เรียงใหม่สุดก่อน */
 const TH=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
-function dv(s){const m=String(s||"").match(/(\d+)\s*(\S+)\s*(\d{4})/);if(!m)return 0;const mo=TH.indexOf(m[2]);return mo<0?0:(+m[3])*10000+mo*100+(+m[1])}
-const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื่องเล่า"])].map((x,i)=>({n:x[0],tag:x[1],i,v:dv(x[0][0])})).sort((a,b)=>b.v-a.v||a.i-b.i);
+const TS=["มค","กพ","มีค","เมย","พค","มิย","กค","สค","กย","ตค","พย","ธค"],TF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
+function dv(s){s=String(s||"").trim();let m=s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+ if(m){let y=+m[1];if(y<2400)y+=543;return y*10000+(+m[2]-1)*100+(+m[3])}
+ m=s.match(/(\d{1,2})\s*([^\s\d]+)\s*(\d{2,4})/);if(!m)return 0;
+ const nm=m[2].replace(/[.\u0e2f]/g,""),mo=TS.indexOf(nm)>=0?TS.indexOf(nm):TF.indexOf(nm);if(mo<0)return 0;
+ let y=+m[3];if(y<100)y+=2500;else if(y<2400)y+=543;return y*10000+mo*100+(+m[1])}
+const NOW=new Date(),TODAY=(NOW.getFullYear()+543)*10000+NOW.getMonth()*100+NOW.getDate();
+const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื่องเล่า"])].map((x,i)=>({n:x[0],tag:x[1],i,v:dv(x[0][0])||(x[0][8]?TODAY:0)})).sort((a,b)=>b.v-a.v||a.i-b.i);
 
 /* การ์ด + หน้าต่างอ่านเต็ม */
 function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));return g}
@@ -153,12 +301,10 @@ $("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
 
 /* ล่าสุด */
 if(FEED.length){
+ if(FEED[0].n[0])$("upd").textContent="เรื่องล่าสุดลงเมื่อ "+FEED[0].n[0];
  $("feat").append(feat(FEED[0].n,FEED[0].tag));
  FEED.slice(1).forEach(f=>$("feed").append(card(f.n,f.tag)));
 }else $("feat").append(el("p","mute","ยังไม่มีเรื่องใหม่ แวะมาติดตามได้เสมอ"));
-if(SITE.notice){const nb=$("notice");nb.textContent="📢 "+SITE.notice;nb.classList.remove("hide");
- const nw=FEED.find(f=>f.tag==="ข่าว");if(nw)nb.onclick=e=>{e.preventDefault();openFull(nw.n,"ข่าว")}}
-
 /* คลิป */
 if(!VIDEOS.length)$("media").classList.add("hide");
 VIDEOS.forEach(v=>{const a=el("a","it"),p=el("div","pic");p.append(img("https://i.ytimg.com/vi/"+v[0]+"/mqdefault.jpg",v[1]),el("span","play","▶ ดูคลิป"));
@@ -194,6 +340,9 @@ selPlace(0);
 (function(){const Z=[1,1.15,1.3,1.5],K="tj2_zoom";let i=0;try{const v=parseInt(localStorage.getItem(K),10);if(v>=0&&v<Z.length)i=v}catch(e){}
  function ap(){document.documentElement.style.setProperty("--fs",Z[i]);$("zm").disabled=i===0;$("zp").disabled=i===Z.length-1;try{localStorage.setItem(K,i)}catch(e){}}
  $("zm").onclick=()=>{if(i>0){i--;ap()}};$("zp").onclick=()=>{if(i<Z.length-1){i++;ap()}};ap()})();
+
+/* หัวเว็บโปร่งบนภาพ แล้วทึบเมื่อเลื่อนลง */
+(function(){const h=document.querySelector("header");const f=()=>h.classList.toggle("solid",scrollY>window.innerHeight*.45);addEventListener("scroll",f,{passive:true});f()})();
 </script>
 </body>
 </html>
