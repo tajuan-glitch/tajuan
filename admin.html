@@ -4,68 +4,111 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-input,textarea{width:100%;font:inherit;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);margin:0 0 14px}
-textarea{min-height:170px}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
-.chips button{flex:1;min-height:52px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font-weight:700}
+body{font-size:1.05rem;line-height:1.7}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0}
+.top a{font-weight:700}
+.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 18px}
+.step h2{font-size:1.25rem;margin:0 0 4px;display:flex;align-items:center;gap:10px}
+.step h2 i{font-style:normal;flex:none;width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font:700 1rem "Noto Sans Thai"}
+.opt{font:700 .75rem "Noto Sans Thai";background:var(--sand);color:var(--mute);border-radius:99px;padding:1px 10px;margin-left:auto}
+.help{margin:0 0 14px;color:var(--mute);font-size:.95rem}
+input[type=text],input[type=url],input:not([type]),textarea{width:100%;font:inherit;font-size:1.05rem;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);margin:0 0 12px}
+input:focus,textarea:focus{border-color:var(--green);outline:0}
+textarea{min-height:200px}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.chips button{min-height:84px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;font-weight:700;line-height:1.35;padding:8px 4px}
+.chips button b{display:block;font-size:1.6rem;line-height:1.2}
 .chips button.on{border-color:var(--green);background:var(--green);color:#fff}
-.btn{cursor:pointer;width:100%;justify-content:center;margin:0 0 12px}
-#thumbs{display:grid;gap:12px;margin:0 0 14px}
-.th{display:flex;gap:10px;align-items:center}
+@media(prefers-color-scheme:dark){.step h2 i,.chips button.on{color:#10150f}}
+.big{width:100%;justify-content:center;cursor:pointer;font-size:1.1rem}
+#thumbs{display:grid;gap:12px;margin:14px 0 0}
+.th{display:grid;grid-template-columns:84px 1fr 44px;gap:10px;align-items:center}
 .th img{width:84px;height:84px;object-fit:cover;border-radius:10px}
-.th input{margin:0}.th button{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px}
-.ok{color:var(--green);font-weight:700}
+.th input{margin:0!important}
+.th button{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;font-size:1.1rem}
+.st{margin:12px 0 0;font-weight:700}
+.st.ok{color:var(--green)}.st.bad{color:var(--clay)}
+.bar{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));margin:0 -20px}
+.bar .btn{margin:0}
+.nums{counter-reset:n;list-style:none;padding:0;margin:0 0 16px}
+.nums li{counter-increment:n;display:flex;gap:12px;margin:12px 0}
+.nums li::before{content:counter(n);flex:none;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700}
 </style></head>
-<body><div class="wrap" style="padding:24px 20px 70px">
-<h1 style="font-size:1.9rem;margin-bottom:6px">โพสต์ใหม่</h1>
-<p class="lead" style="margin-bottom:18px">กรอกเท่าที่อยากใส่ ที่เหลือข้ามได้ แล้วกดบันทึก</p>
+<body><div class="wrap" style="padding:0 20px">
+<div class="top"><a href="index.html">← กลับหน้าเว็บ</a><b style="color:var(--green)">โพสต์ใหม่</b></div>
 
-<div class="chips" id="types"><button data-t="s" class="on">📖 เรื่องเล่า</button><button data-t="n">📢 ข่าว</button><button data-t="p">📍 สถานที่</button></div>
-<input id="title" placeholder="หัวข้อ">
-<textarea id="body" placeholder="เล่าเรื่องที่นี่ (วางข้อความจาก Facebook ได้เลย)"></textarea>
+<div id="form">
+<p class="lead" style="margin-bottom:18px">ทำทีละข้อ ข้อที่มีป้าย <b>ไม่ใส่ก็ได้</b> ข้ามได้เลย</p>
 
-<button class="btn alt" id="pick">📷 เลือกรูป</button>
+<div class="step"><h2><i>1</i>จะโพสต์เรื่องอะไร</h2><p class="help">แตะเลือก 1 อย่าง</p>
+<div class="chips" id="types">
+<button data-t="s" class="on"><b>📖</b>เรื่องเล่า<br>ภูมิปัญญา</button>
+<button data-t="n"><b>📢</b>ข่าว<br>ประกาศ</button>
+<button data-t="p"><b>📍</b>สถานที่<br>ปักหมุด</button></div></div>
+
+<div class="step"><h2><i>2</i>เขียนเรื่อง</h2>
+<label for="title"><b>หัวข้อ</b></label><input id="title" type="text" placeholder="เช่น เทะ ตะแวลย์ ของว่างชาวกวย">
+<label for="body"><b>เนื้อเรื่อง</b></label><textarea id="body" placeholder="พิมพ์ หรือวางข้อความจาก Facebook ที่นี่"></textarea></div>
+
+<div class="step"><h2><i>3</i>ใส่รูป<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<p class="help">เลือกได้หลายรูปพร้อมกัน (สูงสุด 12 รูป)</p>
+<button class="btn alt big" id="pick">📷 เลือกรูปจากเครื่อง</button>
 <input type="file" id="file" accept="image/*" multiple hidden>
-<div id="thumbs"></div>
+<div id="thumbs"></div></div>
 
-<button class="btn alt" id="gps">📍 ใช้ตำแหน่งที่ฉันอยู่ตอนนี้</button>
-<p id="gst" class="mute" style="margin:0 0 10px"></p>
-<input id="pname" placeholder="หรือพิมพ์ชื่อสถานที่ (ไม่ใส่ก็ได้)">
-<input id="link" placeholder="ลิงก์ เช่น โพสต์ Facebook (ไม่ใส่ก็ได้)" inputmode="url">
+<div class="step"><h2><i>4</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<p class="help">ถ้ากำลังอยู่ที่จุดนั้น กดปุ่มข้างล่างได้เลย หรือพิมพ์ชื่อสถานที่แทน</p>
+<button class="btn alt big" id="gps">📍 ใช้ตำแหน่งที่ฉันอยู่ตอนนี้</button>
+<p class="st" id="gst" hidden></p>
+<input id="pname" type="text" placeholder="หรือพิมพ์ชื่อสถานที่ เช่น วัดบ้านตาจวน"></div>
 
-<div id="oldbox" class="alert hide">โหลดโพสต์เดิมไม่ได้ ถ้าเคยโพสต์แล้ว ให้เลือกไฟล์ <b>posts.js</b> เดิมของเว็บตรงนี้ (ถ้าเพิ่งเริ่มโพสต์ครั้งแรก ข้ามได้)
-<input type="file" id="oldf" accept=".js" style="margin-top:10px"></div>
+<div class="step"><h2><i>5</i>ลิงก์<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<p class="help">เช่น ลิงก์โพสต์ Facebook หรือคลิป YouTube ที่เกี่ยวข้อง</p>
+<input id="link" type="url" inputmode="url" placeholder="วางลิงก์ที่นี่"></div>
 
-<button class="btn" id="save">บันทึกโพสต์</button>
-<div id="done" class="callout hide"><p class="ok">✓ ได้ไฟล์ <b>posts.js</b> แล้ว</p>
-<p>ขั้นสุดท้าย: เอาไฟล์ <b>posts.js</b> ที่ดาวน์โหลดไปอัปโหลดขึ้นเว็บ <b>ทับของเดิม</b> เท่านี้เสร็จ (รูปอยู่ในไฟล์นี้แล้ว ไม่ต้องอัปโหลดรูปแยก)</p>
-<button class="btn alt" id="again">ดาวน์โหลดอีกครั้ง</button></div>
+<div id="oldbox" class="alert" hidden><b>โหลดโพสต์เดิมไม่ได้</b><br>ถ้าเคยโพสต์แล้ว ให้เลือกไฟล์ <b>posts.js</b> เดิมของเว็บ เพื่อไม่ให้โพสต์เก่าหาย (ถ้าเพิ่งเริ่มโพสต์ครั้งแรก ข้ามได้)
+<input id="oldf" type="file" accept=".js" style="margin-top:10px;width:100%"></div>
+
+<div class="bar"><button class="btn big" id="save">✓ บันทึกโพสต์</button></div>
 </div>
+
+<div id="done" hidden>
+<div class="step" style="margin-top:20px"><h2 style="color:var(--green)">✓ บันทึกแล้ว ขั้นสุดท้าย</h2>
+<ol class="nums">
+<li><span>เครื่องดาวน์โหลดไฟล์ <b>posts.js</b> ให้แล้ว (ถ้าไม่เห็น กดปุ่มด้านล่าง)</span></li>
+<li><span>เอาไฟล์ <b>posts.js</b> ไปอัปโหลดขึ้นเว็บ <b>ทับไฟล์เดิม</b></span></li>
+<li><span>รอสักครู่ แล้วเปิดหน้าเว็บดูโพสต์ใหม่</span></li></ol>
+<button class="btn alt big" id="again">⬇ ดาวน์โหลด posts.js อีกครั้ง</button>
+<button class="btn big" id="more" style="margin-top:12px">＋ ทำโพสต์ต่อ</button></div>
+</div></div>
+
 <script>
 const $=i=>document.getElementById(i);
-let T="s",pics=[],gps="",old=[],loaded=false,last="";
+let T="s",pics=[],gps="",old=[],loaded=false;
 $("types").onclick=e=>{const b=e.target.closest("button");if(!b)return;T=b.dataset.t;[...$("types").children].forEach(x=>x.classList.toggle("on",x===b))};
-function parse(t){const m=t.match(/POSTS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);old=JSON.parse(m[1]);loaded=true;$("oldbox").classList.add("hide")}
-fetch("posts.js?"+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(parse).catch(()=>$("oldbox").classList.remove("hide"));
+function parse(t){const m=t.match(/POSTS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);old=JSON.parse(m[1]);loaded=true;$("oldbox").hidden=true}
+fetch("posts.js?"+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(parse).catch(()=>$("oldbox").hidden=false);
 $("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parse(t);alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
 
 function shrink(f){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,1000/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL("image/jpeg",.72))};i.onerror=()=>r(null);i.src=u})}
 function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=document.createElement("div");d.className="th";
- const im=new Image();im.src=p.src;const c=document.createElement("input");c.placeholder="คำบรรยายรูป (ไม่ใส่ก็ได้)";c.value=p.cap;c.oninput=()=>p.cap=c.value;
- const x=document.createElement("button");x.textContent="✕";x.setAttribute("aria-label","เอารูปออก");x.onclick=()=>{pics.splice(k,1);draw()};d.append(im,c,x);return d}))}
+ const im=new Image();im.src=p.src;const c=document.createElement("input");c.type="text";c.placeholder="คำบรรยายรูป (ไม่ใส่ก็ได้)";c.value=p.cap;c.oninput=()=>p.cap=c.value;
+ const x=document.createElement("button");x.textContent="✕";x.setAttribute("aria-label","เอารูปออก");x.onclick=()=>{pics.splice(k,1);draw()};d.append(im,c,x);return d}));
+ $("pick").textContent=pics.length?"📷 เพิ่มรูปอีก (มี "+pics.length+" รูป)":"📷 เลือกรูปจากเครื่อง"}
 $("pick").onclick=()=>$("file").click();
-$("file").onchange=async e=>{for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
+$("file").onchange=async e=>{$("pick").textContent="กำลังเตรียมรูป…";for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
 
-$("gps").onclick=()=>{$("gst").textContent="กำลังหาตำแหน่ง… (กด “อนุญาต” ถ้ามีข้อความถาม)";
- if(!navigator.geolocation){$("gst").textContent="เครื่องนี้หาตำแหน่งไม่ได้ ลองพิมพ์ชื่อสถานที่แทน";return}
- navigator.geolocation.getCurrentPosition(p=>{gps=p.coords.latitude.toFixed(6)+","+p.coords.longitude.toFixed(6);$("gst").innerHTML='<span class="ok">✓ ได้ตำแหน่งแล้ว</span>'},
-  ()=>{$("gst").textContent="หาตำแหน่งไม่ได้ ลองพิมพ์ชื่อสถานที่แทน (หรือทำบนมือถือที่เปิดตำแหน่งไว้)"},{enableHighAccuracy:true,timeout:20000})};
+function msg(t,c){const s=$("gst");s.hidden=false;s.className="st "+c;s.textContent=t}
+$("gps").onclick=()=>{msg("กำลังหาตำแหน่ง… ถ้ามีข้อความถาม ให้กด “อนุญาต”","");
+ if(!navigator.geolocation){msg("เครื่องนี้หาตำแหน่งไม่ได้ ลองพิมพ์ชื่อสถานที่แทน","bad");return}
+ navigator.geolocation.getCurrentPosition(p=>{gps=p.coords.latitude.toFixed(6)+","+p.coords.longitude.toFixed(6);msg("✓ ได้ตำแหน่งแล้ว","ok")},
+  ()=>msg("หาตำแหน่งไม่ได้ ลองเปิดตำแหน่ง (GPS) ในมือถือ หรือพิมพ์ชื่อสถานที่แทน","bad"),{enableHighAccuracy:true,timeout:20000})};
 
 function dl(){const b=new Blob(["window.POSTS="+JSON.stringify(old)+";"],{type:"text/javascript"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="posts.js";document.body.append(a);a.click();a.remove()}
-$("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อก่อนนะครับ");$("title").focus();return}
+$("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อในข้อ 2 ก่อนนะครับ");$("title").focus();return}
  if(!loaded&&old.length===0&&!confirm("ยังไม่ได้โหลดโพสต์เดิม ถ้าเว็บมีโพสต์อยู่แล้ว โพสต์เก่าจะหายเมื่ออัปโหลดทับ\nต้องการทำต่อไหม?"))return;
- const post={t:T,date:new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"}),title,body:$("body").value.trim(),photos:pics.map(p=>({src:p.src,cap:p.cap.trim()})),link:{url:$("link").value.trim()},pin:gps||$("pname").value.trim()};
- old=[post,...old];dl();$("done").classList.remove("hide");$("done").scrollIntoView({behavior:"smooth"});
- pics=[];gps="";["title","body","pname","link"].forEach(i=>$(i).value="");$("gst").textContent="";draw()};
+ old=[{t:T,date:new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"}),title,body:$("body").value.trim(),photos:pics.map(p=>({src:p.src,cap:p.cap.trim()})),link:{url:$("link").value.trim()},pin:gps||$("pname").value.trim()},...old];
+ dl();$("form").hidden=true;$("done").hidden=false;scrollTo(0,0)};
 $("again").onclick=dl;
+$("more").onclick=()=>{pics=[];gps="";["title","body","pname","link"].forEach(i=>$(i).value="");$("gst").hidden=true;draw();$("done").hidden=true;$("form").hidden=false;scrollTo(0,0)};
 </script></body></html>
