@@ -281,8 +281,6 @@ function para(x){
  return rich(el("p"),x)}
 const plain=t=>String(t||"").replace(/\[([^\]]+)\]\(https?:\/\/[^\s)]+\)/g,"$1").replace(/(?:https?:\/\/|www\.)[^\s\u0E00-\u0E7F"'<>]+/gi,"").replace(/[ \t]{2,}/g," ").replace(/[:：]\s*$/,"").trim();
 const rid=n=>encodeURIComponent(n[1]);
-/* ชื่อสถานที่ที่ไม่ใช่พิกัด: เติมที่ตั้งบ้านตาจวนต่อท้าย กัน Google เด้งไปจังหวัดอื่น */
-const geoQ=q=>{q=String(q||"");return/^\s*-?\d{1,3}(\.\d+)?\s*,\s*-?\d{1,3}(\.\d+)?\s*$/.test(q)||/ศรีสะเกษ|ไพรบึง|สำโรงพลัน/.test(q)?q:q+" ต.สำโรงพลัน อ.ไพรบึง จ.ศรีสะเกษ"};
 
 /* หัวและท้ายเว็บ */
 document.title=SITE.name+" | เว็บชุมชนบ้านตาจวน";
@@ -290,7 +288,7 @@ $("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan||"";$("hn").textCo
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 
 function links(box,L){(L||[]).forEach(l=>box.append(aLink(l[1],"🔗 "+l[0],"btn alt sm")))}
-function pinBtns(box,q){q=geoQ(q);box.append(ext(el("a","btn alt sm","📍 เปิดแผนที่"),"https://www.google.com/maps/search/?api=1&query="+mq(q)),ext(el("a","btn alt sm","🧭 นำทาง"),"https://www.google.com/maps/dir/?api=1&destination="+mq(q)))}
+function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแผนที่"),"https://www.google.com/maps/search/?api=1&query="+mq(q)),ext(el("a","btn alt sm","🧭 นำทาง"),"https://www.google.com/maps/dir/?api=1&destination="+mq(q)))}
 
 /* โพสต์จาก posts.js (แก้ไข/ลบได้ที่ admin.html) */
 const HT=typeof HIDE_TITLES!=="undefined"?HIDE_TITLES:[];
@@ -301,8 +299,8 @@ const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 [STORIES,NEWS].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][1]))a.splice(i,1)});
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
- let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.push([p.title,"จากโพสต์",p.pin,""])}}
- (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||"",x.th||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[],pl,p.by||"",1])});
+ let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
+ (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[],pl,p.by||"",1])});
 
 [...NEWS,...STORIES].forEach(n=>{n[2]=plain(strip(n[2]));n[3]=strip(n[3])});
 /* รวมข่าว + เรื่องเล่า เรียงใหม่สุดก่อน */
@@ -320,7 +318,7 @@ const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื�
 function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(rich(el("figcaption"),p[1]));return g}
 const isN=t=>t==="ข่าว";
 function pic(n,tag,cls){const p=el("div",cls,isN(tag)?"📰":"📖"),cv=n[4]&&n[4][0];
- if(cv)p.append(img(cv[2]||cv[0],n[1]));p.append(el("span","chip"+(isN(tag)?" n":""),tag));
+ if(cv)p.append(img(cv[0],n[1]));p.append(el("span","chip"+(isN(tag)?" n":""),tag));
  if(n[4]&&n[4].length>1)p.append(el("span","pcount","🖼 "+n[4].length));return p}
 function card(n,tag){const a=el("button","card"),p=pic(n,tag,"cpic");
  const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);
@@ -380,7 +378,7 @@ if(HE.length){$("heroWrap").classList.remove("hide");HE.forEach(h=>{const d=el("
 let cur=-1;
 function selPlace(i){if(i<0||i>=PLACES.length)i=0;cur=i;const p=PLACES[i];
  [...$("plist").children].forEach((b,k)=>{b.classList.toggle("on",k===i);b.setAttribute("aria-selected",k===i)});
- $("mf").src="https://www.google.com/maps?q="+mq(geoQ(p[2]))+"&z=17&output=embed";$("mf").title="แผนที่: "+p[0];
+ $("mf").src="https://www.google.com/maps?q="+mq(p[2])+"&z=17&output=embed";$("mf").title="แผนที่: "+p[0];
  $("pn").textContent=p[0];$("pd").replaceChildren();rich($("pd"),(p[3]||"").replace(/^ตัวอย่าง:\s*/,""));$("pb").replaceChildren();pinBtns($("pb"),p[2])}
 PLACES.forEach((p,i)=>{const b=el("button","pbtn");b.setAttribute("role","tab");b.append(el("b","",p[0]),el("span","",p[1]));b.onclick=()=>selPlace(i);$("plist").append(b)});
 selPlace(0);
