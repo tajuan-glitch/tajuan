@@ -1,0 +1,1 @@
+window.ADMINS=[{"id":"amv6arqodmuhv","name":"konkuay","role":"owner","salt":"77b54b1165f9aacbc98ab558f0334fd1","hash":"1e9913185d4ea556f2a86be54fe8bd1dad5834b1ed8b66b35a1e3e6d7abe96c8"}];
