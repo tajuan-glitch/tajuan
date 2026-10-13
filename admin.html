@@ -47,6 +47,11 @@ textarea{min-height:200px}
 .ac button.del{color:var(--clay)}
 .ac button.yes{background:var(--green);border-color:var(--green);color:#fff}
 @media(prefers-color-scheme:dark){.ac button.yes{color:#10150f}}
+.th video{width:84px;height:84px;object-fit:cover;border-radius:10px;background:#1d2a22}
+.vl{display:grid;gap:8px;margin:12px 0}
+.vl .vr{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--sand);border-radius:12px;padding:10px 12px}
+.vl .vr b{flex:1;min-width:150px;word-break:break-all}
+.vl .vr .btn{min-height:44px;padding:8px 14px;font-size:.95rem}
 .badge{display:inline-block;background:var(--sand);color:var(--green);border-radius:99px;padding:0 10px;font-size:.78rem;font-weight:700;margin-left:6px}
 .badge.owner{background:var(--clay);color:#fff}
 
@@ -270,7 +275,14 @@ details.step[open] summary{margin-bottom:12px}
 <input type="file" id="file" accept="image/*" multiple hidden>
 <div id="thumbs"></div></div>
 
-<div class="step" id="stmap"><h2><i>4</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<div class="step" id="stvid"><h2><i>4</i>ใส่วิดีโอ<span class="opt">ไม่ใส่ก็ได้</span></h2>
+<p class="help">เลือกคลิปวิดีโอจากเครื่องได้ (สูงสุด 3 คลิป แนะนำไฟล์ MP4) วิดีโอจะ <b>ไม่ถูกยัดใน posts.js</b> เพื่อไม่ให้เว็บช้า แต่จะให้ดาวน์โหลดไฟล์วิดีโอแยก แล้วนำไปอัปโหลดเข้าโฟลเดอร์ <b>videos</b> บนเว็บ (ขั้นตอนสุดท้ายจะบอกอีกครั้ง) · คลิปยาวหรือไฟล์ใหญ่มาก แนะนำให้ลง YouTube แล้ววางลิงก์ในข้อ 6 จะลื่นกว่า</p>
+<button class="btn alt big" id="pickv" type="button">🎬 เลือกวิดีโอจากเครื่อง</button>
+<input type="file" id="filev" accept="video/*,.mp4,.webm,.mov,.m4v" multiple hidden>
+<p class="st" id="vst" hidden></p>
+<div id="thumbsv" style="display:grid;gap:12px;margin:14px 0 0"></div></div>
+
+<div class="step" id="stmap"><h2><i>5</i>ปักหมุดที่ตั้ง<span class="opt">ไม่ใส่ก็ได้</span></h2>
 <p class="help">แตะบนแผนที่เพื่อวางหมุด หรือกดที่หมุดค้างไว้แล้วลากไปยังจุดที่ต้องการ แผนที่จะเปิดที่ตำแหน่งที่คุณอยู่ตอนนี้ แต่ถ้าเดินออกจากจุดนั้นมาแล้ว ก็ย้ายหมุดกลับไปที่เดิมได้</p>
 <div class="mapwrap" id="pmapwrap"><div id="pmap" role="application" aria-label="แผนที่สำหรับปักหมุด"></div></div>
 <div class="seg" id="lay"><button type="button" class="on" data-l="o">🗺 แผนที่</button><button type="button" data-l="s">🛰 ภาพดาวเทียม</button></div>
@@ -281,7 +293,7 @@ details.step[open] summary{margin-bottom:12px}
 <label for="pname"><b>หรือพิมพ์ชื่อสถานที่แทน</b> <span class="mute">(ถ้าปักหมุดบนแผนที่แล้ว ระบบใช้พิกัดเป็นหลัก)</span></label>
 <input id="pname" type="text" placeholder="เช่น วัดบ้านตาจวน"></div>
 
-<div class="step" id="stlk"><h2><i>5</i>ลิงก์<span class="opt">ใส่ได้หลายอัน</span></h2>
+<div class="step" id="stlk"><h2><i>6</i>ลิงก์<span class="opt">ใส่ได้หลายอัน</span></h2>
 <p class="help" id="lkhelp">ลิงก์โพสต์ Facebook คลิป YouTube หรือบทความเว็บอื่น (คลิป YouTube จะเล่นในหน้าเรื่องให้เลย)</p>
 <div id="lks"></div><button type="button" class="btn alt big" id="addl">＋ เพิ่มลิงก์</button></div>
 
@@ -296,7 +308,7 @@ details.step[open] summary{margin-bottom:12px}
 <li><span>เครื่องดาวน์โหลดไฟล์ให้แล้ว (ถ้าไม่เห็น กดปุ่มด้านล่าง)</span></li>
 <li><span>เอาไฟล์ <b id="dn2">posts.js</b> ไปอัปโหลดขึ้นเว็บ <b>ทับไฟล์เดิม</b></span></li>
 <li><span>รอสักครู่ แล้วเปิดหน้าเว็บดู</span></li></ol>
-<button class="btn alt big" id="again">⬇ ดาวน์โหลดอีกครั้ง</button>
+<div id="ovl" hidden></div><button class="btn alt big" id="again">⬇ ดาวน์โหลดอีกครั้ง</button>
 <button class="btn big" id="more">← กลับไปรายการโพสต์</button></div>
 
 <div id="doneAdm" class="step" style="margin-top:20px" hidden><h2 style="color:var(--green)">✓ บันทึกโพสต์แล้ว ขั้นสุดท้าย</h2>
@@ -304,6 +316,7 @@ details.step[open] summary{margin-bottom:12px}
 <p class="help">โพสต์ของคุณจะขึ้นเว็บเมื่อเจ้าของรับไฟล์นี้ ส่งไฟล์ให้เจ้าของทาง LINE / Facebook / อีเมล</p>
 <button class="btn big" id="subShare">📤 ส่งไฟล์โพสต์ให้เจ้าของ</button>
 <button class="btn alt big" id="subDl">⬇ ดาวน์โหลดไฟล์โพสต์</button>
+<div id="avl" hidden></div>
 <details style="margin:0 0 12px"><summary style="cursor:pointer;font-weight:700">ฉันมีสิทธิ์อัปโหลดไฟล์ขึ้นเว็บเอง</summary>
 <p class="help" style="margin-top:8px">ดาวน์โหลด posts.js ที่รวมโพสต์ทั้งหมดไปอัปโหลดทับได้เลย (ระวังถ้ามีคนอื่นโพสต์พร้อมกัน โพสต์ของเขาอาจหาย แนะนำให้ส่งให้เจ้าของแทน)</p>
 <button class="btn alt big" id="subPosts">⬇ ดาวน์โหลด posts.js</button></details>
@@ -315,14 +328,58 @@ details.step[open] summary{margin-bottom:12px}
 <script>
 const $=i=>document.getElementById(i);
 const VIEWS=["login","setup","request","reqdone","list","form","team","inbox","cfg","done"];
-let T="s",pics=[],gps="",list=[],loaded=false,ei=-1,admins=[],me=null,last=null,onlyMine=false,inbox=[],lastSub=null,avFor=null;
+let T="s",pics=[],vids=[],gps="",list=[],loaded=false,ei=-1,admins=[],me=null,last=null,onlyMine=false,inbox=[],lastSub=null,avFor=null;
 const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
 const NAME={s:"เรื่องเล่า",n:"ข่าว",p:"สถานที่"};
-/* ประเภทโพสต์: f = ช่องที่ใช้ (d วันที่ b เนื้อหา i รูป m แผนที่ x หมวด/ราคา u ด่วน l ลิงก์) */
-const TY={s:{n:"เรื่องเล่า",e:"📖",f:"dbiml"},n:{n:"ข่าว",e:"📰",f:"dbiml"},a:{n:"ประกาศ",e:"📢",f:"dbimlu"},v:{n:"คลิป",e:"▶️",f:"dbl"},g:{n:"ของดี",e:"🧺",f:"bixml"},h:{n:"คนดีศรีตาจวน",e:"🏅",f:"bi"},p:{n:"สถานที่",e:"📍",f:"bimxl"}};
+/* ประเภทโพสต์: f = ช่องที่ใช้ (d วันที่ b เนื้อหา i รูป w วิดีโอ m แผนที่ x หมวด/ราคา u ด่วน l ลิงก์) */
+const TY={s:{n:"เรื่องเล่า",e:"📖",f:"dbimlw"},n:{n:"ข่าว",e:"📰",f:"dbimlw"},a:{n:"ประกาศ",e:"📢",f:"dbimluw"},v:{n:"คลิป",e:"▶️",f:"dbwl"},g:{n:"ของดี",e:"🧺",f:"bixml"},h:{n:"คนดีศรีตาจวน",e:"🏅",f:"bi"},p:{n:"สถานที่",e:"📍",f:"bimxl"}};
 const TL={s:["หัวข้อ","เนื้อเรื่อง"],n:["หัวข้อข่าว","เนื้อข่าว"],a:["หัวข้อประกาศ","รายละเอียดประกาศ"],v:["ชื่อคลิป","คำอธิบายคลิป (ไม่ใส่ก็ได้)"],g:["ชื่อสินค้า / ของดี","รายละเอียด"],h:["ชื่อ","เรื่องที่ชื่นชม (ขออนุญาตเจ้าตัวก่อนลงทุกครั้ง)"],p:["ชื่อสถานที่","คำอธิบาย"]};
 const CATS={g:["อาหารพื้นบ้าน","ผลิตภัณฑ์ชุมชน","พืชผลเกษตร","จุดเช็คอิน","ร้านอาหาร / กาแฟ"],p:["หมู่บ้าน","วัด","โรงเรียน","ศูนย์เรียนรู้","จุดเรียนรู้","แจ้งเหตุ"]};
 let LK=[],ft="all",fq="";
+/* ---------- วิดีโอ (เก็บเป็นไฟล์แยกในโฟลเดอร์ videos ไม่ฝังใน posts.js) ---------- */
+const vfile=new Map();
+const VMAX=3,VBIG=150*1048576,VEXT=/\.(mp4|webm|mov|m4v|ogv)$/i,VSRC=/^videos\/[\w.-]+\.(mp4|webm|mov|m4v|ogv)$/i;
+const fmtSize=b=>b>=1048576?(b/1048576).toFixed(1)+" MB":Math.max(1,Math.round(b/1024))+" KB";
+const vname=s=>String(s).split("/").pop();
+const subVids=sub=>((sub&&sub.ops)||[]).flatMap(o=>o.op==="put"&&o.post&&Array.isArray(o.post.videos)?o.post.videos.map(v=>v&&v.src).filter(s=>VSRC.test(String(s))):[]);
+function vmsg(t,c){const s=$("vst");s.hidden=!t;s.className="st "+(c||"");s.textContent=t}
+function drawV(){
+ $("thumbsv").replaceChildren(...vids.map((v,k)=>{
+  const d=mk("div","th"),vd=document.createElement("video");
+  vd.muted=true;vd.playsInline=true;vd.preload="metadata";vd.setAttribute("aria-hidden","true");vd.src=v.url?v.url+"#t=0.1":v.src;
+  const c=mk("input");c.type="text";c.placeholder="คำบรรยายวิดีโอ (ไม่ใส่ก็ได้)";c.value=v.cap;c.oninput=()=>v.cap=c.value;
+  const mid=mk("div"),row=mk("div");row.style.cssText="display:flex;gap:8px;flex-wrap:wrap;align-items:center";
+  const up=mk("button","","↑"),dn=mk("button","","↓"),x=mk("button","","✕");up.type=dn.type=x.type="button";
+  up.setAttribute("aria-label","เลื่อนขึ้น");dn.setAttribute("aria-label","เลื่อนลง");x.setAttribute("aria-label","เอาวิดีโอออก");
+  up.disabled=k===0;dn.disabled=k===vids.length-1;
+  up.onclick=()=>{[vids[k-1],vids[k]]=[vids[k],vids[k-1]];drawV()};dn.onclick=()=>{[vids[k+1],vids[k]]=[vids[k],vids[k+1]];drawV()};
+  x.onclick=()=>{if(v.url)URL.revokeObjectURL(v.url);vids.splice(k,1);drawV()};
+  row.append(up,dn,mk("span","mute",(v.file?fmtSize(v.file.size)+" · ไฟล์ใหม่":"อยู่บนเว็บแล้ว")+" · "+vname(v.src)));
+  mid.append(c,row);d.append(vd,mid,x);return d}));
+ $("pickv").textContent=vids.length?"🎬 เพิ่มวิดีโออีก (มี "+vids.length+" คลิป)":"🎬 เลือกวิดีโอจากเครื่อง"}
+$("pickv").onclick=()=>$("filev").click();
+$("filev").onchange=e=>{const fl=[...e.target.files];e.target.value="";let note="";
+ for(const f of fl){
+  if(vids.length>=VMAX){note="ใส่วิดีโอได้สูงสุด "+VMAX+" คลิปต่อโพสต์";break}
+  const m=f.name.match(VEXT);
+  if(!/^video\//.test(f.type)&&!m){note="“"+f.name+"” ไม่ใช่ไฟล์วิดีโอ";continue}
+  if(f.size>VBIG&&!confirm("ไฟล์ “"+f.name+"” ใหญ่ ("+fmtSize(f.size)+") อาจอัปโหลดขึ้นเว็บไม่ได้ หรือโหลดช้ามาก\nแนะนำให้ลง YouTube แล้ววางลิงก์แทน\n\nต้องการใช้ไฟล์นี้ต่อไหม?"))continue;
+  const ext=m?m[1].toLowerCase():/webm/.test(f.type)?"webm":/quicktime/.test(f.type)?"mov":"mp4";
+  const src="videos/v-"+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+"."+ext;
+  vfile.set(src,f);vids.push({src,cap:"",file:f,url:URL.createObjectURL(f)});
+  if(ext==="mov")note="ไฟล์ .mov จากไอโฟนบางเครื่องอาจเล่นบน Android/Chrome ไม่ได้ แนะนำให้ส่งออกเป็น MP4";
+ }
+ drawV();vmsg(note,note?"bad":"")};
+function dlVid(src){const f=vfile.get(src);if(!f)return;const u=URL.createObjectURL(f),a=document.createElement("a");a.href=u;a.download=vname(src);document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),60000)}
+function vidBox(box,names,adm){box.replaceChildren();box.hidden=!names.length;if(!names.length)return;
+ box.append(mk("h3","","🎬 โพสต์นี้มีวิดีโอ "+names.length+" คลิป"),mk("p","help",adm?"ไฟล์โพสต์ (.txt) ไม่รวมตัววิดีโอ ต้องส่งไฟล์วิดีโอด้านล่างให้เจ้าของด้วย โดยไม่เปลี่ยนชื่อไฟล์ เจ้าของจะนำไปใส่ในโฟลเดอร์ videos":"วิดีโอไม่ได้อยู่ใน posts.js ต้องดาวน์โหลดไฟล์วิดีโอด้านล่าง แล้วอัปโหลดเข้าโฟลเดอร์ชื่อ videos บนเว็บ (สร้างโฟลเดอร์ videos ไว้ข้างไฟล์ posts.js ถ้ายังไม่มี) ถ้าไม่ทำ วิดีโอจะไม่ขึ้น"));
+ const L=mk("div","vl");
+ names.forEach(s=>{const f=vfile.get(s),r=mk("div","vr");r.append(mk("b","",s+(f?" ("+fmtSize(f.size)+")":"")));
+  if(f){const d=mk("button","btn alt","⬇ ดาวน์โหลด");d.type="button";d.onclick=()=>dlVid(s);r.append(d);
+   if(adm){const sh=mk("button","btn","📤 ส่ง");sh.type="button";sh.onclick=async()=>{const ff=new File([f],vname(s),{type:f.type||"video/mp4"});if(navigator.canShare&&navigator.canShare({files:[ff]})){try{await navigator.share({files:[ff],title:"วิดีโอสำหรับโพสต์ใหม่"})}catch(e){}}else dlVid(s)};r.append(sh)}}
+  else r.append(mk("span","mute","ต้องได้ไฟล์ชื่อนี้จากผู้ดูแล แล้ววางในโฟลเดอร์ videos"));
+  L.append(r)});box.append(L)}
+
 const ytId=u=>{const m=String(u||"").match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#\s]*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);return m&&m[1]};
 $("tf").append(...[["all","ทั้งหมด"],...Object.entries(TY).map(([k,v])=>[k,v.e+" "+v.n])].map(([k,t])=>{const b=mk("button",k==="all"?"on":"",t);b.dataset.k=k;return b}));
 $("tf").onclick=e=>{const b=e.target.closest("button");if(!b)return;ft=b.dataset.k;[...$("tf").children].forEach(x=>x.classList.toggle("on",x===b));renderList()};
@@ -501,7 +558,7 @@ function renderList(){const box=$("items");box.replaceChildren();
  const vis=list.map((p,i)=>[p,i]).filter(x=>x[0].t!=="x"&&x[0].t!=="cfg"&&(ft==="all"||x[0].t===ft)&&(!fq||(x[0].title+" "+(x[0].body||"")).toLowerCase().includes(fq))&&!(typeof HIDE_TITLES!=="undefined"&&HIDE_TITLES.includes(x[0].title))&&(!onlyMine||(me&&x[0].byId===me.id)));$("empty").hidden=vis.length>0;
  vis.forEach(([p,i])=>{const r=mk("div","it2"),im=mk("div","im",(TY[p.t]||TY.s).e);
   if(p.photos&&p.photos[0]){const g=new Image();g.src=p.photos[0].src;g.onerror=()=>g.remove();im.append(g)}
-  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",(TY[p.t]||TY.s).n+(p.cat?" · "+p.cat:"")+(p.pin?" · 📍":"")+((p.links&&p.links.length)||(p.link&&p.link.url)?" · 🔗":"")+(p.urgent?" · 🔴 ด่วน":"")+(p.date?" · "+p.date:"")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")+(p.by?" · โดย "+p.by:"")));r.append(im,tx);
+  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",(TY[p.t]||TY.s).n+(p.cat?" · "+p.cat:"")+(p.pin?" · 📍":"")+((p.links&&p.links.length)||(p.link&&p.link.url)?" · 🔗":"")+(p.urgent?" · 🔴 ด่วน":"")+(p.date?" · "+p.date:"")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")+(p.videos&&p.videos.length?" · 🎬 "+p.videos.length:"")+(p.by?" · โดย "+p.by:"")));r.append(im,tx);
   if(can(p)){const ac=mk("div","ac"),ed=mk("button","","✏ แก้ไข"),de=mk("button","del","🗑 ลบ");ed.onclick=()=>edit(i);de.onclick=()=>del(i);ac.append(ed,de);r.append(ac)}
   else r.append(mk("p","mute","โพสต์ของผู้ดูแลท่านอื่น (แก้ไขได้เฉพาะเจ้าของ)"));
   box.append(r)})}
@@ -509,10 +566,10 @@ function renderList(){const box=$("items");box.replaceChildren();
 /* ---------- ฟอร์ม + รูปประกอบ ---------- */
 function setType(t){T=t;[...$("types").children].forEach(x=>x.classList.toggle("on",x.dataset.t===t));const f=TY[t].f,l=TL[t];
  const hs=(id,k)=>{const e=$(id);e.hidden=!f.includes(k);const b=e.previousElementSibling;if(b&&b.tagName==="LABEL")b.hidden=e.hidden};
- hs("date","d");$("stpic").hidden=!f.includes("i");$("stmap").hidden=!f.includes("m");$("fx").hidden=!f.includes("x");$("fu").hidden=!f.includes("u");$("stlk").hidden=!f.includes("l");$("pricew").hidden=t!=="g";
+ hs("date","d");$("stpic").hidden=!f.includes("i");$("stvid").hidden=!f.includes("w");$("stmap").hidden=!f.includes("m");$("fx").hidden=!f.includes("x");$("fu").hidden=!f.includes("u");$("stlk").hidden=!f.includes("l");$("pricew").hidden=t!=="g";
  $("title").previousElementSibling.querySelector("b").textContent=l[0];$("body").previousElementSibling.querySelector("b").textContent=l[1];
  $("cats").replaceChildren(...(CATS[t]||[]).map(c=>{const o=mk("option");o.value=c;return o}));
- $("lkhelp").textContent=t==="v"?"วางลิงก์คลิป YouTube ของเรื่องนี้ (ต้องใส่) ใส่ลิงก์อื่นเพิ่มได้":"ลิงก์โพสต์ Facebook คลิป YouTube หรือบทความเว็บอื่น (คลิป YouTube จะเล่นในหน้าเรื่องให้เลย)";
+ $("lkhelp").textContent=t==="v"?"วางลิงก์คลิป YouTube ของเรื่องนี้ หรือเลือกวิดีโอจากเครื่องในข้อ 4 แทนก็ได้ (ต้องมีอย่างใดอย่างหนึ่ง) ใส่ลิงก์อื่นเพิ่มได้":"ลิงก์โพสต์ Facebook คลิป YouTube หรือบทความเว็บอื่น (คลิป YouTube จะเล่นในหน้าเรื่องให้เลย)";
  if(t==="v"&&!LK.length){LK.push(["",""]);drawL()}}
 $("types").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset.t)};
 function shrink(f,max,sq){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const c=document.createElement("canvas"),x=c.getContext("2d");
@@ -526,7 +583,7 @@ function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=mk("div"
  up.disabled=k===0;dn.disabled=k===pics.length-1;
  up.onclick=()=>{[pics[k-1],pics[k]]=[pics[k],pics[k-1]];draw()};dn.onclick=()=>{[pics[k+1],pics[k]]=[pics[k],pics[k+1]];draw()};x.onclick=()=>{pics.splice(k,1);draw()};
  row.append(up,dn);if(/^data:/.test(p.src))row.append(mk("span","mute",Math.round(p.src.length*.75/1024)+" KB"));if(k===0)row.append(mk("span","badge","รูปปก"));mid.append(row);d.style.gridTemplateColumns="84px 1fr 44px";d.append(im,mid,x);return d}));
- $("pick").textContent=pics.length?"📷 เพิ่มรูปอีก (มี "+pics.length+" รูป)":"📷 เลือกรูปจากเครื่อง"}
+ $("pick").textContent=pics.length?"📷 เพิ่มรูปอีก (มี "+pics.length+" รูป)":"📷 เลือกรูปจากเครื่อง";drawV()}
 $("pick").onclick=()=>$("file").click();
 $("file").onchange=async e=>{$("pick").textContent="กำลังเตรียมรูป…";for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
 function msg(t,c){const s=$("gst");s.hidden=!t;s.className="st "+c;s.textContent=t}
@@ -570,10 +627,10 @@ $("gps").onclick=()=>{msg("กำลังหาตำแหน่ง… ถ้�
   const m=Math.round(p.coords.accuracy||0);msg("✓ ปักหมุดที่ตำแหน่งของคุณแล้ว (คลาดเคลื่อนประมาณ "+m+" ม.)"+(m>80?" ถ้าไม่ตรง ลากหมุดไปให้ตรงจุดได้":" ลากหมุดเพื่อปรับได้"),m>80?"bad":"ok")},
   e=>msg(locErr(e),"bad"),{enableHighAccuracy:true,timeout:20000})};
 $("pclr").onclick=clearPin;
-function clear(){pics=[];gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();["date","title","body","pname","cat","price"].forEach(i=>$(i).value="");$("urg").checked=false;LK=[];drawL();msg("","");setType("s")}
+function clear(){pics=[];vids.forEach(v=>v.url&&URL.revokeObjectURL(v.url));vids=[];vmsg("");gps="";if(map&&pm){map.removeLayer(pm);pm=null}showCoord();["date","title","body","pname","cat","price"].forEach(i=>$(i).value="");$("urg").checked=false;LK=[];drawL();msg("","");setType("s")}
 $("newp").onclick=()=>{ei=-1;clear();$("date").value=today();draw();show("form");openMap()};
 function edit(i){ei=i;const p=list[i];clear();setType(p.t);$("date").value=p.date||"";$("title").value=p.title||"";$("body").value=p.body||"";
- pics=(p.photos||[]).map(x=>({src:x.src,cap:x.cap||""}));LK=(p.links&&p.links.length?p.links:(p.link&&p.link.url?[["",p.link.url]]:[])).map(x=>[x[0]||"",x[1]||""]);drawL();$("cat").value=p.cat||"";$("price").value=p.price||"";$("urg").checked=!!p.urgent;
+ pics=(p.photos||[]).map(x=>({src:x.src,cap:x.cap||""}));vids=(p.videos||[]).filter(x=>x&&x.src).map(x=>{const f=vfile.get(x.src);return{src:x.src,cap:x.cap||"",file:f||null,url:f?URL.createObjectURL(f):""}});LK=(p.links&&p.links.length?p.links:(p.link&&p.link.url?[["",p.link.url]]:[])).map(x=>[x[0]||"",x[1]||""]);drawL();$("cat").value=p.cat||"";$("price").value=p.price||"";$("urg").checked=!!p.urgent;
  if(/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(p.pin||""))gps=p.pin;else $("pname").value=p.pin||"";
  draw();show("form");openMap()}
 $("back").onclick=e=>{e.preventDefault();show("list")};
@@ -581,22 +638,25 @@ $("more").onclick=()=>enter();$("more2").onclick=()=>enter();$("iback").onclick=
 const warn=()=>loaded||confirm("ยังโหลด posts.js เดิมของเว็บไม่ได้ ถ้าเคยโพสต์ผ่านหน้านี้แล้ว โพสต์เก่าอาจหายเมื่ออัปโหลดทับ\nต้องการทำต่อไหม?");
 
 /* ---------- บันทึก: เจ้าของ = posts.js / ผู้ดูแล = ไฟล์ส่งให้เจ้าของ ---------- */
-function finishOwner(){dlPosts();renderList();$("doneOwner").hidden=false;$("doneAdm").hidden=true;show("done")}
+function finishOwner(names){dlPosts();renderList();$("doneOwner").hidden=false;$("doneAdm").hidden=true;vidBox($("ovl"),names||[],false);show("done")}
 function subFile(sub){return["tjpost-"+sub.by.replace(/[^\w\u0E00-\u0E7F-]/g,"")+"-"+Date.now().toString(36)+".txt",JSON.stringify(sub)]}
-function finishAdm(sub){lastSub=sub;renderList();$("doneOwner").hidden=true;$("doneAdm").hidden=false;show("done")}
+function finishAdm(sub){lastSub=sub;renderList();$("doneOwner").hidden=true;$("doneAdm").hidden=false;vidBox($("avl"),subVids(sub).filter(s=>vfile.has(s)),true);show("done")}
 function dlSub(){const [n,c]=subFile(lastSub);lastSub.fn=lastSub.fn||n;const b=new Blob([c],{type:"text/plain"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=lastSub.fn;document.body.append(a);a.click();a.remove()}
 $("subDl").onclick=dlSub;
-$("subShare").onclick=async()=>{const [n,c]=subFile(lastSub),f=new File([c],n,{type:"text/plain"});
- if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"โพสต์ใหม่ถึงเจ้าของเว็บ",text:"โพสต์จาก "+lastSub.by})}catch(e){}}else{dlSub();alert("ดาวน์โหลดไฟล์แล้ว ส่งไฟล์นี้ให้เจ้าของทาง LINE / Facebook / อีเมล")}};
+$("subShare").onclick=async()=>{const [n,c]=subFile(lastSub),f=new File([c],n,{type:"text/plain"}),
+ vf=subVids(lastSub).filter(s=>vfile.has(s)).map(s=>new File([vfile.get(s)],vname(s),{type:vfile.get(s).type||"video/mp4"})),cs=fs=>navigator.canShare&&navigator.canShare({files:fs});
+ const fs=vf.length&&cs([f,...vf])?[f,...vf]:[f],lost=vf.length&&fs.length===1;
+ if(cs(fs)){try{await navigator.share({files:fs,title:"โพสต์ใหม่ถึงเจ้าของเว็บ",text:"โพสต์จาก "+lastSub.by});if(lost)alert("ส่งได้เฉพาะไฟล์โพสต์ กรุณาส่งไฟล์วิดีโอตามด้วยปุ่ม “📤 ส่ง” ด้านล่างอีกครั้ง")}catch(e){}}
+ else{dlSub();alert("ดาวน์โหลดไฟล์แล้ว ส่งไฟล์นี้ให้เจ้าของทาง LINE / Facebook / อีเมล"+(vf.length?" พร้อมไฟล์วิดีโอที่อยู่ด้านล่าง":""))}};
 $("subPosts").onclick=()=>{dlFile("posts.js","window.POSTS="+JSON.stringify(list)+";")};
 $("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อในข้อ 2 ก่อนนะครับ");$("title").focus();return}
  if(ei>=0&&!can(list[ei]))return;
- if(T==="v"&&!LK.some(x=>ytId(x[1]))){alert("ใส่ลิงก์ YouTube ของคลิปในข้อ 5 ก่อนนะครับ");return}
- const post={t:T,date:$("date").value.trim()||today(),title,body:$("body").value.trim(),photos:(TY[T].f.includes("i")?pics:[]).map(p=>({src:p.src,cap:p.cap.trim()})),links:LK.filter(x=>x[1].trim()).map(x=>[x[0].trim(),x[1].trim()]),link:{url:(LK.find(x=>x[1].trim())||["",""])[1].trim()},cat:TY[T].f.includes("x")?$("cat").value.trim():"",price:T==="g"?$("price").value.trim():"",urgent:T==="a"&&$("urg").checked,pin:TY[T].f.includes("m")?(gps||$("pname").value.trim()):""};
+ if(T==="v"&&!LK.some(x=>ytId(x[1]))&&!vids.length){alert("ใส่ลิงก์ YouTube ในข้อ 6 หรือเลือกวิดีโอในข้อ 4 ก่อนนะครับ");return}
+ const post={t:T,date:$("date").value.trim()||today(),title,body:$("body").value.trim(),photos:(TY[T].f.includes("i")?pics:[]).map(p=>({src:p.src,cap:p.cap.trim()})),videos:(TY[T].f.includes("w")?vids:[]).map(v=>({src:v.src,cap:v.cap.trim()})),links:LK.filter(x=>x[1].trim()).map(x=>[x[0].trim(),x[1].trim()]),link:{url:(LK.find(x=>x[1].trim())||["",""])[1].trim()},cat:TY[T].f.includes("x")?$("cat").value.trim():"",price:T==="g"?$("price").value.trim():"",urgent:T==="a"&&$("urg").checked,pin:TY[T].f.includes("m")?(gps||$("pname").value.trim()):""};
  const o=ei>=0?list[ei]:null;
  if(o){if(o.orig)post.orig=o.orig;if(o.by){post.by=o.by;post.byId=o.byId}post.id=o.id||uid("p")}
  else{post.by=me.name;post.byId=me.id;post.id=uid("p")}
- if(me.role==="owner"){if(!warn())return;if(ei>=0)list[ei]=post;else list.unshift(post);finishOwner()}
+ if(me.role==="owner"){if(!warn())return;if(ei>=0)list[ei]=post;else list.unshift(post);finishOwner(post.videos.map(v=>v.src).filter(s=>vfile.has(s)))}
  else{if(ei>=0)list[ei]=post;else list.unshift(post);finishAdm({v:1,byId:me.id,by:me.name,ts:Date.now(),ops:[{op:"put",post}]})}};
 function del(i){const p=list[i];if(!can(p)||!confirm("ลบโพสต์นี้ใช่ไหม?\n\n"+p.title))return;
  if(me.role==="owner"){if(!warn())return;if(p.orig)list[i]={t:"x",orig:p.orig};else list.splice(i,1);finishOwner()}
@@ -606,7 +666,8 @@ function del(i){const p=list[i];if(!can(p)||!confirm("ลบโพสต์น�
 const S=(x,n)=>String(x==null?"":x).slice(0,n);
 function clean(p,a){return{id:S(p.id,40),t:Object.keys(TY).includes(p.t)?p.t:"s",date:S(p.date,40),title:S(p.title,200),body:S(p.body,20000),
  photos:(Array.isArray(p.photos)?p.photos:[]).slice(0,12).filter(x=>x&&/^data:image\/(jpeg|png|webp|gif);base64,/.test(x.src)).map(x=>({src:x.src,cap:S(x.cap,200)})),
- link:{url:/^https?:\/\//i.test((p.link&&p.link.url)||"")?S(p.link.url,500):""},pin:S(p.pin,200),cat:S(p.cat,60),price:S(p.price,120),urgent:!!p.urgent&&a.role==="owner",links:(Array.isArray(p.links)?p.links:[]).slice(0,8).filter(l=>Array.isArray(l)&&/^https?:\/\//i.test(l[1])).map(l=>[S(l[0],60),S(l[1],500)]),by:a.name,byId:a.id}}
+ videos:(Array.isArray(p.videos)?p.videos:[]).slice(0,3).filter(x=>x&&VSRC.test(String(x.src))).map(x=>({src:x.src,cap:S(x.cap,200)})),
+  link:{url:/^https?:\/\//i.test((p.link&&p.link.url)||"")?S(p.link.url,500):""},pin:S(p.pin,200),cat:S(p.cat,60),price:S(p.price,120),urgent:!!p.urgent&&a.role==="owner",links:(Array.isArray(p.links)?p.links:[]).slice(0,8).filter(l=>Array.isArray(l)&&/^https?:\/\//i.test(l[1])).map(l=>[S(l[0],60),S(l[1],500)]),by:a.name,byId:a.id}}
 function check(en){const a=byId(en.sub.byId);if(!a||a.name!==en.sub.by)return"ไม่รู้จักผู้ส่งคนนี้ (ยังไม่ได้เป็นผู้ดูแล)";
  const o=en.op,id=o.op==="put"?(o.post&&o.post.id):o.id;if(!id)return"ข้อมูลไม่ครบ";
  const ex=list.find(p=>p.id===id);
@@ -624,7 +685,7 @@ function renderInbox(){const box=$("ilist");box.replaceChildren();
  inbox.forEach(en=>{const why=en.state==="wait"?check(en):"",o=en.op,p=o.op==="put"?o.post||{}:{title:o.title||"(ลบโพสต์)"};
   const r=mk("div","it2"),im=mk("div","im",o.op==="del"?"🗑":(TY[p.t]||TY.s).e);
   if(p.photos&&p.photos[0]&&/^data:image/.test(p.photos[0].src)){const g=new Image();g.src=p.photos[0].src;im.append(g)}
-  const a=byId(en.sub.byId),tx=mk("div","tx");tx.append(mk("b","",S(p.title,120)||"(ไม่มีหัวข้อ)"),mk("span","",(a?a.name:en.sub.by)+" · "+(o.op==="del"?"ขอลบโพสต์":o.post&&list.some(x=>x.id===o.post.id)?"แก้ไขโพสต์":"โพสต์ใหม่")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")));r.append(im,tx);
+  const a=byId(en.sub.byId),tx=mk("div","tx");tx.append(mk("b","",S(p.title,120)||"(ไม่มีหัวข้อ)"),mk("span","",(a?a.name:en.sub.by)+" · "+(o.op==="del"?"ขอลบโพสต์":o.post&&list.some(x=>x.id===o.post.id)?"แก้ไขโพสต์":"โพสต์ใหม่")+(p.photos&&p.photos.length?" · 🖼 "+p.photos.length:"")+(p.videos&&p.videos.length?" · 🎬 "+p.videos.length:"")));r.append(im,tx);
   if(o.op==="put"&&p.body)r.append(Object.assign(mk("p","mute",S(p.body,160)+(p.body.length>160?"…":"")),{style:"grid-column:1/-1;margin:0"}));
   if(en.state==="ok")r.append(mk("p","st ok","✓ รับแล้ว"));else if(en.state==="no")r.append(mk("p","st bad","✕ ไม่รับ"));
   else if(why)r.append(mk("p","st bad","⚠ "+why));
@@ -632,5 +693,5 @@ function renderInbox(){const box=$("ilist");box.replaceChildren();
   box.append(r)});
  $("igo").textContent="⬇ สร้าง posts.js จากที่ยอมรับแล้ว ("+inbox.filter(x=>x.state==="ok").length+")"}
 $("iall").onclick=()=>{inbox.forEach(en=>{if(en.state==="wait"&&!check(en)){apply(en);en.state="ok"}});renderInbox()};
-$("igo").onclick=()=>{if(!inbox.some(x=>x.state==="ok")){alert("ยังไม่ได้ยอมรับโพสต์ไหนเลย");return}if(!warn())return;finishOwner()};
+$("igo").onclick=()=>{if(!inbox.some(x=>x.state==="ok")){alert("ยังไม่ได้ยอมรับโพสต์ไหนเลย");return}if(!warn())return;finishOwner(inbox.filter(x=>x.state==="ok"&&x.op.op==="put"&&x.op.post).flatMap(x=>Array.isArray(x.op.post.videos)?x.op.post.videos.map(v=>v&&v.src):[]).filter(s=>VSRC.test(String(s))))};
 </script></body></html>

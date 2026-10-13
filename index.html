@@ -168,6 +168,25 @@ a:focus-visible,button:focus-visible{outline:3px solid #e9a23b;outline-offset:2p
 .totop{position:fixed;right:16px;bottom:18px;z-index:40;border:0;border-radius:999px;background:var(--green);color:#fff;font-weight:700;font-size:1rem;padding:10px 16px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);display:flex;gap:6px;align-items:center}
 .totop span{font-size:.85rem}
 
+/* ---------- แชร์/คัดลอก + วิดีโอที่อัปโหลด ---------- */
+.cw{display:flex;flex-direction:column;background:#fff;border-radius:var(--r);overflow:hidden;box-shadow:0 2px 14px rgba(60,50,30,.09);transition:transform .2s,box-shadow .2s}
+.cw:hover{transform:translateY(-3px);box-shadow:0 8px 26px rgba(60,50,30,.16)}
+.cw.fw{margin-bottom:22px}
+.cw>.card,.cw>.feat{box-shadow:none;border-radius:0;flex:1;margin:0;width:100%}
+.cw>.card:hover,.cw>.feat:hover{transform:none;box-shadow:none}
+.act{display:flex;flex-wrap:wrap;gap:8px;padding:10px 14px 12px;border-top:1px solid var(--line);background:#fff}
+.act .btn,.sharebar .btn{min-height:40px;font-size:.9rem}
+.follow .act{padding:0;border:0;background:none}
+.sharebar{margin:0 0 16px}
+.btn.line{background:#06c755;border-color:#06c755;color:#fff}
+.btn.fb{background:#1877f2;border-color:#1877f2;color:#fff}
+.vf{margin:0 0 18px}.vf video{width:100%;display:block;border-radius:16px;background:#1d2a22;max-height:78vh}
+.fpic video,.cpic video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.vplay.sm{width:48px;height:48px;font-size:1.2rem;padding-left:3px}
+.pcount.vc{right:auto;left:12px}
+.it .pic video{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+.it>.act{margin:8px 0 0;padding:10px 14px 0}
+
 footer{background:var(--green);color:#e8efe9;text-align:center;padding:26px 0;font-size:.92rem}
 footer b{color:#fff}
 .urg{display:block;width:100%;border:0;text-align:left;background:var(--rust);color:#fff;padding:12px 20px;font-weight:700;cursor:pointer;line-height:1.5}.urg.s{cursor:default}
@@ -282,6 +301,29 @@ function para(x){
  return rich(el("p"),x)}
 const plain=t=>String(t||"").replace(/\[([^\]]+)\]\(https?:\/\/[^\s)]+\)/g,"$1").replace(/(?:https?:\/\/|www\.)[^\s\u0E00-\u0E7F"'<>]+/gi,"").replace(/[ \t]{2,}/g," ").replace(/[:：]\s*$/,"").trim();
 const rid=n=>encodeURIComponent(n[1]);
+const tagIc=t=>t==="ข่าว"?"📰":t==="คลิป"?"🎬":"📖";
+const VRE=/^videos\/[\w.-]+\.(mp4|webm|mov|m4v|ogv)$/i;
+const upV=p=>(Array.isArray(p.videos)?p.videos:[]).filter(x=>x&&VRE.test(String(x.src))).map(x=>[x.src,x.cap||""]);
+/* แชร์ / คัดลอก */
+const baseU=()=>location.href.split("#")[0],postU=n=>baseU()+"#r="+rid(n);
+async function copyTxt(t){try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(t);return true}}catch(e){}
+ const a=document.createElement("textarea");a.value=t;a.readOnly=true;a.setAttribute("aria-hidden","true");a.style.cssText="position:fixed;left:0;top:0;width:1px;height:1px;opacity:0";
+ (document.querySelector("dialog[open]")||document.body).append(a);a.select();a.setSelectionRange(0,t.length);let r=false;try{r=document.execCommand("copy")}catch(e){}a.remove();return r}
+function flash(b,t){if(!b.dataset.o)b.dataset.o=b.textContent;b.textContent=t;clearTimeout(b._t);b._t=setTimeout(()=>{b.textContent=b.dataset.o},2200)}
+function postText(n){const body=String(n[3]||n[2]||"").split("\n").map(x=>x.trim()).filter(Boolean).join("\n\n");return n[1].replace(/^ตัวอย่าง:\s*/,"")+(n[0]?"\n📅 "+n[0]:"")+(body?"\n\n"+body:"")+"\n\n🌾 "+SITE.name+"\n"+postU(n)}
+function shareBar(n,full,more){const w=el("div",full?"btns sharebar":"act");w.setAttribute("role","group");w.setAttribute("aria-label","แชร์และคัดลอก");
+ const B=(t,c,f)=>{const b=el("button",c,t);b.type="button";b.onclick=e=>{e.stopPropagation();f(b)};return b},u=postU(n);
+ const sh=B("📤 แชร์",full?"btn sm":"btn alt sm",b=>{if(navigator.share)navigator.share({title:n[1],text:n[2]||n[1],url:u}).catch(()=>{});else copyTxt(u).then(ok=>flash(b,ok?"คัดลอกลิงก์แล้ว ✓":"คัดลอกไม่ได้"))});
+ const cl=B("🔗 คัดลอกลิงก์","btn alt sm",b=>copyTxt(u).then(ok=>flash(b,ok?"คัดลอกลิงก์แล้ว ✓":"คัดลอกไม่ได้")));
+ if(more)w.append(more);w.append(sh,cl);
+ if(full){w.append(B("📋 คัดลอกเนื้อหา","btn alt sm",b=>copyTxt(postText(n)).then(ok=>flash(b,ok?"คัดลอกเนื้อหาแล้ว ✓":"คัดลอกไม่ได้"))),
+  ext(el("a","btn line sm","💬 ส่งทาง LINE"),"https://social-plugins.line.me/lineit/share?url="+encodeURIComponent(u)),
+  ext(el("a","btn fb sm","👍 แชร์ Facebook"),"https://www.facebook.com/sharer/sharer.php?u="+encodeURIComponent(u)))}
+ return w}
+function wrapC(btn,n,cls){const w=el("div","cw"+(cls||""));w.append(btn,shareBar(n,false));return w}
+function vfig(v){const g=el("figure","vf"),x=document.createElement("video");x.controls=true;x.preload="metadata";x.playsInline=true;x.src=v[0];x.setAttribute("aria-label",v[1]||"วิดีโอ");
+ x.onerror=()=>{const m=el("p","tip","เล่นวิดีโอนี้ในหน้าเว็บไม่ได้ (ไฟล์อาจยังอัปโหลดไม่ครบ หรือเครื่องไม่รองรับรูปแบบนี้) ");m.append(aLink(v[0],"เปิด/ดาวน์โหลดวิดีโอ"));x.replaceWith(m)};
+ g.append(x);if(v[1])g.append(rich(el("figcaption"),v[1]));return g}
 
 /* หัวและท้ายเว็บ */
 document.title=SITE.name+" | เว็บชุมชนบ้านตาจวน";
@@ -298,16 +340,16 @@ const strip=t=>String(t||"").split("\n").filter(l=>!isS(l.trim())).join("\n");
 function ex(t,ti){const L=strip(t).split("\n").map(x=>plain(x.trim())).filter(Boolean),dup=x=>ti&&ti.includes(x.slice(0,15)),l=L.find(x=>x.length>=40&&!dup(x))||L.find(x=>!dup(x))||L[0]||"";return l.length>150?l.slice(0,148).trimEnd()+"…":l}
 const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 [[STORIES,1],[NEWS,1],[VIDEOS,1],[GOODS,1],[HEROES,0],[PLACES,0]].forEach(([a,k])=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][k]))a.splice(i,1)});
-let URG=null;
+let URG=null;const VUP=[];
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="cfg"){Object.assign(SITE,p.v||{});return}
  const ph0=(p.photos&&p.photos[0]&&p.photos[0].src)||"";
- if(p.t==="v"){const id=yt((p.links&&p.links.map(l=>l[1]).find(yt))||(p.link&&p.link.url)||"");if(id)VIDEOS.unshift([id,p.title]);return}
+ if(p.t==="v"){const id=yt((p.links&&p.links.map(l=>l[1]).find(yt))||(p.link&&p.link.url)||"");if(id)VIDEOS.unshift([id,p.title]);const vs=upV(p);if(vs.length)VUP.unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),[],[],"",p.by||"",1,vs]);return}
  if(p.t==="g"){GOODS.unshift([p.cat||"อื่น ๆ",p.title,p.body||"",p.price||"",ph0]);if(p.pin)PLACES.unshift([p.title,p.cat||"ของดี",p.pin,p.price||""]);return}
  if(p.t==="h"){HEROES.unshift([p.title,p.body||"",ph0]);return}
  if(p.t==="p"){PLACES.unshift([p.title,p.cat||"สถานที่",p.pin||p.title,p.body||""]);return}
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
- const row=[p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),(p.links&&p.links.length?p.links.filter(l=>l&&l[1]).map(l=>[l[0]||"ดูเพิ่มเติม",fixU(l[1])]):p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[]),pl,p.by||"",1];
+ const vs=upV(p),row=[p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),(p.links&&p.links.length?p.links.filter(l=>l&&l[1]).map(l=>[l[0]||"ดูเพิ่มเติม",fixU(l[1])]):p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[]),pl,p.by||"",1,vs];
  (p.t==="s"?STORIES:NEWS).unshift(row);if(p.t==="a"&&p.urgent)URG=row});
 
 [...NEWS,...STORIES].forEach(n=>{n[2]=plain(strip(n[2]));n[3]=strip(n[3])});
@@ -325,30 +367,31 @@ const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื�
 /* การ์ด + หน้าต่างอ่านเต็ม */
 function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(rich(el("figcaption"),p[1]));return g}
 const isN=t=>t==="ข่าว";
-function pic(n,tag,cls){const p=el("div",cls,isN(tag)?"📰":"📖"),cv=n[4]&&n[4][0];
- if(cv)p.append(img(cv[0],n[1]));p.append(el("span","chip"+(isN(tag)?" n":""),tag));
- if(n[4]&&n[4].length>1)p.append(el("span","pcount","🖼 "+n[4].length));return p}
+function pic(n,tag,cls){const p=el("div",cls,tagIc(tag)),cv=n[4]&&n[4][0],vs=n[9]||[];
+ if(cv)p.append(img(cv[0],n[1]));else if(vs[0]){const v=document.createElement("video");v.src=vs[0][0]+"#t=0.1";v.preload="metadata";v.muted=true;v.playsInline=true;v.setAttribute("aria-hidden","true");v.onerror=()=>v.remove();p.append(v,el("span","vplay sm","▶"))}
+ p.append(el("span","chip"+(isN(tag)?" n":""),tag));
+ if(n[4]&&n[4].length>1)p.append(el("span","pcount","🖼 "+n[4].length));
+ if(vs.length)p.append(el("span","pcount vc","🎬 "+vs.length));return p}
 function card(n,tag){const a=el("button","card"),p=pic(n,tag,"cpic");
  const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);
  m.append(el("span","cdt",[n[0],n[7]&&"โดย "+n[7]].filter(Boolean).join(" · ")),el("span","go","อ่านต่อ →"));
- b.append(h,el("p","",n[2]),m);a.append(p,b);a.onclick=()=>openFull(n,tag);return a}
+ b.append(h,el("p","",n[2]),m);a.append(p,b);a.onclick=()=>openFull(n,tag);return wrapC(a,n)}
 function feat(n,tag){const a=el("button","feat"),p=pic(n,tag,"fpic");
  const b=el("div","fb"),m=el("div","dmeta"),h=el("h3");
  m.append(el("span","tag new","ล่าสุด"));if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);
- b.append(m,h,el("p","",n[2]),el("span","go","อ่านเรื่องเต็มและดูรูป →"));a.append(p,b);a.onclick=()=>openFull(n,tag);return a}
+ b.append(m,h,el("p","",n[2]),el("span","go","อ่านเรื่องเต็มและดูรูป →"));a.append(p,b);a.onclick=()=>openFull(n,tag);return wrapC(a,n," fw")}
 function openFull(n,tag){const c=$("dbody");c.replaceChildren();const ph=n[4]||[];
  if(ph[0]){const hf=el("figure","dhero");hf.append(img(ph[0][0],ph[0][1]));if(ph[0][1])hf.append(rich(el("figcaption"),ph[0][1]));c.append(hf)}
- const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag"+(isN(tag)?" nw":""),(isN(tag)?"📢 ":"📖 ")+tag));
- if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);c.append(m,h);
+ const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag"+(isN(tag)?" nw":""),(isN(tag)?"📢 ":tag==="คลิป"?"🎬 ":"📖 ")+tag));
+ if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);c.append(m,h,shareBar(n,true));
  String(n[3]||n[2]).split("\n").map(x=>x.trim()).filter(Boolean).forEach(x=>{
   if(/^[“"].+[”"]$/.test(x)){c.append(el("blockquote","pq",x));return}
   if(/^(คำแนะนำ|หมายเหตุ|ข้อควรระวัง)/.test(x)){const t=el("div","tip");t.append(el("b","","💡 "));rich(t,x);c.append(t);return}
   c.append(para(x))});
+ const vs=n[9]||[];if(vs.length){c.append(el("h3","pgt","🎬 วิดีโอ"));vs.forEach(v=>c.append(vfig(v)))}
  if(ph.length>1){c.append(el("h3","pgt","ภาพเพิ่มเติม"));const g=el("div","pgrid"+(ph.length===2?" one":""));ph.slice(1).forEach(p=>g.append(fig(p)));c.append(g)}
  const LK=(n[5]||[]).filter(l=>l&&l[1]).map(l=>[l[0],fixU(l[1])]);LK.filter(l=>yt(l[1])).forEach(l=>c.append(vid(l[1])));const bx=el("div","btns lk");links(bx,LK.filter(l=>!yt(l[1])));const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl){pinBtns(bx,pl[2]);const sh=el("button","btn alt sm","🗺️ ดูบนแผนที่ชุมชน");sh.onclick=()=>{$("dlg").close();selPlace(PLACES.indexOf(pl));$("map").scrollIntoView()};bx.append(sh)}if(bx.children.length)c.append(bx);
- const f=el("div","follow"),sh=el("button","btn sm","📤 ส่งต่อให้เพื่อนและญาติ");
- f.append(el("p","","💚 ติดตามเรื่องราวบ้านตาจวนได้ที่เว็บนี้ ส่งต่อให้คนบ้านเราที่อยู่ไกลได้เลย"),sh);c.append(f);
- sh.onclick=()=>{const u=location.origin+location.pathname+"#r="+rid(n);if(navigator.share)navigator.share({title:n[1],text:n[2],url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}sh.textContent="คัดลอกลิงก์แล้ว ✓"}};
+ const f=el("div","follow");f.append(el("p","","💚 ติดตามเรื่องราวบ้านตาจวนได้ที่เว็บนี้ ส่งต่อให้คนบ้านเราที่อยู่ไกลได้เลย"),shareBar(n,false));c.append(f);
  try{history.replaceState(null,"","#r="+rid(n))}catch(e){}$("dlg").showModal();$("dlg").scrollTop=0}
 $("dx").onclick=()=>$("dlg").close();
 $("dlg").addEventListener("close",()=>{$("dbody").replaceChildren();if(/^#r=/.test(location.hash))try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});
@@ -365,9 +408,14 @@ if(FEED.length){
  FEED.slice(1).forEach(f=>$("feed").append(card(f.n,f.tag)));
 }else $("feat").append(el("p","mute","ยังไม่มีเรื่องใหม่ แวะมาติดตามได้เสมอ"));
 /* คลิป */
-if(!VIDEOS.length)$("media").classList.add("hide");
+if(!VIDEOS.length&&!VUP.length)$("media").classList.add("hide");
 VIDEOS.forEach(v=>{const a=el("a","it"),p=el("div","pic");p.append(img("https://i.ytimg.com/vi/"+v[0]+"/mqdefault.jpg",v[1]),el("span","play","▶ ดูคลิป"));
  ext(a,"https://www.youtube.com/watch?v="+v[0]);a.append(p,el("h4","",v[1]));$("vids").append(a)});
+VUP.forEach(n=>{const d=el("div","it"),p=el("div","pic"),hh=el("h4"),v=document.createElement("video");
+ v.controls=true;v.preload="metadata";v.playsInline=true;v.src=n[9][0][0];v.setAttribute("aria-label",n[1]);v.onerror=()=>p.replaceChildren(el("span","","เล่นวิดีโอไม่ได้"));p.append(v);
+ put(hh,n[1]);d.append(p,hh);if(n[2])d.append(el("p","",n[2]));
+ const ob=el("button","btn alt sm","📖 ดูรายละเอียด");ob.type="button";ob.onclick=()=>openFull(n,"คลิป");
+ d.append(shareBar(n,false,ob));$("vids").append(d)});
 
 const real=a=>a.filter(r=>!isS(r[0])&&!isS(r[1]||""));
 
@@ -403,7 +451,7 @@ selPlace(0);
 /* หัวเว็บโปร่งบนภาพ แล้วทึบเมื่อเลื่อนลง */
 (function(){const h=document.querySelector("header");const u=$("up");const f=()=>{h.classList.toggle("solid",scrollY>window.innerHeight*.45);u.classList.toggle("hide",scrollY<window.innerHeight*.8)};u.onclick=()=>scrollTo({top:0,behavior:"smooth"});addEventListener("scroll",f,{passive:true});f()})();
 /* เปิดเรื่องที่แชร์ลิงก์มาโดยตรง (#r=ชื่อเรื่อง) */
-(function(){const m=location.hash.match(/^#r=(.+)$/);if(!m)return;let t;try{t=decodeURIComponent(m[1])}catch(e){return}const f=FEED.find(x=>x.n[1]===t);if(f)openFull(f.n,f.tag)})();
+(function(){const m=location.hash.match(/^#r=(.+)$/);if(!m)return;let t;try{t=decodeURIComponent(m[1])}catch(e){return}const f=FEED.find(x=>x.n[1]===t);if(f)openFull(f.n,f.tag);else{const u=VUP.find(x=>x[1]===t);if(u)openFull(u,"คลิป")}})();
 </script>
 </body>
 </html>
