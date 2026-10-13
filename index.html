@@ -20,13 +20,13 @@
 <meta name="theme-color" content="#2f4a3a">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
   <div class="bar">
-    <a class="brand" href="#top"><span id="bn"></span><small id="bs"></small></a>
+    <a class="brand" href="#top"><span id="bn"></span></a>
     <nav class="top" id="nav" aria-label="เมนูหลัก">
       <a href="#news">ข่าวสาร</a>
       <a href="#about">รู้จักบ้านตาจวน</a>
@@ -160,9 +160,9 @@ function img(src,alt){const i=new Image();i.src=src;i.alt=alt||"";i.loading="laz
 function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
 
 /* หัวและท้ายเว็บ */
-document.title=SITE.name+" | "+SITE.slogan;
+document.title=SITE.name;
 if(SITE.notice){$("notice").textContent="⚠ "+SITE.notice;$("notice").classList.remove("hide")}
-$("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan;
+$("bn").textContent=SITE.name;
 $("hs").textContent=SITE.slogan;$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
