@@ -127,3 +127,27 @@ nav.top a{padding:8px 10px;font-size:.92rem}
 .place p{margin:0 0 12px;color:var(--mute)}
 .tag{display:inline-block;font-size:.78rem;background:var(--sand);color:var(--green);border-radius:99px;padding:0 12px;font-weight:700}
 .mapf{width:100%;height:340px;border:0;border-radius:14px;margin-top:14px;display:block}
+
+/* การ์ดข่าว + หน้าต่างอ่านเต็ม */
+.cards{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.card{display:flex;flex-direction:column;text-align:left;padding:0;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:18px;overflow:hidden;cursor:pointer;font:inherit;line-height:1.6;box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.cpic{position:relative;aspect-ratio:16/10;background:linear-gradient(135deg,var(--sand),var(--line));display:grid;place-items:center;font-size:3rem;overflow:hidden}
+.cpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.cdate{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.68);color:#fff;font-size:.8rem;font-weight:700;padding:2px 12px;border-radius:99px;line-height:1.7}
+.cb{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
+.cb h4{margin:0;font:700 1.1rem/1.5 "Noto Sans Thai",sans-serif}
+.cb p{margin:0;color:var(--mute);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cmeta{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--green);font-weight:700;font-size:.9rem}
+dialog{border:0;padding:0;max-width:720px;width:94%;max-height:92vh;border-radius:20px;background:var(--paper);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.6)}
+.dtop{position:sticky;top:0;display:flex;justify-content:flex-end;padding:10px 12px;background:var(--paper);z-index:2}
+.dbody{padding:0 22px 26px}
+.dbody h2{font-size:1.5rem;margin:8px 0 14px}
+.dbody p{margin:0 0 14px}
+.dmeta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.dbody figure{margin:0 0 16px}
+.dbody figure img{width:100%;height:auto;border-radius:14px;display:block;background:var(--sand);max-height:70vh;object-fit:contain}
+.dbody figcaption{font-size:.88rem;color:var(--mute);margin-top:6px}
+.follow{background:var(--sand);border-radius:14px;padding:16px 18px;margin-top:20px}
+.follow p{margin:0 0 10px}

@@ -59,8 +59,8 @@
   <section id="news"><div class="wrap">
     <div class="eyebrow">ข่าวและกิจกรรม</div>
     <h2>ข่าวสารหมู่บ้าน</h2>
-    <p class="lead">ประกาศของหมู่บ้านและหน่วยงาน กดที่ข่าวเพื่ออ่านเต็ม</p>
-    <div class="rows" id="newsList"></div>
+    <p class="lead">ประกาศของหมู่บ้านและหน่วยงาน แตะที่การ์ดเพื่ออ่านเรื่องเต็มและดูรูปทั้งหมด</p>
+    <div class="cards" id="newsList"></div>
     <h3>ปฏิทินกิจกรรม</h3>
     <div class="rows" id="calList"></div>
   </div></section>
@@ -80,8 +80,8 @@
   <section id="wisdom"><div class="wrap">
     <div class="eyebrow">ภูมิปัญญาชาวกวย</div>
     <h2>เรื่องเล่าของดีบ้านเรา</h2>
-    <p class="lead">อาหารพื้นบ้าน สมุนไพร วิถีชีวิต และเรื่องเล่าของผู้เฒ่า กดที่เรื่องเพื่ออ่านเต็ม</p>
-    <div class="rows" id="storyList"></div>
+    <p class="lead">อาหารพื้นบ้าน สมุนไพร วิถีชีวิต และเรื่องเล่าของผู้เฒ่า มีเรื่องใหม่เมื่อไรจะมาลงที่นี่ แวะมาติดตามได้เสมอ</p>
+    <div class="cards" id="storyList"></div>
   </div></section>
 
   <section id="report"><div class="wrap">
@@ -145,6 +145,8 @@
   <p style="margin:8px 0 0">เหตุฉุกเฉิน โทรก่อนเสมอ: <a href="tel:191">191</a> · <a href="tel:1669">1669</a> · <a href="tel:199">199</a></p>
 </div></footer>
 
+<dialog id="dlg" aria-label="อ่านเรื่องเต็ม"><div class="dtop"><button class="btn alt sm" id="dx">✕ ปิด</button></div><div class="dbody" id="dbody"></div></dialog>
+
 <noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
 
 <script src="content.js"></script>
@@ -169,21 +171,35 @@ $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Bool
 function links(box,L){(L||[]).forEach(l=>box.append(ext(el("a","btn alt sm",l[0]),l[1])))}
 const mq=encodeURIComponent;
 function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแผนที่"),"https://www.google.com/maps/search/?api=1&query="+mq(q)),ext(el("a","btn alt sm","🧭 นำทาง"),"https://www.google.com/maps/dir/?api=1&destination="+mq(q)))}
-/* เรื่อง/ข่าว: [วันที่, หัวข้อ, สรุป, เนื้อเต็ม, รูป, ลิงก์, ชื่อที่ตั้ง] */
-function story(n,open){const d=el("details","row"),s=el("summary"),b=el("div"),h=el("h4");
- s.append(el("div","d",n[0]));put(h,n[1]);b.append(h,el("p","",n[2]));s.append(b);
- const f=el("div","full");String(n[3]||n[2]).split("\n").forEach(x=>f.append(put(el("p"),x)));
- (n[4]||[]).forEach(p=>{const g=el("figure","ph"),a=p[0].startsWith("data:")?el("span"):ext(el("a"),p[0]);a.append(img(p[0],p[1]));g.append(a);if(p[1])g.append(el("figcaption","",p[1]));f.append(g)});
- const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl)pinBtns(bx,pl[2]);if(bx.children.length)f.append(bx);
- d.append(s,f);if(open)d.open=true;return d}
-/* โพสต์ใหม่จาก admin.html (posts.js) */
-(typeof POSTS!=="undefined"?POSTS:[]).slice().reverse().forEach(p=>{
+/* โพสต์จาก posts.js (แก้ไข/ลบได้ที่ admin.html) */
+const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(Boolean);
+const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
+[STORIES,NEWS].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][1]))a.splice(i,1)});
+P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
- let pl="";if(p.pin){pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}
- const row=[p.date,p.title,(p.body||"").replace(/\s+/g," ").slice(0,110),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl];
- (p.t==="n"?NEWS:STORIES).unshift(row)});
-NEWS.forEach((n,i)=>$("newsList").append(story(n,i===0)));
-STORIES.forEach((n,i)=>$("storyList").append(story(n,i===0)));
+ let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
+ (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,(p.body||"").replace(/\s+/g," ").slice(0,120),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl])});
+
+/* การ์ดข่าว/เรื่อง + หน้าต่างอ่านเต็ม */
+function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));return g}
+function card(n,tag){const a=el("button","card"),pic=el("div","cpic",tag==="ข่าว"?"📰":"📖"),cv=n[4]&&n[4][0];
+ if(cv)pic.append(img(cv[0],n[1]));if(n[0])pic.append(el("span","cdate",n[0]));
+ const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);m.append(el("span","","📁 "+tag),el("span","","อ่านต่อ →"));
+ b.append(h,el("p","",n[2]),m);a.append(pic,b);a.onclick=()=>openFull(n,tag);return a}
+function openFull(n,tag){const c=$("dbody");c.replaceChildren();
+ const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag","📁 "+tag),el("span","mute",n[0]));put(h,n[1]);c.append(m,h);
+ const ph=n[4]||[];if(ph[0])c.append(fig(ph[0]));
+ String(n[3]||n[2]).split("\n").forEach(x=>c.append(put(el("p"),x)));
+ ph.slice(1).forEach(p=>c.append(fig(p)));
+ const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl)pinBtns(bx,pl[2]);if(bx.children.length)c.append(bx);
+ const f=el("div","follow"),sh=el("button","btn sm","📤 ส่งต่อให้เพื่อนและญาติ");
+ f.append(el("p","","💚 ติดตามเรื่องราวบ้านตาจวนได้ที่เว็บนี้ ส่งต่อให้คนบ้านเราที่อยู่ไกลได้เลย"),sh);c.append(f);
+ sh.onclick=()=>{const u=location.origin+location.pathname;if(navigator.share)navigator.share({title:n[1],text:n[2],url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}sh.textContent="คัดลอกลิงก์แล้ว ✓"}};
+ $("dlg").showModal();$("dlg").scrollTop=0}
+$("dx").onclick=()=>$("dlg").close();
+$("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
+NEWS.forEach(n=>$("newsList").append(card(n,"ข่าว")));
+STORIES.forEach(n=>$("storyList").append(card(n,"เรื่องเล่า")));
 PLACES.forEach(p=>{const d=el("div","place"),h=el("h4");put(h,p[0]);d.append(el("span","tag",p[1]),h,el("p","",p[3]||""));
  const bx=el("div","btns"),t=el("button","btn alt sm","ดูแผนที่ในหน้านี้");let fr;
  t.onclick=()=>{if(fr){fr.remove();fr=null;t.textContent="ดูแผนที่ในหน้านี้";return}fr=el("iframe","mapf");fr.src="https://www.google.com/maps?q="+mq(p[2])+"&output=embed";fr.loading="lazy";fr.title=p[0];d.append(fr);t.textContent="ซ่อนแผนที่"};
