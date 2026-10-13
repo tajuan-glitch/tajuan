@@ -1,59 +1,71 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>ตัวช่วยเพิ่มเนื้อหา | ตาจวนบ้านเรา</title>
+<meta name="robots" content="noindex"><title>โพสต์ใหม่ | ตาจวนบ้านเรา</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <style>
-label{display:block;font-weight:700;margin:18px 0 2px}
-small{display:block;color:var(--mute);margin-bottom:4px;line-height:1.5}
-input,textarea,select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
-textarea{min-height:110px}
-.out{background:var(--sand);padding:14px;border-radius:12px;white-space:pre-wrap;word-break:break-all;font:.8rem/1.5 monospace;margin:14px 0}
+input,textarea{width:100%;font:inherit;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);margin:0 0 14px}
+textarea{min-height:170px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.chips button{flex:1;min-height:52px;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font-weight:700}
+.chips button.on{border-color:var(--green);background:var(--green);color:#fff}
+.btn{cursor:pointer;width:100%;justify-content:center;margin:0 0 12px}
+#thumbs{display:grid;gap:12px;margin:0 0 14px}
+.th{display:flex;gap:10px;align-items:center}
+.th img{width:84px;height:84px;object-fit:cover;border-radius:10px}
+.th input{margin:0}.th button{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px}
+.ok{color:var(--green);font-weight:700}
 </style></head>
-<body><div class="wrap" style="padding:30px 20px 60px">
-<div class="eyebrow">สำหรับทีมงาน</div>
-<h1 style="font-size:2rem">ตัวช่วยเพิ่มเนื้อหา</h1>
-<p class="lead">กรอกฟอร์ม แล้วกด “สร้างโค้ด” จากนั้นคัดลอกไปวางใน content.js ตามขั้นตอนด้านล่าง ไม่ต้องเขียนโค้ดเอง</p>
+<body><div class="wrap" style="padding:24px 20px 70px">
+<h1 style="font-size:1.9rem;margin-bottom:6px">โพสต์ใหม่</h1>
+<p class="lead" style="margin-bottom:18px">กรอกเท่าที่อยากใส่ ที่เหลือข้ามได้ แล้วกดบันทึก</p>
 
-<label for="t">จะเพิ่มอะไร</label>
-<select id="t"><option value="s">เรื่องเล่า / ภูมิปัญญา</option><option value="n">ข่าวประชาสัมพันธ์</option><option value="p">ปักหมุดที่ตั้ง</option></select>
+<div class="chips" id="types"><button data-t="s" class="on">📖 เรื่องเล่า</button><button data-t="n">📢 ข่าว</button><button data-t="p">📍 สถานที่</button></div>
+<input id="title" placeholder="หัวข้อ">
+<textarea id="body" placeholder="เล่าเรื่องที่นี่ (วางข้อความจาก Facebook ได้เลย)"></textarea>
 
-<div id="fa">
-<label>วันที่</label><input id="date" placeholder="เช่น 20 ต.ค. 2569">
-<label>หัวข้อ</label><input id="title">
-<label>สรุปสั้น ๆ (1–2 บรรทัด)</label><textarea id="sum" style="min-height:70px"></textarea>
-<label>เนื้อเรื่องเต็ม</label><small>ขึ้นย่อหน้าใหม่ด้วยการกด Enter วางข้อความจาก Facebook ได้เลย</small><textarea id="body" style="min-height:200px"></textarea>
-<label>รูปประกอบ</label><small>บรรทัดละ 1 รูป รูปแบบ: ชื่อไฟล์|คำบรรยาย เช่น  teh-5.jpg|คุณยายกำลังตำพริก<br>(ต้องเอาไฟล์รูปไปใส่ในโฟลเดอร์ img ก่อน)</small><textarea id="ph"></textarea>
-<label>ลิงก์ (ถ้ามี)</label><small>บรรทัดละ 1 ลิงก์ รูปแบบ: ชื่อปุ่ม|ลิงก์ เช่น  ดูโพสต์ใน Facebook|https://facebook.com/...</small><textarea id="lk" style="min-height:70px"></textarea>
-<label>ชื่อที่ตั้ง (ถ้าอยากให้มีปุ่มแผนที่)</label><small>พิมพ์ให้ตรงกับชื่อที่เพิ่มไว้ใน “ปักหมุดที่ตั้ง” เช่น บ้านตาจวน</small><input id="pl">
-</div>
+<button class="btn alt" id="pick">📷 เลือกรูป</button>
+<input type="file" id="file" accept="image/*" multiple hidden>
+<div id="thumbs"></div>
 
-<div id="fp" class="hide">
-<label>ชื่อที่ตั้ง</label><input id="pn" placeholder="เช่น ศาลาประชาคม">
-<label>หมวด</label><input id="pc" placeholder="เช่น หมู่บ้าน / วัด / ร้านค้า / แจ้งเหตุ">
-<label>ที่อยู่หรือพิกัด</label><small>ใส่ชื่อสถานที่ หรือพิกัดตัวเลข เช่น 14.123456,104.123456<br>วิธีได้พิกัด: เปิด Google Maps ในมือถือ แตะค้างที่จุดนั้น แล้วคัดลอกตัวเลขที่ขึ้นด้านบน</small><input id="pq">
-<label>คำอธิบาย (ถ้ามี)</label><input id="pd">
-</div>
+<button class="btn alt" id="gps">📍 ใช้ตำแหน่งที่ฉันอยู่ตอนนี้</button>
+<p id="gst" class="mute" style="margin:0 0 10px"></p>
+<input id="pname" placeholder="หรือพิมพ์ชื่อสถานที่ (ไม่ใส่ก็ได้)">
+<input id="link" placeholder="ลิงก์ เช่น โพสต์ Facebook (ไม่ใส่ก็ได้)" inputmode="url">
 
-<p style="margin-top:26px"><button class="btn" id="go">สร้างโค้ด</button></p>
-<div id="res" class="hide">
-<div class="out" id="out"></div>
-<button class="btn alt" id="cp">คัดลอกโค้ด</button>
-<h3>นำไปวางอย่างไร</h3>
-<ol class="steps" id="how"></ol>
-</div>
+<div id="oldbox" class="alert hide">โหลดโพสต์เดิมไม่ได้ ถ้าเคยโพสต์แล้ว ให้เลือกไฟล์ <b>posts.js</b> เดิมของเว็บตรงนี้ (ถ้าเพิ่งเริ่มโพสต์ครั้งแรก ข้ามได้)
+<input type="file" id="oldf" accept=".js" style="margin-top:10px"></div>
+
+<button class="btn" id="save">บันทึกโพสต์</button>
+<div id="done" class="callout hide"><p class="ok">✓ ได้ไฟล์ <b>posts.js</b> แล้ว</p>
+<p>ขั้นสุดท้าย: เอาไฟล์ <b>posts.js</b> ที่ดาวน์โหลดไปอัปโหลดขึ้นเว็บ <b>ทับของเดิม</b> เท่านี้เสร็จ (รูปอยู่ในไฟล์นี้แล้ว ไม่ต้องอัปโหลดรูปแยก)</p>
+<button class="btn alt" id="again">ดาวน์โหลดอีกครั้ง</button></div>
 </div>
 <script>
 const $=i=>document.getElementById(i);
-const L=t=>t.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>x.split("|").map(s=>s.trim()));
-const where={s:"const STORIES = [",n:"const NEWS = [",p:"const PLACES = ["};
-$("t").onchange=()=>{const p=$("t").value==="p";$("fa").classList.toggle("hide",p);$("fp").classList.toggle("hide",!p)};
-$("go").onclick=()=>{const t=$("t").value;let a;
- if(t==="p")a=[$("pn").value.trim(),$("pc").value.trim(),$("pq").value.trim(),$("pd").value.trim()];
- else a=[$("date").value.trim(),$("title").value.trim(),$("sum").value.trim(),$("body").value.trim(),
-  L($("ph").value).map(x=>[/^(img\/|https?:)/.test(x[0])?x[0]:"img/"+x[0],x[1]||""]),L($("lk").value).map(x=>[x[0],x[1]||""]),$("pl").value.trim()];
- $("out").textContent=JSON.stringify(a)+",";$("res").classList.remove("hide");
- $("how").innerHTML="<li>เปิดไฟล์ <b>content.js</b></li><li>หาบรรทัด <b>"+where[t]+"</b></li><li>กด Enter ต่อท้ายบรรทัดนั้น 1 ครั้ง แล้ววางโค้ดที่คัดลอกลงไป (รายการใหม่สุดไว้บนสุด)</li><li>บันทึกไฟล์ แล้วอัปโหลดขึ้นเว็บทับของเดิม (รวมถึงรูปใหม่ในโฟลเดอร์ img)</li>"};
-$("cp").onclick=()=>{const r=document.createRange();r.selectNodeContents($("out"));const s=getSelection();s.removeAllRanges();s.addRange(r);
- (navigator.clipboard?navigator.clipboard.writeText($("out").textContent):Promise.reject()).catch(()=>document.execCommand("copy")).finally(()=>{$("cp").textContent="คัดลอกแล้ว ✓"})};
+let T="s",pics=[],gps="",old=[],loaded=false,last="";
+$("types").onclick=e=>{const b=e.target.closest("button");if(!b)return;T=b.dataset.t;[...$("types").children].forEach(x=>x.classList.toggle("on",x===b))};
+function parse(t){const m=t.match(/POSTS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);old=JSON.parse(m[1]);loaded=true;$("oldbox").classList.add("hide")}
+fetch("posts.js?"+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(parse).catch(()=>$("oldbox").classList.remove("hide"));
+$("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parse(t);alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
+
+function shrink(f){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,1000/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL("image/jpeg",.72))};i.onerror=()=>r(null);i.src=u})}
+function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=document.createElement("div");d.className="th";
+ const im=new Image();im.src=p.src;const c=document.createElement("input");c.placeholder="คำบรรยายรูป (ไม่ใส่ก็ได้)";c.value=p.cap;c.oninput=()=>p.cap=c.value;
+ const x=document.createElement("button");x.textContent="✕";x.setAttribute("aria-label","เอารูปออก");x.onclick=()=>{pics.splice(k,1);draw()};d.append(im,c,x);return d}))}
+$("pick").onclick=()=>$("file").click();
+$("file").onchange=async e=>{for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
+
+$("gps").onclick=()=>{$("gst").textContent="กำลังหาตำแหน่ง… (กด “อนุญาต” ถ้ามีข้อความถาม)";
+ if(!navigator.geolocation){$("gst").textContent="เครื่องนี้หาตำแหน่งไม่ได้ ลองพิมพ์ชื่อสถานที่แทน";return}
+ navigator.geolocation.getCurrentPosition(p=>{gps=p.coords.latitude.toFixed(6)+","+p.coords.longitude.toFixed(6);$("gst").innerHTML='<span class="ok">✓ ได้ตำแหน่งแล้ว</span>'},
+  ()=>{$("gst").textContent="หาตำแหน่งไม่ได้ ลองพิมพ์ชื่อสถานที่แทน (หรือทำบนมือถือที่เปิดตำแหน่งไว้)"},{enableHighAccuracy:true,timeout:20000})};
+
+function dl(){const b=new Blob(["window.POSTS="+JSON.stringify(old)+";"],{type:"text/javascript"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="posts.js";document.body.append(a);a.click();a.remove()}
+$("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อก่อนนะครับ");$("title").focus();return}
+ if(!loaded&&old.length===0&&!confirm("ยังไม่ได้โหลดโพสต์เดิม ถ้าเว็บมีโพสต์อยู่แล้ว โพสต์เก่าจะหายเมื่ออัปโหลดทับ\nต้องการทำต่อไหม?"))return;
+ const post={t:T,date:new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"}),title,body:$("body").value.trim(),photos:pics.map(p=>({src:p.src,cap:p.cap.trim()})),link:{url:$("link").value.trim()},pin:gps||$("pname").value.trim()};
+ old=[post,...old];dl();$("done").classList.remove("hide");$("done").scrollIntoView({behavior:"smooth"});
+ pics=[];gps="";["title","body","pname","link"].forEach(i=>$(i).value="");$("gst").textContent="";draw()};
+$("again").onclick=dl;
 </script></body></html>

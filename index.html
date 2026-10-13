@@ -138,6 +138,7 @@
 <noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
 
 <script src="content.js"></script>
+<script src="posts.js"></script>
 <script>
 const $=i=>document.getElementById(i);
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -162,9 +163,15 @@ function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแ
 function story(n,open){const d=el("details","row"),s=el("summary"),b=el("div"),h=el("h4");
  s.append(el("div","d",n[0]));put(h,n[1]);b.append(h,el("p","",n[2]));s.append(b);
  const f=el("div","full");String(n[3]||n[2]).split("\n").forEach(x=>f.append(put(el("p"),x)));
- (n[4]||[]).forEach(p=>{const g=el("figure","ph"),a=ext(el("a"),p[0]);a.append(img(p[0],p[1]));g.append(a);if(p[1])g.append(el("figcaption","",p[1]));f.append(g)});
+ (n[4]||[]).forEach(p=>{const g=el("figure","ph"),a=p[0].startsWith("data:")?el("span"):ext(el("a"),p[0]);a.append(img(p[0],p[1]));g.append(a);if(p[1])g.append(el("figcaption","",p[1]));f.append(g)});
  const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl)pinBtns(bx,pl[2]);if(bx.children.length)f.append(bx);
  d.append(s,f);if(open)d.open=true;return d}
+/* โพสต์ใหม่จาก admin.html (posts.js) */
+(typeof POSTS!=="undefined"?POSTS:[]).slice().reverse().forEach(p=>{
+ if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
+ let pl="";if(p.pin){pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}
+ const row=[p.date,p.title,(p.body||"").replace(/\s+/g," ").slice(0,110),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl];
+ (p.t==="n"?NEWS:STORIES).unshift(row)});
 NEWS.forEach((n,i)=>$("newsList").append(story(n,i===0)));
 STORIES.forEach((n,i)=>$("storyList").append(story(n,i===0)));
 PLACES.forEach(p=>{const d=el("div","place"),h=el("h4");put(h,p[0]);d.append(el("span","tag",p[1]),h,el("p","",p[3]||""));
