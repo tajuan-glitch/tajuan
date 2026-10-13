@@ -118,8 +118,8 @@ details.step[open] summary{margin-bottom:12px}
 <label for="lpw"><b>รหัสผ่าน</b></label>
 <div class="pw"><input id="lpw" name="password" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div>
 <p class="pwn" aria-live="polite"></p>
-<label class="chk" for="lrem"><input type="checkbox" id="lrem"> จำฉันไว้ในเครื่องนี้ (30 วัน)</label>
-<p class="help" style="margin-top:-8px">ใช้เฉพาะมือถือหรือคอมของตัวเอง ไม่ควรติ๊กในเครื่องที่ใช้ร่วมกับคนอื่น</p>
+<label class="chk" for="lrem"><input type="checkbox" id="lrem" checked> จำฉันไว้ในเครื่องนี้ (30 วัน ต่ออายุให้ทุกครั้งที่เข้า)</label>
+<p class="help" style="margin-top:-8px">ใช้เฉพาะมือถือหรือคอมของตัวเอง ไม่ควรติ๊กในเครื่องที่ใช้ร่วมกับคนอื่น (iPhone/Safari อาจล้างค่าที่จำไว้ถ้าไม่ได้เปิดเว็บเกิน 7 วัน)</p>
 <div id="lerr" class="alert" hidden role="alert"></div>
 <button class="btn big" id="lgo" type="submit">เข้าสู่ระบบ</button>
 <button type="button" class="linkb" id="reqlink">ยังไม่มีบัญชี? ขอเป็นผู้ดูแลใหม่ →</button></form></div>
@@ -176,7 +176,7 @@ details.step[open] summary{margin-bottom:12px}
 <button class="btn alt big" id="impb">📥 รับโพสต์ที่ผู้ดูแลส่งมา</button>
 <input type="file" id="impf" accept=".txt,.json" multiple hidden>
 <div id="roleinfo" class="alert" hidden><b>คุณเป็นผู้ดูแล</b> โพสต์ได้เอง แก้ไข/ลบได้เฉพาะโพสต์ของตัวเอง เมื่อบันทึกแล้วจะได้ไฟล์ส่งให้เจ้าของเพื่อเผยแพร่ขึ้นเว็บ</div>
-<h3 style="margin:22px 0 12px">โพสต์ทั้งหมด</h3>
+<h3 style="margin:22px 0 6px">โพสต์ทั้งหมด</h3><p class="help" id="szinfo"></p>
 <div class="fl" id="flt"><button class="on" data-f="all">ทั้งหมด</button><button data-f="mine">ของฉัน</button></div>
 <div id="empty" hidden style="text-align:center">
 <svg class="ill" viewBox="0 0 320 130" role="img" aria-label="ภาพประกอบ ยังไม่มีโพสต์" style="max-width:240px">
@@ -363,8 +363,9 @@ function setSess(a,rem){try{sessionStorage.setItem("tj_me",a.id)}catch(e){}
  try{localStorage.setItem("tj_last",a.id);if(rem)localStorage.setItem("tj_rem",JSON.stringify({id:a.id,h:a.hash,exp:Date.now()+30*864e5}));else localStorage.removeItem("tj_rem")}catch(e){}}
 function clrSess(){try{sessionStorage.removeItem("tj_me");localStorage.removeItem("tj_rem")}catch(e){}}
 function stored(){let id="",a;try{id=sessionStorage.getItem("tj_me")}catch(e){}a=admins.find(x=>x.id===id);if(a)return a;
- try{const r=JSON.parse(localStorage.getItem("tj_rem")||"null");if(r&&r.exp>Date.now()){a=admins.find(x=>x.id===r.id&&x.hash===r.h);if(a){try{sessionStorage.setItem("tj_me",a.id)}catch(e){}return a}}}catch(e){}return null}
-function route(){if(!admins.length){show("setup");return}
+ try{const r=JSON.parse(localStorage.getItem("tj_rem")||"null");if(r&&r.exp>Date.now()){a=admins.find(x=>x.id===r.id&&x.hash===r.h);if(a){try{sessionStorage.setItem("tj_me",a.id);localStorage.setItem("tj_rem",JSON.stringify({id:a.id,h:a.hash,exp:Date.now()+30*864e5}))}catch(e){}return a}}}catch(e){}return null}
+function route(){if(!admins.length){let seen=false;try{seen=!!localStorage.getItem("tj_last")}catch(e){}
+ if(seen){show("login");lerr("โหลดรายชื่อผู้ดูแล (admins.js) ไม่ได้ ลองรีเฟรชหน้า หรือตรวจว่าไฟล์ admins.js อยู่บนเว็บ (ไม่ใช่เปิดไฟล์จากเครื่องโดยตรง)");return}show("setup");return}
  $("lname").replaceChildren(...admins.map(a=>{const o=mk("option","",a.name);o.value=a.id;return o}));
  try{const l=localStorage.getItem("tj_last");if(l&&admins.some(a=>a.id===l))$("lname").value=l}catch(e){}
  syncUser();me=stored();me?enter():show("login")}
@@ -452,6 +453,7 @@ $("rchk").onclick=async()=>{const box=$("rres");box.replaceChildren();box.hidden
 const can=p=>me&&(me.role==="owner"||p.byId===me.id);
 $("flt").onclick=e=>{const b=e.target.closest("button");if(!b)return;onlyMine=b.dataset.f==="mine";[...$("flt").children].forEach(x=>x.classList.toggle("on",x===b));renderList()};
 function renderList(){const box=$("items");box.replaceChildren();
+ {const mb=JSON.stringify(list).length/1048576;$("szinfo").textContent="ไฟล์ posts.js ตอนนี้ประมาณ "+mb.toFixed(1)+" MB"+(mb>3?" ⚠ เริ่มใหญ่ หน้าเว็บจะโหลดช้าบนมือถือ ควรลดรูป หรือแยกไฟล์รูปออกจาก posts.js":"")}
  const vis=list.map((p,i)=>[p,i]).filter(x=>x[0].t!=="x"&&!(typeof HIDE_TITLES!=="undefined"&&HIDE_TITLES.includes(x[0].title))&&(!onlyMine||(me&&x[0].byId===me.id)));$("empty").hidden=vis.length>0;
  vis.forEach(([p,i])=>{const r=mk("div","it2"),im=mk("div","im",p.t==="n"?"📰":p.t==="p"?"📍":"📖");
   if(p.photos&&p.photos[0]){const g=new Image();g.src=p.photos[0].src;g.onerror=()=>g.remove();im.append(g)}
@@ -466,14 +468,14 @@ $("types").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset
 function shrink(f,max,sq){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const c=document.createElement("canvas"),x=c.getContext("2d");
  if(sq){const s=Math.min(i.width,i.height);c.width=c.height=max||160;x.drawImage(i,(i.width-s)/2,(i.height-s)/2,s,s,0,0,c.width,c.height)}
  else{const s=Math.min(1,(max||1000)/Math.max(i.width,i.height));c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);x.drawImage(i,0,0,c.width,c.height)}
- URL.revokeObjectURL(u);r(c.toDataURL("image/jpeg",.72))};i.onerror=()=>r(null);i.src=u})}
+ URL.revokeObjectURL(u);let q=.78,d=c.toDataURL("image/jpeg",q);if(!sq)while(d.length>160000&&q>.45){q-=.07;d=c.toDataURL("image/jpeg",q)}r(d)};i.onerror=()=>r(null);i.src=u})}
 function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=mk("div","th"),im=new Image();im.src=p.src;
  const c=mk("input");c.type="text";c.placeholder=k===0?"คำบรรยายรูปปก (ไม่ใส่ก็ได้)":"คำบรรยายรูป (ไม่ใส่ก็ได้)";c.value=p.cap;c.oninput=()=>p.cap=c.value;
  const mid=mk("div");mid.append(c);const row=mk("div");row.style.cssText="display:flex;gap:8px";
  const up=mk("button","","↑"),dn=mk("button","","↓"),x=mk("button","","✕");up.setAttribute("aria-label","เลื่อนขึ้น");dn.setAttribute("aria-label","เลื่อนลง");x.setAttribute("aria-label","เอารูปออก");
  up.disabled=k===0;dn.disabled=k===pics.length-1;
  up.onclick=()=>{[pics[k-1],pics[k]]=[pics[k],pics[k-1]];draw()};dn.onclick=()=>{[pics[k+1],pics[k]]=[pics[k],pics[k+1]];draw()};x.onclick=()=>{pics.splice(k,1);draw()};
- row.append(up,dn);if(k===0)row.append(mk("span","badge","รูปปก"));mid.append(row);d.style.gridTemplateColumns="84px 1fr 44px";d.append(im,mid,x);return d}));
+ row.append(up,dn);if(/^data:/.test(p.src))row.append(mk("span","mute",Math.round(p.src.length*.75/1024)+" KB"));if(k===0)row.append(mk("span","badge","รูปปก"));mid.append(row);d.style.gridTemplateColumns="84px 1fr 44px";d.append(im,mid,x);return d}));
  $("pick").textContent=pics.length?"📷 เพิ่มรูปอีก (มี "+pics.length+" รูป)":"📷 เลือกรูปจากเครื่อง"}
 $("pick").onclick=()=>$("file").click();
 $("file").onchange=async e=>{$("pick").textContent="กำลังเตรียมรูป…";for(const f of e.target.files){if(pics.length>=12)break;const s=await shrink(f);if(s)pics.push({src:s,cap:""})}e.target.value="";draw()};
