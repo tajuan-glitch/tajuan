@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 <header>
@@ -166,7 +166,7 @@ const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
- (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,(p.body||"").replace(/\s+/g," ").slice(0,120),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl])});
+ (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,(p.body||"").replace(/\s+/g," ").slice(0,120),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||""])});
 
 /* การ์ดข่าว/เรื่อง + หน้าต่างอ่านเต็ม */
 function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));return g}
@@ -175,7 +175,7 @@ function card(n,tag){const a=el("button","card"),pic=el("div","cpic",tag==="ข�
  const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);m.append(el("span","","📁 "+tag),el("span","","อ่านต่อ →"));
  b.append(h,el("p","",n[2]),m);a.append(pic,b);a.onclick=()=>openFull(n,tag);return a}
 function openFull(n,tag){const c=$("dbody");c.replaceChildren();
- const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag","📁 "+tag),el("span","mute",n[0]));put(h,n[1]);c.append(m,h);
+ const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag","📁 "+tag),el("span","mute",n[0]));if(n[7])m.append(el("span","mute","โดย "+n[7]));put(h,n[1]);c.append(m,h);
  const ph=n[4]||[];if(ph[0])c.append(fig(ph[0]));
  String(n[3]||n[2]).split("\n").forEach(x=>c.append(put(el("p"),x)));
  ph.slice(1).forEach(p=>c.append(fig(p)));

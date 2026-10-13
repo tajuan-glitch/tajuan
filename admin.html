@@ -1,35 +1,37 @@
 <!DOCTYPE html>
 <html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex"><title>โพสต์ใหม่ | ตาจวนบ้านเรา</title>
+<meta name="robots" content="noindex"><title>ผู้ดูแล | ตาจวนบ้านเรา</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=5">
+<link rel="stylesheet" href="style.css?v=6">
 <style>
+[hidden]{display:none!important}
 body{font-size:1.05rem;line-height:1.7}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 0;flex-wrap:wrap}
 .top a{font-weight:700}
+#who{display:flex;align-items:center;gap:8px;font-size:.95rem}
+#who button{min-height:40px;padding:0 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:10px;cursor:pointer}
 .step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:0 0 18px}
 .step h2{font-size:1.25rem;margin:0 0 4px;display:flex;align-items:center;gap:10px}
 .step h2 i{font-style:normal;flex:none;width:34px;height:34px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font:700 1rem "Sarabun"}
 .opt{font:700 .75rem "Sarabun";background:var(--sand);color:var(--mute);border-radius:99px;padding:1px 10px;margin-left:auto}
 .help{margin:0 0 14px;color:var(--mute);font-size:.95rem}
-input[type=text],input[type=url],input:not([type]),textarea{width:100%;font:inherit;font-size:1.05rem;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);margin:0 0 12px}
-input:focus,textarea:focus{border-color:var(--green);outline:0}
+input[type=text],input[type=url],input[type=password],input:not([type]),textarea,select{width:100%;font:inherit;font-size:1.05rem;padding:14px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);margin:0 0 12px}
+input:focus,textarea:focus,select:focus{border-color:var(--green);outline:0}
 textarea{min-height:200px}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .chips button{min-height:84px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:14px;font-weight:700;line-height:1.35;padding:8px 4px}
 .chips button b{display:block;font-size:1.6rem;line-height:1.2}
 .chips button.on{border-color:var(--green);background:var(--green);color:#fff}
 @media(prefers-color-scheme:dark){.step h2 i,.chips button.on{color:#10150f}}
-.big{width:100%;justify-content:center;cursor:pointer;font-size:1.1rem}
+.big{width:100%;justify-content:center;cursor:pointer;font-size:1.1rem;margin:0 0 12px}
 #thumbs{display:grid;gap:12px;margin:14px 0 0}
 .th{display:grid;grid-template-columns:84px 1fr 44px;gap:10px;align-items:center}
 .th img{width:84px;height:84px;object-fit:cover;border-radius:10px}
 .th input{margin:0!important}
 .th button{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:10px;font-size:1.1rem}
-.st{margin:12px 0 0;font-weight:700}
-.st.ok{color:var(--green)}.st.bad{color:var(--clay)}
+.st{margin:12px 0 0;font-weight:700}.st.ok{color:var(--green)}.st.bad{color:var(--clay)}
 .bar{position:sticky;bottom:0;background:var(--paper);border-top:1px solid var(--line);padding:12px 20px calc(12px + env(safe-area-inset-bottom,0px));margin:0 -20px}
-.bar .btn{margin:0}
+.bar .big{margin:0}
 .nums{counter-reset:n;list-style:none;padding:0;margin:0 0 16px}
 .nums li{counter-increment:n;display:flex;gap:12px;margin:12px 0}
 .nums li::before{content:counter(n);flex:none;width:30px;height:30px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-weight:700}
@@ -38,14 +40,35 @@ textarea{min-height:200px}
 .it2 .im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .it2 .tx b{display:block;line-height:1.4}.it2 .tx span{color:var(--mute);font-size:.88rem}
 .ac{grid-column:1/-1;display:flex;gap:10px}
-.ac button{flex:1;min-height:46px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;font-weight:700}
+.ac button{flex:1;min-height:46px;border:2px solid var(--line);background:var(--paper);color:var(--ink);border-radius:12px;font-weight:700;cursor:pointer}
 .ac button.del{color:var(--clay)}
+.badge{display:inline-block;background:var(--sand);color:var(--green);border-radius:99px;padding:0 10px;font-size:.78rem;font-weight:700;margin-left:6px}
 </style></head>
 <body><div class="wrap" style="padding:0 20px">
-<div class="top"><a href="index.html">← กลับหน้าเว็บ</a><b style="color:var(--green)" id="fh">จัดการโพสต์</b></div>
+<div class="top"><a href="index.html">← กลับหน้าเว็บ</a><b style="color:var(--green)" id="fh">ผู้ดูแล</b>
+<span id="who" hidden><span id="wn"></span><button id="out">ออกจากระบบ</button></span></div>
 
-<div id="list">
+<!-- เข้าสู่ระบบ -->
+<div id="login" hidden>
+<div class="step"><h2>เข้าสู่ระบบผู้ดูแล</h2><p class="help">เลือกชื่อของคุณ แล้วใส่รหัสผ่าน</p>
+<label for="lname"><b>ชื่อ</b></label><select id="lname"></select>
+<label for="lpw"><b>รหัสผ่าน</b></label><input id="lpw" type="password" autocomplete="current-password">
+<p class="st bad" id="lerr" hidden>รหัสผ่านไม่ถูกต้อง</p>
+<button class="btn big" id="lgo" style="margin-top:12px">เข้าสู่ระบบ</button></div></div>
+
+<!-- ตั้งค่าครั้งแรก -->
+<div id="setup" hidden>
+<div class="step"><h2>ตั้งค่าครั้งแรก</h2><p class="help">ยังไม่มีผู้ดูแล สร้างบัญชี <b>เจ้าของเว็บ</b> ก่อน เจ้าของเพิ่ม/ลบผู้ดูแลคนอื่นได้ภายหลัง</p>
+<label for="sn"><b>ชื่อเจ้าของ</b></label><input id="sn" type="text" placeholder="เช่น ผู้ใหญ่บ้าน หรือชื่อของคุณ">
+<label for="sp"><b>ตั้งรหัสผ่าน</b> (อย่างน้อย 6 ตัว)</label><input id="sp" type="password" autocomplete="new-password">
+<label for="sp2"><b>พิมพ์รหัสผ่านอีกครั้ง</b></label><input id="sp2" type="password" autocomplete="new-password">
+<button class="btn big" id="sgo" style="margin-top:12px">สร้างบัญชีเจ้าของ</button>
+<p class="help" style="margin-top:14px">เคยตั้งค่าไว้แล้ว? เลือกไฟล์ <b>admins.js</b> เดิมของเว็บ: <input id="adf" type="file" accept=".js" style="margin-top:8px"></p></div></div>
+
+<!-- รายการโพสต์ -->
+<div id="list" hidden>
 <button class="btn big" id="newp">＋ โพสต์ใหม่</button>
+<button class="btn alt big" id="teamb">👥 จัดการผู้ดูแล</button>
 <h3 style="margin:22px 0 12px">โพสต์ทั้งหมด</h3>
 <p id="empty" class="mute" hidden>ยังไม่มีโพสต์ กด “โพสต์ใหม่” ได้เลย</p>
 <div id="items"></div>
@@ -53,10 +76,22 @@ textarea{min-height:200px}
 <input id="oldf" type="file" accept=".js" style="margin-top:10px;width:100%"></div>
 </div>
 
+<!-- จัดการผู้ดูแล (เจ้าของเท่านั้น) -->
+<div id="team" hidden>
+<p><a href="#" id="tback">← กลับไปรายการโพสต์</a></p>
+<div id="tlist"></div>
+<div class="step"><h2>เพิ่มผู้ดูแลใหม่</h2><p class="help">ผู้ดูแลโพสต์ แก้ไข และลบ <b>ได้เฉพาะโพสต์ของตัวเอง</b> ส่วนเจ้าของจัดการได้ทุกโพสต์</p>
+<label for="tn"><b>ชื่อ</b></label><input id="tn" type="text" placeholder="เช่น สมชาย">
+<label for="tp"><b>ตั้งรหัสผ่านให้ (อย่างน้อย 6 ตัว)</b></label><input id="tp" type="password" autocomplete="new-password">
+<button class="btn big" id="tadd">＋ เพิ่มผู้ดูแล</button></div>
+<div id="abar" class="alert" hidden><b>มีการเปลี่ยนแปลง</b> กดปุ่มด้านล่าง แล้วเอาไฟล์ <b>admins.js</b> ไปอัปโหลดขึ้นเว็บทับของเดิม ผู้ดูแลจึงจะใช้งานได้
+<button class="btn big" id="adl" style="margin:12px 0 0">⬇ ดาวน์โหลด admins.js</button></div>
+<p class="help">หมายเหตุ: รหัสผ่านใช้แยกบทบาทในหน้านี้ แต่คนที่ <b>อัปโหลดไฟล์ขึ้นเว็บได้จริง</b> คือคนที่มีสิทธิ์เข้าที่เก็บไฟล์ของเว็บ จึงควรให้สิทธิ์นั้นเฉพาะคนที่ไว้ใจ</p>
+</div>
+
+<!-- ฟอร์มโพสต์ -->
 <div id="form" hidden>
 <p><a href="#" id="back">← กลับไปรายการโพสต์</a></p>
-<p class="lead" style="margin-bottom:18px">ทำทีละข้อ ข้อที่มีป้าย <b>ไม่ใส่ก็ได้</b> ข้ามได้เลย</p>
-
 <div class="step"><h2><i>1</i>จะโพสต์เรื่องอะไร</h2><p class="help">แตะเลือก 1 อย่าง</p>
 <div class="chips" id="types">
 <button data-t="s" class="on"><b>📖</b>เรื่องเล่า<br>ภูมิปัญญา</button>
@@ -84,50 +119,102 @@ textarea{min-height:200px}
 <p class="help">เช่น ลิงก์โพสต์ Facebook หรือคลิป YouTube ที่เกี่ยวข้อง</p>
 <input id="link" type="url" inputmode="url" placeholder="วางลิงก์ที่นี่"></div>
 
-
-
 <div class="bar"><button class="btn big" id="save">✓ บันทึกโพสต์</button></div>
 </div>
 
+<!-- เสร็จ -->
 <div id="done" hidden>
-<div class="step" style="margin-top:20px"><h2 style="color:var(--green)">✓ บันทึกแล้ว ขั้นสุดท้าย</h2>
+<div class="step" style="margin-top:20px"><h2 style="color:var(--green)">✓ ได้ไฟล์ <span id="dn">posts.js</span> แล้ว ขั้นสุดท้าย</h2>
 <ol class="nums">
-<li><span>เครื่องดาวน์โหลดไฟล์ <b>posts.js</b> ให้แล้ว (ถ้าไม่เห็น กดปุ่มด้านล่าง)</span></li>
-<li><span>เอาไฟล์ <b>posts.js</b> ไปอัปโหลดขึ้นเว็บ <b>ทับไฟล์เดิม</b></span></li>
-<li><span>รอสักครู่ แล้วเปิดหน้าเว็บดูโพสต์ใหม่</span></li></ol>
-<button class="btn alt big" id="again">⬇ ดาวน์โหลด posts.js อีกครั้ง</button>
-<button class="btn big" id="more" style="margin-top:12px">← กลับไปรายการโพสต์</button></div>
+<li><span>เครื่องดาวน์โหลดไฟล์ให้แล้ว (ถ้าไม่เห็น กดปุ่มด้านล่าง)</span></li>
+<li><span>เอาไฟล์ <b id="dn2">posts.js</b> ไปอัปโหลดขึ้นเว็บ <b>ทับไฟล์เดิม</b></span></li>
+<li><span>รอสักครู่ แล้วเปิดหน้าเว็บดู</span></li></ol>
+<button class="btn alt big" id="again">⬇ ดาวน์โหลดอีกครั้ง</button>
+<button class="btn big" id="more">← กลับไปรายการโพสต์</button></div>
 </div></div>
 
-<script src="content.js?v=5"></script>
+<script src="content.js?v=6"></script>
 <script>
 const $=i=>document.getElementById(i);
-let T="s",pics=[],gps="",list=[],loaded=false,ei=-1;
+const VIEWS=["login","setup","list","form","team","done"];
+let T="s",pics=[],gps="",list=[],loaded=false,ei=-1,admins=[],me=null,last=null;
 const today=()=>new Date().toLocaleDateString("th-TH",{day:"numeric",month:"short",year:"numeric"});
 const NAME={s:"เรื่องเล่า",n:"ข่าว",p:"สถานที่"};
-function show(v){["list","form","done"].forEach(x=>$(x).hidden=x!==v);$("fh").textContent=v==="form"?(ei>=0?"แก้ไขโพสต์":"โพสต์ใหม่"):"จัดการโพสต์";scrollTo(0,0)}
-function setType(t){T=t;[...$("types").children].forEach(x=>x.classList.toggle("on",x.dataset.t===t))}
-$("types").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset.t)};
+const HEAD={login:"เข้าสู่ระบบ",setup:"ตั้งค่าครั้งแรก",team:"ผู้ดูแลเว็บ"};
+function mk(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+function show(v){VIEWS.forEach(x=>$(x).hidden=x!==v);$("fh").textContent=v==="form"?(ei>=0?"แก้ไขโพสต์":"โพสต์ใหม่"):(HEAD[v]||"จัดการโพสต์");$("who").hidden=!me;scrollTo(0,0)}
 
-/* โหลดโพสต์เดิม + ดึงโพสต์ใน content.js เข้ามาให้แก้ไขได้ */
-function parse(t){const m=t.match(/POSTS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/);list=JSON.parse(m[1]);loaded=true;$("oldbox").hidden=true}
+/* ---------- รหัสผ่าน (เก็บเป็นค่าแฮช ไม่เก็บรหัสจริง) ---------- */
+const hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+const unhex=s=>new Uint8Array(s.match(/../g).map(x=>parseInt(x,16)));
+const okCrypto=()=>{if(window.crypto&&crypto.subtle)return true;alert("ฟังก์ชันรหัสผ่านใช้ได้เมื่อเปิดผ่านเว็บจริง (https) เท่านั้น");return false};
+async function hp(pw,salt){const k=await crypto.subtle.importKey("raw",new TextEncoder().encode(pw),"PBKDF2",false,["deriveBits"]);return hex(await crypto.subtle.deriveBits({name:"PBKDF2",salt:unhex(salt),iterations:150000,hash:"SHA-256"},k,256))}
+async function mkAdmin(name,pw,role){const salt=hex(crypto.getRandomValues(new Uint8Array(16)));return{id:"a"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,role,salt,hash:await hp(pw,salt)}}
+
+/* ---------- ดาวน์โหลดไฟล์ ---------- */
+function dlFile(n,c){last=[n,c];const b=new Blob([c],{type:"text/javascript"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=n;document.body.append(a);a.click();a.remove();$("dn").textContent=n;$("dn2").textContent=n}
+const dlPosts=()=>dlFile("posts.js","window.POSTS="+JSON.stringify(list)+";");
+const dlAdmins=()=>dlFile("admins.js","window.ADMINS="+JSON.stringify(admins)+";");
+$("again").onclick=()=>last&&dlFile(last[0],last[1]);
+$("adl").onclick=dlAdmins;
+
+/* ---------- โหลดข้อมูล ---------- */
+const parseP=t=>{list=JSON.parse(t.match(/POSTS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/)[1]);loaded=true;$("oldbox").hidden=true};
+const parseA=t=>{admins=JSON.parse(t.match(/ADMINS\s*=\s*(\[[\s\S]*\])\s*;?\s*$/)[1])};
+const getT=u=>fetch(u+"?"+Date.now()).then(r=>r.ok?r.text():Promise.reject());
 function imp(rows,t){rows.forEach(n=>{if(list.some(p=>p.orig===n[1]||p.title===n[1]))return;
  const pl=n[6]&&PLACES.find(x=>x[0]===n[6]);
  list.push({t,date:n[0],title:n[1],body:n[3]||n[2],photos:(n[4]||[]).map(x=>({src:x[0],cap:x[1]||""})),link:{url:(n[5]&&n[5][0]&&n[5][0][1])||""},pin:pl?pl[2]:"",orig:n[1]})})}
-function refresh(){imp(STORIES,"s");imp(NEWS,"n");renderList()}
-fetch("posts.js?"+Date.now()).then(r=>r.ok?r.text():Promise.reject()).then(parse).catch(()=>{$("oldbox").hidden=false}).finally(refresh);
-$("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parse(t);refresh();alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
+Promise.all([getT("posts.js").then(parseP).catch(()=>{$("oldbox").hidden=false}),getT("admins.js").then(parseA).catch(()=>{})]).then(()=>{imp(STORIES,"s");imp(NEWS,"n");route()});
+$("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseP(t);imp(STORIES,"s");imp(NEWS,"n");renderList();alert("โหลดโพสต์เดิมแล้ว")}catch(x){alert("ไฟล์นี้ไม่ใช่ posts.js ของเว็บ")}})};
+$("adf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseA(t);route()}catch(x){alert("ไฟล์นี้ไม่ใช่ admins.js ของเว็บ")}})};
 
-function mk(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+/* ---------- เข้าสู่ระบบ ---------- */
+function route(){if(!admins.length){show("setup");return}
+ $("lname").replaceChildren(...admins.map(a=>{const o=mk("option","",a.name);o.value=a.id;return o}));
+ let id="";try{id=sessionStorage.getItem("tj_me")}catch(e){}
+ me=admins.find(a=>a.id===id)||null;me?enter():show("login")}
+function enter(){$("wn").textContent="👤 "+me.name+(me.role==="owner"?" (เจ้าของ)":"");$("teamb").hidden=me.role!=="owner";renderList();show("list")}
+$("lgo").onclick=async()=>{if(!okCrypto())return;const a=admins.find(x=>x.id===$("lname").value);if(!a)return;
+ $("lgo").disabled=true;const h=await hp($("lpw").value,a.salt);
+ if(h!==a.hash){await new Promise(r=>setTimeout(r,700));$("lerr").hidden=false;$("lgo").disabled=false;return}
+ $("lerr").hidden=true;$("lgo").disabled=false;me=a;try{sessionStorage.setItem("tj_me",a.id)}catch(e){}$("lpw").value="";enter()};
+$("lpw").onkeydown=e=>{if(e.key==="Enter")$("lgo").click()};
+$("out").onclick=()=>{me=null;try{sessionStorage.removeItem("tj_me")}catch(e){}route()};
+$("sgo").onclick=async()=>{const n=$("sn").value.trim(),p=$("sp").value;
+ if(!n){alert("ใส่ชื่อก่อนนะครับ");return}if(p.length<6){alert("รหัสผ่านต้องมีอย่างน้อย 6 ตัว");return}if(p!==$("sp2").value){alert("รหัสผ่านสองครั้งไม่ตรงกัน");return}
+ if(!okCrypto())return;admins=[await mkAdmin(n,p,"owner")];me=admins[0];try{sessionStorage.setItem("tj_me",me.id)}catch(e){}
+ $("sp").value=$("sp2").value="";dlAdmins();$("wn").textContent="👤 "+me.name+" (เจ้าของ)";$("teamb").hidden=false;renderList();show("done")};
+
+/* ---------- จัดการผู้ดูแล ---------- */
+function renderTeam(){const box=$("tlist");box.replaceChildren();
+ admins.forEach((a,i)=>{const r=mk("div","it2"),im=mk("div","im",a.role==="owner"?"👑":"👤"),tx=mk("div","tx"),b=mk("b","",a.name),bd=mk("span","badge",a.role==="owner"?"เจ้าของ":"ผู้ดูแล");b.append(bd);tx.append(b);
+  const ac=mk("div","ac"),pw=mk("button","","🔑 เปลี่ยนรหัส");
+  pw.onclick=async()=>{const p=prompt("รหัสผ่านใหม่ของ "+a.name+" (อย่างน้อย 6 ตัว)");if(!p)return;if(p.length<6){alert("ต้องมีอย่างน้อย 6 ตัว");return}if(!okCrypto())return;a.salt=hex(crypto.getRandomValues(new Uint8Array(16)));a.hash=await hp(p,a.salt);$("abar").hidden=false};
+  ac.append(pw);
+  if(a.id!==me.id){const d=mk("button","del","🗑 ลบ");d.onclick=()=>{if(confirm("ลบผู้ดูแล “"+a.name+"” ใช่ไหม?\n(โพสต์ที่เขาเคยทำจะยังอยู่ เจ้าของจัดการได้)")){admins.splice(i,1);$("abar").hidden=false;renderTeam()}};ac.append(d)}
+  r.append(im,tx,ac);box.append(r)})}
+$("teamb").onclick=()=>{renderTeam();show("team")};
+$("tback").onclick=e=>{e.preventDefault();show("list")};
+$("tadd").onclick=async()=>{const n=$("tn").value.trim(),p=$("tp").value;
+ if(!n){alert("ใส่ชื่อก่อนนะครับ");return}if(p.length<6){alert("รหัสผ่านต้องมีอย่างน้อย 6 ตัว");return}
+ if(admins.some(a=>a.name===n)){alert("มีชื่อนี้อยู่แล้ว");return}if(!okCrypto())return;
+ admins.push(await mkAdmin(n,p,"admin"));$("tn").value=$("tp").value="";$("abar").hidden=false;renderTeam()};
+
+/* ---------- รายการโพสต์ ---------- */
+const can=p=>me&&(me.role==="owner"||p.byId===me.id);
 function renderList(){const box=$("items");box.replaceChildren();
  const vis=list.map((p,i)=>[p,i]).filter(x=>x[0].t!=="x"&&!(typeof HIDE_TITLES!=="undefined"&&HIDE_TITLES.includes(x[0].title)));$("empty").hidden=vis.length>0;
  vis.forEach(([p,i])=>{const r=mk("div","it2"),im=mk("div","im",p.t==="n"?"📰":p.t==="p"?"📍":"📖");
   if(p.photos&&p.photos[0]){const g=new Image();g.src=p.photos[0].src;g.onerror=()=>g.remove();im.append(g)}
-  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",NAME[p.t]+(p.date?" · "+p.date:"")));
-  const ac=mk("div","ac"),ed=mk("button","","✏ แก้ไข"),de=mk("button","del","🗑 ลบ");ed.onclick=()=>edit(i);de.onclick=()=>del(i);
-  ac.append(ed,de);r.append(im,tx,ac);box.append(r)})}
+  const tx=mk("div","tx");tx.append(mk("b","",p.title),mk("span","",NAME[p.t]+(p.date?" · "+p.date:"")+(p.by?" · โดย "+p.by:"")));r.append(im,tx);
+  if(can(p)){const ac=mk("div","ac"),ed=mk("button","","✏ แก้ไข"),de=mk("button","del","🗑 ลบ");ed.onclick=()=>edit(i);de.onclick=()=>del(i);ac.append(ed,de);r.append(ac)}
+  else r.append(mk("p","mute","โพสต์ของผู้ดูแลท่านอื่น (แก้ไขได้เฉพาะเจ้าของ)"));
+  box.append(r)})}
 
-/* ฟอร์ม */
+/* ---------- ฟอร์ม ---------- */
+function setType(t){T=t;[...$("types").children].forEach(x=>x.classList.toggle("on",x.dataset.t===t))}
+$("types").onclick=e=>{const b=e.target.closest("button");if(b)setType(b.dataset.t)};
 function shrink(f){return new Promise(r=>{const u=URL.createObjectURL(f),i=new Image();i.onload=()=>{const s=Math.min(1,1000/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);r(c.toDataURL("image/jpeg",.72))};i.onerror=()=>r(null);i.src=u})}
 function draw(){$("thumbs").replaceChildren(...pics.map((p,k)=>{const d=mk("div","th"),im=new Image();im.src=p.src;
  const c=mk("input");c.type="text";c.placeholder="คำบรรยายรูป (ไม่ใส่ก็ได้)";c.value=p.cap;c.oninput=()=>p.cap=c.value;
@@ -147,16 +234,15 @@ function edit(i){ei=i;const p=list[i];clear();setType(p.t);$("date").value=p.dat
  if(/^-?\d+(\.\d+)?,\s*-?\d+(\.\d+)?$/.test(p.pin||"")){gps=p.pin;msg("✓ มีตำแหน่งเดิมอยู่แล้ว (กดปุ่มด้านบนเพื่อเปลี่ยน)","ok")}else $("pname").value=p.pin||"";
  draw();show("form")}
 $("back").onclick=e=>{e.preventDefault();show("list")};
-$("more").onclick=()=>show("list");
-
-function dl(){const b=new Blob(["window.POSTS="+JSON.stringify(list)+";"],{type:"text/javascript"}),a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="posts.js";document.body.append(a);a.click();a.remove()}
+$("more").onclick=()=>enter();
 const warn=()=>loaded||confirm("ยังโหลด posts.js เดิมของเว็บไม่ได้ ถ้าเคยโพสต์ผ่านหน้านี้แล้ว โพสต์เก่าอาจหายเมื่ออัปโหลดทับ\nต้องการทำต่อไหม?");
-function finish(){dl();renderList();show("done")}
+function finish(){dlPosts();renderList();show("done")}
 $("save").onclick=()=>{const title=$("title").value.trim();if(!title){alert("ใส่หัวข้อในข้อ 2 ก่อนนะครับ");$("title").focus();return}
- if(!warn())return;
+ if(ei>=0&&!can(list[ei]))return;if(!warn())return;
  const post={t:T,date:$("date").value.trim()||today(),title,body:$("body").value.trim(),photos:pics.map(p=>({src:p.src,cap:p.cap.trim()})),link:{url:$("link").value.trim()},pin:gps||$("pname").value.trim()};
- if(ei>=0){if(list[ei].orig)post.orig=list[ei].orig;list[ei]=post}else list.unshift(post);finish()};
-function del(i){const p=list[i];if(!confirm("ลบโพสต์นี้ใช่ไหม?\n\n"+p.title)||!warn())return;
+ if(ei>=0){const o=list[ei];if(o.orig)post.orig=o.orig;if(o.by){post.by=o.by;post.byId=o.byId}list[ei]=post}
+ else{post.by=me.name;post.byId=me.id;list.unshift(post)}
+ finish()};
+function del(i){const p=list[i];if(!can(p)||!confirm("ลบโพสต์นี้ใช่ไหม?\n\n"+p.title)||!warn())return;
  if(p.orig)list[i]={t:"x",orig:p.orig};else list.splice(i,1);finish()}
-$("again").onclick=dl;
 </script></body></html>
