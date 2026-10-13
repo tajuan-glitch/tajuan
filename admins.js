@@ -1,1 +1,1 @@
-window.ADMINS=[{"id":"amv6arqodmuhv","name":"konkuay","role":"owner","salt":"77b54b1165f9aacbc98ab558f0334fd1","hash":"1e9913185d4ea556f2a86be54fe8bd1dad5834b1ed8b66b35a1e3e6d7abe96c8"}];
+window.ADMINS=[{"id":"amv6bn9nx6gl7","name":"konkuay","role":"owner","salt":"02d167ffdc1511479c5e3e251313e49d","hash":"9cdfa86b9b1cbc3c57ae670a6c28e3a96e83803d1f57e8aa068e0655b8fcf0ec","since":"2026-10-13"}];
