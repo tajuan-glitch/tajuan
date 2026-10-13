@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <header>
@@ -149,8 +149,8 @@
 
 <noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
 
-<script src="content.js"></script>
-<script src="posts.js"></script>
+<script src="content.js?v=5"></script>
+<script src="posts.js?v=5"></script>
 <script>
 const $=i=>document.getElementById(i);
 function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -163,7 +163,7 @@ function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
 document.title=SITE.name;
 if(SITE.notice){$("notice").textContent="⚠ "+SITE.notice;$("notice").classList.remove("hide")}
 $("bn").textContent=SITE.name;
-$("hs").textContent=SITE.slogan;$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
+$("hs").textContent="ทุกเรื่องราวที่มี ที่...ตาจวนบ้านเรา";$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
 
@@ -172,7 +172,8 @@ function links(box,L){(L||[]).forEach(l=>box.append(ext(el("a","btn alt sm",l[0]
 const mq=encodeURIComponent;
 function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแผนที่"),"https://www.google.com/maps/search/?api=1&query="+mq(q)),ext(el("a","btn alt sm","🧭 นำทาง"),"https://www.google.com/maps/dir/?api=1&destination="+mq(q)))}
 /* โพสต์จาก posts.js (แก้ไข/ลบได้ที่ admin.html) */
-const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(Boolean);
+const HT=typeof HIDE_TITLES!=="undefined"?HIDE_TITLES:[];
+const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(p=>p&&!HT.includes(p.title));
 const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 [STORIES,NEWS].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][1]))a.splice(i,1)});
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{

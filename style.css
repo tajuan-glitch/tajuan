@@ -1,3 +1,8 @@
+/* ฟอนต์ TH Sarabun (Sarabun = TH Sarabun New) โหลดจาก CDN */
+@font-face{font-family:"TH Sarabun";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/sarabun@5.3.0/thai-400-normal.woff2) format("woff2");unicode-range:U+0E01-0E5B,U+200C-200D,U+25CC}
+@font-face{font-family:"TH Sarabun";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/sarabun@5.3.0/thai-700-normal.woff2) format("woff2");unicode-range:U+0E01-0E5B,U+200C-200D,U+25CC}
+@font-face{font-family:"TH Sarabun";font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/sarabun@5.3.0/latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
+@font-face{font-family:"TH Sarabun";font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/sarabun@5.3.0/latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2212,U+FEFF,U+FFFD}
 /* ตาจวนบ้านเรา — โทนกระดาษครีม + เขียวเข้ม อ่านง่าย เว้นระยะกว้าง */
 :root{
   --paper:#faf6ee; --card:#ffffff; --ink:#26302a; --mute:#5f6b63; --line:#e3dccd;
@@ -9,7 +14,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:84px;font-size:calc(20px * var(--fs))}
-body{margin:0;background:var(--paper);color:var(--ink);font-family:"Sarabun","Sarabun",system-ui,sans-serif;line-height:1.85}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"TH Sarabun","Sarabun","Noto Sans Thai",system-ui,sans-serif;line-height:1.85}
 h1,h2,h3{font-family:"Noto Serif Thai",serif;line-height:1.4;margin:0;color:var(--green)}
 a{color:var(--green);text-underline-offset:3px}
 button{font:inherit;cursor:pointer}
@@ -21,8 +26,8 @@ button{font:inherit;cursor:pointer}
 /* หัวเว็บ */
 header{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:12px;max-width:940px;margin:0 auto;padding:10px 20px}
-.brand{font:700 1.2rem/1.2 "Noto Serif Thai",serif;color:var(--green);text-decoration:none;margin-right:auto}
-.brand small{display:block;font:400 .7rem "Sarabun",sans-serif;color:var(--mute)}
+.brand{white-space:nowrap;font:700 1.2rem/1.2 "Noto Serif Thai",serif;color:var(--green);text-decoration:none;margin-right:auto}
+.brand small{display:block;font:400 .7rem "TH Sarabun","Sarabun",sans-serif;color:var(--mute)}
 nav.top{display:flex;gap:2px}
 nav.top a{padding:8px 14px;border-radius:99px;text-decoration:none;color:var(--ink);font-size:.95rem}
 nav.top a:hover{background:var(--sand)}
@@ -30,7 +35,7 @@ nav.top a:hover{background:var(--sand)}
 .sz button,.mb{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font-weight:700}
 .sz button[disabled]{opacity:.35}
 .mb{display:none}
-@media(max-width:820px){
+@media(max-width:1100px){
   nav.top{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;background:var(--paper);border-bottom:1px solid var(--line);padding:6px 20px 14px}
   nav.top.open{display:flex}
   nav.top a{padding:14px 6px;border-radius:0;border-top:1px solid var(--line);font-size:1.05rem}
@@ -58,7 +63,7 @@ h3{font-size:1.25rem;margin:34px 0 10px}
 .rows{border-top:1px solid var(--line)}
 .row{display:grid;grid-template-columns:130px 1fr;gap:6px 20px;padding:20px 0;border-bottom:1px solid var(--line)}
 .row .d{color:var(--clay);font-weight:700}
-.row h4{margin:0;font:700 1.12rem/1.5 "Sarabun",sans-serif}
+.row h4{margin:0;font:700 1.12rem/1.5 "TH Sarabun","Sarabun",sans-serif}
 .row p{margin:4px 0 0;color:var(--mute)}
 details.row{display:block}
 details.row summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:130px 1fr;gap:6px 20px}
@@ -91,7 +96,7 @@ ol.steps{padding-left:1.3em;margin:0 0 20px}ol.steps li{margin:8px 0}
 .gal{display:grid;gap:26px 20px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
 .it .pic{aspect-ratio:4/3;border-radius:14px;background:var(--sand);display:grid;place-items:center;color:var(--mute);overflow:hidden;position:relative}
 .it .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.it h4{margin:10px 0 2px;font:700 1.05rem/1.5 "Sarabun",sans-serif}
+.it h4{margin:10px 0 2px;font:700 1.05rem/1.5 "TH Sarabun","Sarabun",sans-serif}
 .it p{margin:0;color:var(--mute);font-size:.92rem}
 .it .pr{color:var(--clay);font-weight:700;margin-top:4px;display:block}
 a.it{text-decoration:none;color:inherit}
@@ -118,12 +123,12 @@ details.row .full figcaption{font-size:.88rem;color:var(--mute);margin-top:6px}
 
 /* เพิ่ม: ลิงก์ ปักหมุด */
 nav.top a{padding:8px 10px;font-size:.92rem}
-@media(max-width:820px){nav.top a{padding:14px 6px;font-size:1.05rem}}
+@media(max-width:1100px){nav.top a{padding:14px 6px;font-size:1.05rem}}
 .btn.sm{min-height:44px;padding:6px 16px;font-size:.92rem;cursor:pointer}
 .lk{margin-top:10px}
 .places{border-top:1px solid var(--line)}
 .place{padding:20px 0;border-bottom:1px solid var(--line)}
-.place h4{margin:6px 0 2px;font:700 1.1rem/1.5 "Sarabun",sans-serif}
+.place h4{margin:6px 0 2px;font:700 1.1rem/1.5 "TH Sarabun","Sarabun",sans-serif}
 .place p{margin:0 0 12px;color:var(--mute)}
 .tag{display:inline-block;font-size:.78rem;background:var(--sand);color:var(--green);border-radius:99px;padding:0 12px;font-weight:700}
 .mapf{width:100%;height:340px;border:0;border-radius:14px;margin-top:14px;display:block}
@@ -136,7 +141,7 @@ nav.top a{padding:8px 10px;font-size:.92rem}
 .cpic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .cdate{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.68);color:#fff;font-size:.8rem;font-weight:700;padding:2px 12px;border-radius:99px;line-height:1.7}
 .cb{padding:16px 18px 18px;display:flex;flex-direction:column;gap:6px;flex:1}
-.cb h4{margin:0;font:700 1.1rem/1.5 "Sarabun",sans-serif}
+.cb h4{margin:0;font:700 1.1rem/1.5 "TH Sarabun","Sarabun",sans-serif}
 .cb p{margin:0;color:var(--mute);font-size:.92rem;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .cmeta{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);display:flex;justify-content:space-between;color:var(--green);font-weight:700;font-size:.9rem}
 dialog{border:0;padding:0;max-width:720px;width:94%;max-height:92vh;border-radius:20px;background:var(--paper);color:var(--ink)}
@@ -151,3 +156,5 @@ dialog::backdrop{background:rgba(0,0,0,.6)}
 .dbody figcaption{font-size:.88rem;color:var(--mute);margin-top:6px}
 .follow{background:var(--sand);border-radius:14px;padding:16px 18px;margin-top:20px}
 .follow p{margin:0 0 10px}
+
+nav.top a{white-space:nowrap}
