@@ -201,3 +201,7 @@ nav.top a{white-space:nowrap}
 
 /* ไม่มีส่วนหัวใหญ่แล้ว: เนื้อหาล่าสุดขึ้นก่อน */
 #latest{border-top:0;padding-top:32px}
+
+/* ปุ่มเข้าหน้าผู้ดูแล (ท้ายเว็บ) */
+.adminlink{display:inline-flex;align-items:center;min-height:44px;padding:6px 18px;border:1px solid rgba(255,255,255,.55);border-radius:99px;color:#fff;text-decoration:none;font-weight:700}
+.adminlink:hover{background:rgba(255,255,255,.14)}

@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=8">
+<link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 <a class="notice hide" id="notice" href="#latest"></a>
@@ -89,6 +89,7 @@
 <footer><div class="wrap">
   <b id="fn"></b> • <span id="fs"></span>
   <p id="fc" style="margin:8px 0 0"></p>
+  <p style="margin:14px 0 0"><a class="adminlink" href="admin.html">🔑 สำหรับผู้ดูแลเว็บ: โพสต์ / แก้ไข</a></p>
 </div></footer>
 
 <dialog id="dlg" aria-label="อ่านเรื่องเต็ม"><div class="dtop"><button class="btn alt sm" id="dx">✕ ปิด</button></div><div class="dbody" id="dbody"></div></dialog>
@@ -190,7 +191,8 @@ let gf="ทั้งหมด";
 function rG(){const cats=["ทั้งหมด",...new Set(GD.map(g=>g[0]))];
  $("gtabs").replaceChildren(...(cats.length>2?cats.map(k=>{const b=el("button",k===gf?"on":"",k);b.onclick=()=>{gf=k;rG()};return b}):[]));
  $("ggal").replaceChildren(...GD.filter(g=>gf==="ทั้งหมด"||g[0]===gf).map(g=>{const d=el("div","it"),p=el("div","pic",g[0]);
-  if(g[4]){const im=img(g[4],g[1]);im.onerror=()=>{im.remove();p.textContent=g[0]};p.textContent="";p.append(im)}
+  const pp=P.find(x=>x.photos&&x.photos[0]&&(x.title||"").includes(g[1])),gs=g[4]||(pp&&pp.photos[0].src);
+  if(gs){const im=img(gs,g[1]);im.onerror=()=>{im.remove();p.textContent=g[0]};p.textContent="";p.append(im)}
   const s=el("p");put(s,g[2]);d.append(el("h4","",g[1]),s);d.insertBefore(p,d.firstChild);
   if(g[3]){const pr=el("span","pr");put(pr,g[3]);d.append(pr)}return d}))}
 if(GD.length)rG();else $("goods").classList.add("hide");
