@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ตาจวนบ้านเรา | เว็บชุมชนบ้านตาจวน</title>
-<meta name="description" content="ตาจวนบ้านเรา เว็บชุมชนบ้านตาจวน ข่าวสาร ปฏิทินงานบุญ แจ้งเรื่อง คลิป ภาพ และของดีของบ้านเรา">
+<meta name="description" content="ตาจวนบ้านเรา เว็บชุมชนบ้านตาจวน ข่าวสารล่าสุด เรื่องเล่า คลิป ภาพเก่า ของดี และแผนที่บ้านตาจวน">
 <!-- ภาพตัวอย่างเวลาส่งลิงก์ใน LINE/Facebook: แก้ที่อยู่เว็บ https://YOUR-DOMAIN/ ทั้ง 2 จุดด้านล่างนี้ให้เป็นที่อยู่เว็บจริง (ลงท้ายด้วย / และต้องเหมือนกัน) -->
 <meta property="og:type" content="website">
 <meta property="og:locale" content="th_TH">
@@ -21,9 +21,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
 </head>
 <body>
+<a class="notice hide" id="notice" href="#latest"></a>
 <header>
   <div class="bar">
     <a class="brand" href="#top"><span id="bn"></span><small id="bs"></small></a>
@@ -38,91 +39,59 @@
   <div class="wrap hero">
     <h1 id="hn"></h1>
     <p id="hi"></p>
+    <div class="upd" id="upd"></div>
     <div class="btns">
-      <a class="btn" href="#news">ดูข่าวล่าสุด</a>
-      <a class="btn alt" href="#report">แจ้งเรื่องเดือดร้อน</a>
+      <a class="btn" href="#latest">ดูเรื่องล่าสุด</a>
+      <a class="btn alt" href="#map">ดูแผนที่บ้านเรา</a>
     </div>
   </div>
 
-  <section id="news"><div class="wrap">
-    <div class="eyebrow">ข่าวและกิจกรรม</div>
-    <h2>ข่าวสารหมู่บ้าน</h2>
-    <p class="lead">ประกาศของหมู่บ้านและหน่วยงาน แตะที่การ์ดเพื่ออ่านเรื่องเต็มและดูรูปทั้งหมด</p>
-    <div class="cards" id="newsList"></div>
-    <h3>ปฏิทินกิจกรรม</h3>
-    <div class="rows" id="calList"></div>
-  </div></section>
-
-  <section id="about"><div class="wrap">
-    <div class="eyebrow">รู้จักบ้านเรา</div>
-    <h2>บ้านตาจวน</h2>
-    <p class="lead">ประวัติ ข้อมูลพื้นฐาน และผู้ที่ช่วยกันดูแลหมู่บ้าน</p>
-    <dl class="facts" id="facts"></dl>
-    <h3>ประวัติความเป็นมา</h3>
-    <div class="prose" id="history"></div>
-    <h3>ผู้นำและบุคคลสำคัญ</h3>
-    <ul class="ppl" id="ppl"></ul>
-    <p style="margin-top:26px"><a class="btn alt" id="mapA" target="_blank" rel="noopener">ดูแผนที่หมู่บ้าน</a></p>
-  </div></section>
-
-  <section id="wisdom"><div class="wrap">
-    <div class="eyebrow">ภูมิปัญญาชาวกวย</div>
-    <h2>เรื่องเล่าของดีบ้านเรา</h2>
-    <p class="lead">อาหารพื้นบ้าน สมุนไพร วิถีชีวิต และเรื่องเล่าของผู้เฒ่า มีเรื่องใหม่เมื่อไรจะมาลงที่นี่ แวะมาติดตามได้เสมอ</p>
-    <div class="cards" id="storyList"></div>
-  </div></section>
-
-  <section id="report"><div class="wrap">
-    <div class="eyebrow">ดูแลกันและกัน</div>
-    <h2>แจ้งเรื่องและเบอร์สำคัญ</h2>
-    <div class="alert"><b>เหตุฉุกเฉินให้โทรก่อนเสมอ</b> ตำรวจ 191 • แพทย์ฉุกเฉิน 1669 • ดับเพลิง 199 เว็บนี้ไม่ใช่สายด่วน</div>
-    <p>ไฟทางดับ ขยะไม่เก็บ น้ำประปาไม่ไหล ถนนพัง หรือเรื่องเดือดร้อนอื่น ๆ แจ้งได้ตามขั้นตอนนี้</p>
-    <ol class="steps">
-      <li>จดว่าเกิดอะไรขึ้น ที่ไหน (บอกจุดสังเกต เช่น หน้าวัด ใกล้ศาลา)</li>
-      <li>ถ่ายรูปไว้ 1–2 รูป (ไม่ให้ติดใบหน้าคนโดยไม่จำเป็น)</li>
-      <li>แจ้งผู้ใหญ่บ้าน หรือส่งให้ทีมดูแลเว็บตามช่องทางด้านล่าง</li>
-    </ol>
-    <div class="btns" id="rep"></div>
-    <h3>เบอร์โทรสำคัญ</h3>
-    <ul class="tel" id="tel"></ul>
+  <section id="latest"><div class="wrap">
+    <div class="eyebrow">เกิดอะไรขึ้นที่บ้านเรา</div>
+    <h2>ล่าสุดจากบ้านตาจวน</h2>
+    <p class="lead">ข่าว ประกาศ และเรื่องเล่าที่เพิ่งลงใหม่ แตะที่เรื่องเพื่ออ่านเต็มและดูรูปทั้งหมด</p>
+    <div id="feat"></div>
+    <div class="cards" id="feed"></div>
   </div></section>
 
   <section id="media"><div class="wrap">
-    <div class="eyebrow">คิดถึงบ้าน</div>
-    <h2>คลิปและภาพ</h2>
-    <p class="lead">บรรยากาศงานบุญ เรื่องเล่าของผู้เฒ่า และภาพกิจกรรมของหมู่บ้าน</p>
-    <h3 style="margin-top:0">คลิป</h3>
+    <div class="eyebrow">ดูกันได้เลย</div>
+    <h2>คลิปจากบ้านเรา</h2>
+    <p class="lead">ห้องเรียนชุมชน งานบุญ และสมุนไพรชาวกวย</p>
     <div class="gal" id="vids"></div>
-    <h3>อัลบั้มภาพ</h3>
-    <div class="gal" id="albs"></div>
-    <h3>เล่าเรื่องเก่า ย้อนวันวาน</h3>
+  </div></section>
+
+  <section id="memory"><div class="wrap">
+    <div class="eyebrow">คิดถึงบ้าน</div>
+    <h2>เล่าเรื่องเก่า ย้อนวันวาน</h2>
     <p class="lead">ภาพเก่าของหมู่บ้าน ใครจำได้ว่าเป็นใคร งานอะไร ปีไหน บอกทีมงานได้</p>
     <div class="gal" id="mem"></div>
+    <div class="callout" id="oldCall" style="margin-top:22px">
+      <p>บ้านใครมีภาพเก่า ภาพงานบุญ ภาพตอนสร้างศาลา หรือเรื่องเล่าของผู้เฒ่า ส่งมาให้ทีมงานได้ ทีมงานจะขออนุญาตเจ้าของภาพก่อนลงทุกครั้ง</p>
+      <div class="btns" id="send"></div>
+    </div>
+    <div id="albWrap" class="hide"><h3>อัลบั้มภาพ</h3><div class="gal" id="albs"></div></div>
   </div></section>
 
   <section id="goods"><div class="wrap">
-    <div class="eyebrow">เศรษฐกิจชุมชน</div>
+    <div class="eyebrow">ภูมิปัญญาและเศรษฐกิจชุมชน</div>
     <h2>ของดีบ้านตาจวน</h2>
-    <p class="lead">สินค้าชุมชน พืชผล จุดเช็คอิน และร้านในหมู่บ้าน ติดต่อเจ้าของโดยตรง ไม่ผ่านคนกลาง</p>
+    <p class="lead">อาหารพื้นบ้าน สินค้าชุมชน พืชผล และจุดเช็คอิน ติดต่อเจ้าของโดยตรง ไม่ผ่านคนกลาง</p>
     <div class="tabs" id="gtabs"></div>
     <div class="gal" id="ggal"></div>
-    <h3>คนดีศรีตาจวน</h3>
-    <p class="lead">ชื่นชมคนบ้านเรา เด็กเรียนดี นักกีฬา และผู้ที่ทำความดีให้ชุมชน</p>
-    <div class="gal" id="hero"></div>
+    <div id="heroWrap" class="hide"><h3>คนดีศรีตาจวน</h3><p class="lead">ชื่นชมคนบ้านเรา เด็กเรียนดี นักกีฬา และผู้ที่ทำความดีให้ชุมชน</p><div class="gal" id="hero"></div></div>
   </div></section>
 
-  <section id="map"><div class="wrap">
-    <div class="eyebrow">ปักหมุด</div>
-    <h2>แผนที่และจุดสำคัญ</h2>
-    <p class="lead">กด “ดูแผนที่ในหน้านี้” เพื่อดูตำแหน่ง หรือกด “นำทาง” เพื่อเปิดใน Google Maps</p>
-    <div class="places" id="places"></div>
-  </div></section>
-
-  <section><div class="wrap">
-    <div class="callout">
-      <h2 style="font-size:1.5rem">ฝากเรื่องราวถึงชุมชน</h2>
-      <p>มีภาพเก่า เรื่องเล่าผู้เฒ่า ข่าวดีของลูกหลาน สินค้าที่อยากฝากขาย หรืออยากให้ลงประกาศ ส่งมาที่ทีมงานได้ ทีมงานจะขออนุญาตเจ้าของเรื่องก่อนเผยแพร่ทุกครั้ง</p>
-      <div class="btns" id="send"></div>
+  <section id="map" class="soft"><div class="wrap">
+    <div class="eyebrow">แผนที่ชุมชน</div>
+    <h2>บ้านตาจวนอยู่ตรงไหน</h2>
+    <p class="lead">เลือกจุดทางซ้ายเพื่อดูตำแหน่งบนแผนที่ หรือกด “นำทาง” เพื่อเปิดใน Google Maps</p>
+    <div class="mapbox">
+      <div class="plist" id="plist" role="tablist" aria-label="จุดสำคัญในชุมชน"></div>
+      <div class="mview">
+        <iframe id="mf" title="แผนที่" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="pinfo"><h3 id="pn"></h3><p id="pd"></p><div class="btns" id="pb"></div></div>
+      </div>
     </div>
   </div></section>
 </main>
@@ -130,14 +99,13 @@
 <footer><div class="wrap">
   <b id="fn"></b> • <span id="fs"></span>
   <p id="fc" style="margin:8px 0 0"></p>
-  <p style="margin:8px 0 0">เหตุฉุกเฉิน โทรก่อนเสมอ: <a href="tel:191">191</a> · <a href="tel:1669">1669</a> · <a href="tel:199">199</a></p>
 </div></footer>
 
 <dialog id="dlg" aria-label="อ่านเรื่องเต็ม"><div class="dtop"><button class="btn alt sm" id="dx">✕ ปิด</button></div><div class="dbody" id="dbody"></div></dialog>
 
 <noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
 
-<script src="content.js?v=5"></script>
+<script src="content.js?v=6"></script>
 <script src="posts.js?v=5"></script>
 <script>
 const $=i=>document.getElementById(i);
@@ -146,18 +114,18 @@ const isS=t=>/^ตัวอย่าง:/.test(t);
 function put(n,t){if(isS(t)){n.append(el("span","sample","ตัวอย่าง"),document.createTextNode(t.replace(/^ตัวอย่าง:\s*/,"")))}else n.append(document.createTextNode(t));return n}
 function img(src,alt){const i=new Image();i.src=src;i.alt=alt||"";i.loading="lazy";i.onerror=()=>i.remove();return i}
 function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
+const mq=encodeURIComponent;
 
 /* หัวและท้ายเว็บ */
-document.title=SITE.name;
-$("bn").textContent=SITE.name;$("bs").textContent="ทุกเรื่องราวที่มี ที่...ตาจวนบ้านเรา";
+document.title=SITE.name+" | เว็บชุมชนบ้านตาจวน";
+$("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan||"";
 $("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
 
-/* ข่าว (กดเปิดอ่านเต็มในหน้าเดียว) */
 function links(box,L){(L||[]).forEach(l=>box.append(ext(el("a","btn alt sm",l[0]),l[1])))}
-const mq=encodeURIComponent;
 function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแผนที่"),"https://www.google.com/maps/search/?api=1&query="+mq(q)),ext(el("a","btn alt sm","🧭 นำทาง"),"https://www.google.com/maps/dir/?api=1&destination="+mq(q)))}
+
 /* โพสต์จาก posts.js (แก้ไข/ลบได้ที่ admin.html) */
 const HT=typeof HIDE_TITLES!=="undefined"?HIDE_TITLES:[];
 const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(p=>p&&!HT.includes(p.title));
@@ -168,72 +136,88 @@ P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
  (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,(p.body||"").replace(/\s+/g," ").slice(0,120),p.body||"",(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||""])});
 
-/* การ์ดข่าว/เรื่อง + หน้าต่างอ่านเต็ม */
+/* รวมข่าว + เรื่องเล่า เรียงใหม่สุดก่อน */
+const TH=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+function dv(s){const m=String(s||"").match(/(\d+)\s*(\S+)\s*(\d{4})/);if(!m)return 0;const mo=TH.indexOf(m[2]);return mo<0?0:(+m[3])*10000+mo*100+(+m[1])}
+const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื่องเล่า"])].map((x,i)=>({n:x[0],tag:x[1],i,v:dv(x[0][0])})).sort((a,b)=>b.v-a.v||a.i-b.i);
+
+/* การ์ด + หน้าต่างอ่านเต็ม */
 function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));return g}
 function card(n,tag){const a=el("button","card"),pic=el("div","cpic",tag==="ข่าว"?"📰":"📖"),cv=n[4]&&n[4][0];
  if(cv)pic.append(img(cv[0],n[1]));if(n[0])pic.append(el("span","cdate",n[0]));
  const b=el("div","cb"),h=el("h4"),m=el("div","cmeta");put(h,n[1]);m.append(el("span","","📁 "+tag),el("span","","อ่านต่อ →"));
  b.append(h,el("p","",n[2]),m);a.append(pic,b);a.onclick=()=>openFull(n,tag);return a}
+function feat(n,tag){const a=el("button","feat"),pic=el("div","fpic",tag==="ข่าว"?"📰":"📖"),cv=n[4]&&n[4][0];
+ if(cv)pic.append(img(cv[0],n[1]));
+ const b=el("div","fb"),m=el("div","dmeta"),h=el("h3");
+ m.append(el("span","tag new","ล่าสุด"),el("span","tag","📁 "+tag),el("span","mute",n[0]));put(h,n[1]);
+ b.append(m,h,el("p","",n[2]),el("span","more","อ่านเรื่องเต็มและดูรูป →"));a.append(pic,b);a.onclick=()=>openFull(n,tag);return a}
 function openFull(n,tag){const c=$("dbody");c.replaceChildren();
  const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag","📁 "+tag),el("span","mute",n[0]));if(n[7])m.append(el("span","mute","โดย "+n[7]));put(h,n[1]);c.append(m,h);
  const ph=n[4]||[];if(ph[0])c.append(fig(ph[0]));
  String(n[3]||n[2]).split("\n").forEach(x=>c.append(put(el("p"),x)));
  ph.slice(1).forEach(p=>c.append(fig(p)));
- const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl)pinBtns(bx,pl[2]);if(bx.children.length)c.append(bx);
+ const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl){pinBtns(bx,pl[2]);const sh=el("button","btn alt sm","🗺️ ดูบนแผนที่ชุมชน");sh.onclick=()=>{$("dlg").close();selPlace(PLACES.indexOf(pl));$("map").scrollIntoView()};bx.append(sh)}if(bx.children.length)c.append(bx);
  const f=el("div","follow"),sh=el("button","btn sm","📤 ส่งต่อให้เพื่อนและญาติ");
  f.append(el("p","","💚 ติดตามเรื่องราวบ้านตาจวนได้ที่เว็บนี้ ส่งต่อให้คนบ้านเราที่อยู่ไกลได้เลย"),sh);c.append(f);
  sh.onclick=()=>{const u=location.origin+location.pathname;if(navigator.share)navigator.share({title:n[1],text:n[2],url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}sh.textContent="คัดลอกลิงก์แล้ว ✓"}};
  $("dlg").showModal();$("dlg").scrollTop=0}
 $("dx").onclick=()=>$("dlg").close();
 $("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
-NEWS.forEach(n=>$("newsList").append(card(n,"ข่าว")));
-STORIES.forEach(n=>$("storyList").append(card(n,"เรื่องเล่า")));
-PLACES.forEach(p=>{const d=el("div","place"),h=el("h4");put(h,p[0]);d.append(el("span","tag",p[1]),h,el("p","",p[3]||""));
- const bx=el("div","btns"),t=el("button","btn alt sm","ดูแผนที่ในหน้านี้");let fr;
- t.onclick=()=>{if(fr){fr.remove();fr=null;t.textContent="ดูแผนที่ในหน้านี้";return}fr=el("iframe","mapf");fr.src="https://www.google.com/maps?q="+mq(p[2])+"&output=embed";fr.loading="lazy";fr.title=p[0];d.append(fr);t.textContent="ซ่อนแผนที่"};
- bx.append(t);pinBtns(bx,p[2]);d.insertBefore(bx,d.lastChild.nextSibling);$("places").append(d)});
-CAL.forEach(c=>{const r=el("div","row"),d=el("div","d");put(d,c[0]);const b=el("div"),h=el("h4");put(h,c[1]);b.append(h,el("p","",c[2]));r.append(d,b);$("calList").append(r)});
 
-/* รู้จักบ้าน */
-FACTS.forEach(f=>{const dt=el("dt","",f[0]),dd=el("dd");put(dd,f[1]);$("facts").append(dt,dd)});
-HISTORY.forEach(t=>$("history").append(put(el("p"),t)));
-LEADERS.forEach(l=>{const li=el("li"),a=el("div","av",l[0].replace(/^ตัวอย่าง:\s*/,"").trim().charAt(0)||"–");
- if(l[2]){a.textContent="";a.append(img(l[2],l[0]))}
- const t=el("div"),n=el("b");put(n,l[0]);t.append(n,el("span","mute",l[1]));li.append(a,t);$("ppl").append(li)});
-SITE.mapUrl?ext($("mapA"),SITE.mapUrl):$("mapA").classList.add("hide");
+/* ล่าสุด */
+if(FEED.length){
+ $("feat").append(feat(FEED[0].n,FEED[0].tag));
+ FEED.slice(1).forEach(f=>$("feed").append(card(f.n,f.tag)));
+ if(FEED[0].n[0])$("upd").textContent="อัปเดตล่าสุด "+FEED[0].n[0];
+}else $("feat").append(el("p","mute","ยังไม่มีเรื่องใหม่ แวะมาติดตามได้เสมอ"));
+if(SITE.notice){const nb=$("notice");nb.textContent="📢 "+SITE.notice;nb.classList.remove("hide");
+ const nw=FEED.find(f=>f.tag==="ข่าว");if(nw)nb.onclick=e=>{e.preventDefault();openFull(nw.n,"ข่าว")}}
 
 /* แจ้งเรื่อง / ติดต่อ */
 function contacts(box){
  if(SITE.formUrl)box.append(ext(el("a","btn","กรอกแบบฟอร์ม"),SITE.formUrl));
  if(SITE.phone)box.append(Object.assign(el("a","btn alt","โทร "+SITE.phone),{href:"tel:"+SITE.phone.replace(/[^\d+]/g,"")}));
- if(SITE.email)box.append(Object.assign(el("a","btn alt","ส่งอีเมล"),{href:"mailto:"+SITE.email}));
+ if(SITE.email)box.append(Object.assign(el("a","btn","ส่งอีเมลถึงทีมงาน"),{href:"mailto:"+SITE.email+"?subject="+mq("ส่งเรื่องราว/ภาพถึงตาจวนบ้านเรา")}));
  if(SITE.facebookUrl)box.append(ext(el("a","btn alt","Facebook"),SITE.facebookUrl));
  if(SITE.youtubeUrl)box.append(ext(el("a","btn alt","YouTube"),SITE.youtubeUrl));
- if(!box.children.length)box.append(el("p","mute","ยังไม่ได้ตั้งช่องทางติดต่อ ติดต่อผู้ใหญ่บ้านโดยตรงได้เลย (ทีมดูแลเว็บใส่เบอร์/อีเมลในไฟล์ content.js)"))}
-contacts($("rep"));contacts($("send"));
-TEL.forEach(t=>{const li=el("li");li.append(el("span","",t[0]));const num=isS(t[1])?"":t[1].replace(/[^\d+]/g,"");
- if(num){const a=el("a","",t[1]);a.href="tel:"+num;li.append(a)}else{const b=el("b","n");put(b,t[1]);li.append(b)}$("tel").append(li)});
+ if(!box.children.length)box.append(el("p","mute","ติดต่อผู้ใหญ่บ้านหรือทีมงานโดยตรงได้เลย"))}
+contacts($("send"));
 
-/* คลิป อัลบั้ม ภาพเก่า */
-if(!VIDEOS.length)$("vids").append(el("p","mute","กำลังรวบรวมคลิป ส่งคลิปงานบุญหรือสัมภาษณ์ผู้เฒ่ามาให้ทีมงานได้"));
+/* คลิป */
+if(!VIDEOS.length)$("media").classList.add("hide");
 VIDEOS.forEach(v=>{const a=el("a","it"),p=el("div","pic");p.append(img("https://i.ytimg.com/vi/"+v[0]+"/mqdefault.jpg",v[1]),el("span","play","▶ ดูคลิป"));
  ext(a,"https://www.youtube.com/watch?v="+v[0]);a.append(p,el("h4","",v[1]));$("vids").append(a)});
-ALBUMS.forEach(x=>{const a=el(x[1]?"a":"div","it"),p=el("div","pic","ภาพ");if(x[2]){p.textContent="";p.append(img(x[2],x[0]))}
- const h=el("h4");put(h,x[0]);a.append(p,h);if(x[1]){ext(a,x[1]);a.append(el("p","","เปิดอัลบั้ม →"))}$("albs").append(a)});
-MEMORY.forEach(m=>{const d=el("div","it"),p=el("div","pic","ภาพเก่า");if(m[0]){p.textContent="";p.append(img(m[0],m[1]))}const c=el("p");put(c,m[1]);d.append(p,c);$("mem").append(d)});
+
+/* ภาพเก่า / อัลบั้ม (ซ่อนรายการ "ตัวอย่าง:" ที่ยังไม่ได้ใส่ข้อมูลจริง) */
+const real=a=>a.filter(r=>!isS(r[0])&&!isS(r[1]||""));
+MEMORY.filter(m=>!isS(m[1])).forEach(m=>{const d=el("div","it"),p=el("div","pic","ภาพเก่า");if(m[0]){p.textContent="";p.append(img(m[0],m[1]))}d.append(p,el("p","",m[1]));$("mem").append(d)});
+const AL=ALBUMS.filter(x=>!isS(x[0]));
+if(AL.length){$("albWrap").classList.remove("hide");AL.forEach(x=>{const a=el(x[1]?"a":"div","it"),p=el("div","pic","ภาพ");if(x[2]){p.textContent="";p.append(img(x[2],x[0]))}
+ a.append(p,el("h4","",x[0]));if(x[1]){ext(a,x[1]);a.append(el("p","","เปิดอัลบั้ม →"))}$("albs").append(a)})}
 
 /* ของดี + คนดี */
+const GD=GOODS.filter(g=>!isS(g[1]));
 let gf="ทั้งหมด";
-function rG(){const cats=["ทั้งหมด",...new Set(GOODS.map(g=>g[0]))];
- $("gtabs").replaceChildren(...cats.map(k=>{const b=el("button",k===gf?"on":"",k);b.onclick=()=>{gf=k;rG()};return b}));
- $("ggal").replaceChildren(...GOODS.filter(g=>gf==="ทั้งหมด"||g[0]===gf).map(g=>{const d=el("div","it"),p=el("div","pic",g[0]);
-  if(g[4]){p.textContent="";p.append(img(g[4],g[1]))}const h=el("h4");put(h,g[1]);const s=el("p");put(s,g[2]);d.append(p,h,s);
+function rG(){const cats=["ทั้งหมด",...new Set(GD.map(g=>g[0]))];
+ $("gtabs").replaceChildren(...(cats.length>2?cats.map(k=>{const b=el("button",k===gf?"on":"",k);b.onclick=()=>{gf=k;rG()};return b}):[]));
+ $("ggal").replaceChildren(...GD.filter(g=>gf==="ทั้งหมด"||g[0]===gf).map(g=>{const d=el("div","it"),p=el("div","pic",g[0]);
+  if(g[4]){const im=img(g[4],g[1]);im.onerror=()=>{im.remove();p.textContent=g[0]};p.textContent="";p.append(im)}
+  const s=el("p");put(s,g[2]);d.append(el("h4","",g[1]),s);d.insertBefore(p,d.firstChild);
   if(g[3]){const pr=el("span","pr");put(pr,g[3]);d.append(pr)}return d}))}
-rG();
-HEROES.forEach(h=>{const d=el("div","it"),p=el("div","pic","คนดี");if(h[2]){p.textContent="";p.append(img(h[2],h[0]))}
- const t=el("h4");put(t,h[0]);const s=el("p");put(s,h[1]);d.append(p,t,s);$("hero").append(d)});
+if(GD.length)rG();else $("goods").classList.add("hide");
+const HE=HEROES.filter(h=>!isS(h[0]));
+if(HE.length){$("heroWrap").classList.remove("hide");HE.forEach(h=>{const d=el("div","it"),p=el("div","pic","คนดี");if(h[2]){p.textContent="";p.append(img(h[2],h[0]))}
+ const s=el("p");put(s,h[1]);d.append(p,el("h4","",h[0]),s);$("hero").append(d)})}
 
-/* เมนูมือถือ */
+/* แผนที่ชุมชน */
+let cur=-1;
+function selPlace(i){if(i<0||i>=PLACES.length)i=0;cur=i;const p=PLACES[i];
+ [...$("plist").children].forEach((b,k)=>{b.classList.toggle("on",k===i);b.setAttribute("aria-selected",k===i)});
+ $("mf").src="https://www.google.com/maps?q="+mq(p[2])+"&z=17&output=embed";$("mf").title="แผนที่: "+p[0];
+ $("pn").textContent=p[0];$("pd").textContent=(p[3]||"").replace(/^ตัวอย่าง:\s*/,"");$("pb").replaceChildren();pinBtns($("pb"),p[2])}
+PLACES.forEach((p,i)=>{const b=el("button","pbtn");b.setAttribute("role","tab");b.append(el("b","",p[0]),el("span","",p[1]));b.onclick=()=>selPlace(i);$("plist").append(b)});
+selPlace(0);
 
 /* ขนาดตัวอักษร */
 (function(){const Z=[1,1.15,1.3,1.5],K="tj2_zoom";let i=0;try{const v=parseInt(localStorage.getItem(K),10);if(v>=0&&v<Z.length)i=v}catch(e){}
