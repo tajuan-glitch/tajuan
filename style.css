@@ -205,3 +205,8 @@ nav.top a{white-space:nowrap}
 /* ปุ่มเข้าหน้าผู้ดูแล (ท้ายเว็บ) */
 .adminlink{display:inline-flex;align-items:center;min-height:44px;padding:6px 18px;border:1px solid rgba(255,255,255,.55);border-radius:99px;color:#fff;text-decoration:none;font-weight:700}
 .adminlink:hover{background:rgba(255,255,255,.14)}
+
+/* ปุ่มผู้ดูแลที่หัวเว็บ ข้างปุ่มปรับขนาดตัวอักษร */
+.admb{display:inline-flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;padding:0 12px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font-weight:700;font-size:.9rem;text-decoration:none;white-space:nowrap}
+.admb:hover{background:var(--sand)}
+@media(max-width:480px){.admb span{display:none}}
