@@ -149,11 +149,31 @@ figcaption{font-size:.85rem;color:var(--mute);margin-top:6px}
 .follow{margin-top:22px;background:#e4eee6;border-radius:16px;padding:14px 18px}.follow p{margin:0 0 10px}
 @media(max-width:560px){.pgrid{grid-template-columns:1fr}.dbody{padding:0 16px 22px}}
 
+
+/* ---------- ลิงก์ในเนื้อหา / วิดีโอ / การเข้าถึง ---------- */
+.tl{color:var(--rust);font-weight:700;text-decoration:underline;text-underline-offset:3px;word-break:break-word}
+.tl:hover{color:var(--green)}
+.lkp{margin:0 0 14px}
+.lkp .btn{max-width:100%;word-break:break-word}
+.vid{margin:0 0 18px}
+.vbox{position:relative;aspect-ratio:16/9;background:#1d2a22;border-radius:16px;overflow:hidden}
+.vbox iframe,.vthumb{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vthumb{padding:0;background:none;cursor:pointer;display:block}
+.vthumb img{width:100%;height:100%;object-fit:cover;display:block}
+.vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:72px;height:72px;border-radius:50%;background:rgba(181,80,45,.95);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.8rem;box-shadow:0 4px 18px rgba(0,0,0,.4);padding-left:5px}
+.vlink{display:inline-block;margin-top:6px;font-size:.9rem}
+a:focus-visible,button:focus-visible{outline:3px solid #e9a23b;outline-offset:2px}
+.skip{position:absolute;left:12px;top:-60px;z-index:60;background:#fff;color:var(--green);font-weight:700;padding:8px 14px;border-radius:10px;text-decoration:none}
+.skip:focus{top:10px}
+.totop{position:fixed;right:16px;bottom:18px;z-index:40;border:0;border-radius:999px;background:var(--green);color:#fff;font-weight:700;font-size:1rem;padding:10px 16px;cursor:pointer;box-shadow:0 4px 16px rgba(0,0,0,.3);display:flex;gap:6px;align-items:center}
+.totop span{font-size:.85rem}
+
 footer{background:var(--green);color:#e8efe9;text-align:center;padding:26px 0;font-size:.92rem}
 footer b{color:#fff}
 </style>
 </head>
 <body>
+<a class="skip" href="#latest">ข้ามไปที่เนื้อหา</a>
 <header>
   <div class="bar">
     <a class="brand" href="#top"><span id="bn"></span><small id="bs"></small></a>
@@ -221,6 +241,7 @@ footer b{color:#fff}
 
 <dialog id="dlg" aria-label="อ่านเรื่องเต็ม"><div class="dtop"><button class="btn alt sm" id="dx">✕ ปิด</button></div><div class="dbody" id="dbody"></div></dialog>
 
+<button id="up" class="totop hide" aria-label="กลับขึ้นด้านบน">↑<span>ขึ้นบน</span></button>
 <noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
 
 <!-- โหลดข้อมูลสดใหม่ทุกครั้ง (ใส่เวลาต่อท้ายชื่อไฟล์ ไม่ต้องแก้เลข ?v= อีกต่อไป) -->
@@ -236,27 +257,52 @@ function img(src,alt){const i=new Image();i.src=src;i.alt=alt||"";i.loading="laz
 function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
 const mq=encodeURIComponent;
 
+/* ลิงก์ในเนื้อหา: แปลง URL และ [ข้อความ](url) ให้กดเปิดได้ / คลิป YouTube เล่นในหน้าได้ */
+const URL_RE=/(\[([^\]]+)\]\((https?:\/\/[^\s)]+)\))|((?:https?:\/\/|www\.)[^\s\u0E00-\u0E7F"'<>]+)/gi;
+const fixU=u=>{u=String(u||"").trim();return/^https?:\/\//i.test(u)?u:"https://"+u.replace(/^\/+/,"")};
+const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch(e){return u}};
+const yt=u=>{const m=String(u).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:[^#\s]*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})/);return m&&m[1]};
+const nice=u=>{const h=host(u);if(yt(u))return"▶ ดูวิดีโอ (YouTube)";if(/facebook\.com|fb\.watch|fb\.com/.test(h))return"เปิดใน Facebook";if(/line\.me/.test(h))return"เปิดใน LINE";return"เปิดลิงก์ ("+h+")"};
+function aLink(u,label,cls){const a=ext(el("a",cls||"tl",label),u);a.setAttribute("aria-label",label+" (เปิดในแท็บใหม่)");return a}
+function rich(n,t){t=String(t||"");let last=0,m;URL_RE.lastIndex=0;
+ while((m=URL_RE.exec(t))){n.append(document.createTextNode(t.slice(last,m.index)));
+  let u,label=null,tail="";
+  if(m[1]){u=m[3];label=m[2]}else{u=m[4];while(/[.,;:!?)\]'"”’]$/.test(u)){tail=u.slice(-1)+tail;u=u.slice(0,-1)}u=fixU(u)}
+  n.append(aLink(u,label||nice(u)));if(tail)n.append(document.createTextNode(tail));last=m.index+m[0].length}
+ n.append(document.createTextNode(t.slice(last)));return n}
+function vid(u){const id=yt(u),w=el("div","vid"),b=el("button","vthumb");b.setAttribute("aria-label","เล่นวิดีโอ");
+ b.append(img("https://i.ytimg.com/vi/"+id+"/hqdefault.jpg",""),el("span","vplay","▶"));
+ b.onclick=()=>{const f=document.createElement("iframe");f.src="https://www.youtube-nocookie.com/embed/"+id+"?autoplay=1&rel=0";f.allow="autoplay; encrypted-media; picture-in-picture; fullscreen";f.allowFullscreen=true;f.title="วิดีโอ";b.replaceWith(f)};
+ const x=el("div","vbox");x.append(b);w.append(x,aLink(u,"เปิดใน YouTube","tl vlink"));return w}
+function para(x){
+ let m=x.match(/^\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)$/),u=null,label=null;
+ if(m){label=m[1];u=m[2]}else if(/^(?:https?:\/\/|www\.)\S+$/i.test(x)){u=fixU(x)}
+ if(u){if(yt(u))return vid(u);const d=el("p","lkp");d.append(aLink(u,"🔗 "+(label||nice(u)),"btn"));return d}
+ return rich(el("p"),x)}
+const plain=t=>String(t||"").replace(/\[([^\]]+)\]\(https?:\/\/[^\s)]+\)/g,"$1").replace(/(?:https?:\/\/|www\.)[^\s\u0E00-\u0E7F"'<>]+/gi,"").replace(/[ \t]{2,}/g," ").replace(/[:：]\s*$/,"").trim();
+const rid=n=>encodeURIComponent(n[1]);
+
 /* หัวและท้ายเว็บ */
 document.title=SITE.name+" | เว็บชุมชนบ้านตาจวน";
 $("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan||"";$("hn").textContent=SITE.name;$("hs").textContent=SITE.slogan||"ทุกเรื่องราวที่มี ที่…ตาจวนบ้านเรา";
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 
-function links(box,L){(L||[]).forEach(l=>box.append(ext(el("a","btn alt sm",l[0]),l[1])))}
+function links(box,L){(L||[]).forEach(l=>box.append(aLink(l[1],"🔗 "+l[0],"btn alt sm")))}
 function pinBtns(box,q){box.append(ext(el("a","btn alt sm","📍 เปิดแผนที่"),"https://www.google.com/maps/search/?api=1&query="+mq(q)),ext(el("a","btn alt sm","🧭 นำทาง"),"https://www.google.com/maps/dir/?api=1&destination="+mq(q)))}
 
 /* โพสต์จาก posts.js (แก้ไข/ลบได้ที่ admin.html) */
 const HT=typeof HIDE_TITLES!=="undefined"?HIDE_TITLES:[];
 const P=(typeof POSTS!=="undefined"?POSTS:[]).filter(p=>p&&!HT.includes(p.title));
 const strip=t=>String(t||"").split("\n").filter(l=>!isS(l.trim())).join("\n");
-function ex(t,ti){const L=strip(t).split("\n").map(x=>x.trim()).filter(Boolean),dup=x=>ti&&ti.includes(x.slice(0,15)),l=L.find(x=>x.length>=40&&!dup(x))||L.find(x=>!dup(x))||L[0]||"";return l.length>150?l.slice(0,148).trimEnd()+"…":l}
+function ex(t,ti){const L=strip(t).split("\n").map(x=>plain(x.trim())).filter(Boolean),dup=x=>ti&&ti.includes(x.slice(0,15)),l=L.find(x=>x.length>=40&&!dup(x))||L.find(x=>!dup(x))||L[0]||"";return l.length>150?l.slice(0,148).trimEnd()+"…":l}
 const hid=new Set(P.flatMap(p=>[p.orig,p.title]).filter(Boolean));
 [STORIES,NEWS].forEach(a=>{for(let i=a.length-1;i>=0;i--)if(hid.has(a[i][1]))a.splice(i,1)});
 P.filter(p=>p.t!=="x").slice().reverse().forEach(p=>{
  if(p.t==="p"){PLACES.unshift([p.title,"สถานที่",p.pin||p.title,p.body||""]);return}
  let pl="";if(p.pin){const ex=PLACES.find(x=>x[2]===p.pin);if(ex)pl=ex[0];else{pl=p.title;PLACES.unshift([p.title,"จากโพสต์",p.pin,""])}}
- (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",p.link.url]]:[],pl,p.by||"",1])});
+ (p.t==="n"?NEWS:STORIES).unshift([p.date||"",p.title,ex(p.body,p.title),strip(p.body),(p.photos||[]).map(x=>[x.src,x.cap||""]),p.link&&p.link.url?[["ดูเพิ่มเติม",fixU(p.link.url)]]:[],pl,p.by||"",1])});
 
-[...NEWS,...STORIES].forEach(n=>{n[2]=strip(n[2]);n[3]=strip(n[3])});
+[...NEWS,...STORIES].forEach(n=>{n[2]=plain(strip(n[2]));n[3]=strip(n[3])});
 /* รวมข่าว + เรื่องเล่า เรียงใหม่สุดก่อน */
 const TH=["ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
 const TS=["มค","กพ","มีค","เมย","พค","มิย","กค","สค","กย","ตค","พย","ธค"],TF=["มกราคม","กุมภาพันธ์","มีนาคม","เมษายน","พฤษภาคม","มิถุนายน","กรกฎาคม","สิงหาคม","กันยายน","ตุลาคม","พฤศจิกายน","ธันวาคม"];
@@ -269,7 +315,7 @@ const NOW=new Date(),TODAY=(NOW.getFullYear()+543)*10000+NOW.getMonth()*100+NOW.
 const FEED=[...NEWS.map(n=>[n,"ข่าว"]),...STORIES.map(n=>[n,"เรื่องเล่า"])].map((x,i)=>({n:x[0],tag:x[1],i,v:dv(x[0][0])||(x[0][8]?TODAY:0)})).sort((a,b)=>b.v-a.v||a.i-b.i);
 
 /* การ์ด + หน้าต่างอ่านเต็ม */
-function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));return g}
+function fig(p){const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(rich(el("figcaption"),p[1]));return g}
 const isN=t=>t==="ข่าว";
 function pic(n,tag,cls){const p=el("div",cls,isN(tag)?"📰":"📖"),cv=n[4]&&n[4][0];
  if(cv)p.append(img(cv[0],n[1]));p.append(el("span","chip"+(isN(tag)?" n":""),tag));
@@ -283,20 +329,21 @@ function feat(n,tag){const a=el("button","feat"),p=pic(n,tag,"fpic");
  m.append(el("span","tag new","ล่าสุด"));if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);
  b.append(m,h,el("p","",n[2]),el("span","go","อ่านเรื่องเต็มและดูรูป →"));a.append(p,b);a.onclick=()=>openFull(n,tag);return a}
 function openFull(n,tag){const c=$("dbody");c.replaceChildren();const ph=n[4]||[];
- if(ph[0]){const hf=el("figure","dhero");hf.append(img(ph[0][0],ph[0][1]));if(ph[0][1])hf.append(el("figcaption","",ph[0][1]));c.append(hf)}
+ if(ph[0]){const hf=el("figure","dhero");hf.append(img(ph[0][0],ph[0][1]));if(ph[0][1])hf.append(rich(el("figcaption"),ph[0][1]));c.append(hf)}
  const m=el("div","dmeta"),h=el("h2");m.append(el("span","tag"+(isN(tag)?" nw":""),(isN(tag)?"📢 ":"📖 ")+tag));
  if(n[0])m.append(el("span","mute","📅 "+n[0]));if(n[7])m.append(el("span","mute","✍ โดย "+n[7]));put(h,n[1]);c.append(m,h);
  String(n[3]||n[2]).split("\n").map(x=>x.trim()).filter(Boolean).forEach(x=>{
   if(/^[“"].+[”"]$/.test(x)){c.append(el("blockquote","pq",x));return}
-  if(/^(คำแนะนำ|หมายเหตุ|ข้อควรระวัง)/.test(x)){const t=el("div","tip");t.append(el("b","","💡 "),document.createTextNode(x));c.append(t);return}
-  c.append(put(el("p"),x))});
+  if(/^(คำแนะนำ|หมายเหตุ|ข้อควรระวัง)/.test(x)){const t=el("div","tip");t.append(el("b","","💡 "));rich(t,x);c.append(t);return}
+  c.append(para(x))});
  if(ph.length>1){c.append(el("h3","pgt","ภาพเพิ่มเติม"));const g=el("div","pgrid"+(ph.length===2?" one":""));ph.slice(1).forEach(p=>g.append(fig(p)));c.append(g)}
- const bx=el("div","btns lk");links(bx,n[5]);const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl){pinBtns(bx,pl[2]);const sh=el("button","btn alt sm","🗺️ ดูบนแผนที่ชุมชน");sh.onclick=()=>{$("dlg").close();selPlace(PLACES.indexOf(pl));$("map").scrollIntoView()};bx.append(sh)}if(bx.children.length)c.append(bx);
+ const LK=(n[5]||[]).filter(l=>l&&l[1]).map(l=>[l[0],fixU(l[1])]);LK.filter(l=>yt(l[1])).forEach(l=>c.append(vid(l[1])));const bx=el("div","btns lk");links(bx,LK.filter(l=>!yt(l[1])));const pl=n[6]&&PLACES.find(p=>p[0]===n[6]);if(pl){pinBtns(bx,pl[2]);const sh=el("button","btn alt sm","🗺️ ดูบนแผนที่ชุมชน");sh.onclick=()=>{$("dlg").close();selPlace(PLACES.indexOf(pl));$("map").scrollIntoView()};bx.append(sh)}if(bx.children.length)c.append(bx);
  const f=el("div","follow"),sh=el("button","btn sm","📤 ส่งต่อให้เพื่อนและญาติ");
  f.append(el("p","","💚 ติดตามเรื่องราวบ้านตาจวนได้ที่เว็บนี้ ส่งต่อให้คนบ้านเราที่อยู่ไกลได้เลย"),sh);c.append(f);
- sh.onclick=()=>{const u=location.origin+location.pathname;if(navigator.share)navigator.share({title:n[1],text:n[2],url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}sh.textContent="คัดลอกลิงก์แล้ว ✓"}};
- $("dlg").showModal();$("dlg").scrollTop=0}
+ sh.onclick=()=>{const u=location.origin+location.pathname+"#r="+rid(n);if(navigator.share)navigator.share({title:n[1],text:n[2],url:u}).catch(()=>{});else{try{navigator.clipboard.writeText(u)}catch(e){}sh.textContent="คัดลอกลิงก์แล้ว ✓"}};
+ try{history.replaceState(null,"","#r="+rid(n))}catch(e){}$("dlg").showModal();$("dlg").scrollTop=0}
 $("dx").onclick=()=>$("dlg").close();
+$("dlg").addEventListener("close",()=>{$("dbody").replaceChildren();if(/^#r=/.test(location.hash))try{history.replaceState(null,"",location.pathname+location.search)}catch(e){}});
 $("dlg").onclick=e=>{if(e.target===$("dlg"))$("dlg").close()};
 
 /* ล่าสุด */
@@ -332,7 +379,7 @@ let cur=-1;
 function selPlace(i){if(i<0||i>=PLACES.length)i=0;cur=i;const p=PLACES[i];
  [...$("plist").children].forEach((b,k)=>{b.classList.toggle("on",k===i);b.setAttribute("aria-selected",k===i)});
  $("mf").src="https://www.google.com/maps?q="+mq(p[2])+"&z=17&output=embed";$("mf").title="แผนที่: "+p[0];
- $("pn").textContent=p[0];$("pd").textContent=(p[3]||"").replace(/^ตัวอย่าง:\s*/,"");$("pb").replaceChildren();pinBtns($("pb"),p[2])}
+ $("pn").textContent=p[0];$("pd").replaceChildren();rich($("pd"),(p[3]||"").replace(/^ตัวอย่าง:\s*/,""));$("pb").replaceChildren();pinBtns($("pb"),p[2])}
 PLACES.forEach((p,i)=>{const b=el("button","pbtn");b.setAttribute("role","tab");b.append(el("b","",p[0]),el("span","",p[1]));b.onclick=()=>selPlace(i);$("plist").append(b)});
 selPlace(0);
 
@@ -342,7 +389,9 @@ selPlace(0);
  $("zm").onclick=()=>{if(i>0){i--;ap()}};$("zp").onclick=()=>{if(i<Z.length-1){i++;ap()}};ap()})();
 
 /* หัวเว็บโปร่งบนภาพ แล้วทึบเมื่อเลื่อนลง */
-(function(){const h=document.querySelector("header");const f=()=>h.classList.toggle("solid",scrollY>window.innerHeight*.45);addEventListener("scroll",f,{passive:true});f()})();
+(function(){const h=document.querySelector("header");const u=$("up");const f=()=>{h.classList.toggle("solid",scrollY>window.innerHeight*.45);u.classList.toggle("hide",scrollY<window.innerHeight*.8)};u.onclick=()=>scrollTo({top:0,behavior:"smooth"});addEventListener("scroll",f,{passive:true});f()})();
+/* เปิดเรื่องที่แชร์ลิงก์มาโดยตรง (#r=ชื่อเรื่อง) */
+(function(){const m=location.hash.match(/^#r=(.+)$/);if(!m)return;let t;try{t=decodeURIComponent(m[1])}catch(e){return}const f=FEED.find(x=>x.n[1]===t);if(f)openFull(f.n,f.tag)})();
 </script>
 </body>
 </html>
