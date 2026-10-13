@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>ตัวช่วยเพิ่มเนื้อหา | ตาจวนบ้านเรา</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+label{display:block;font-weight:700;margin:18px 0 2px}
+small{display:block;color:var(--mute);margin-bottom:4px;line-height:1.5}
+input,textarea,select{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)}
+textarea{min-height:110px}
+.out{background:var(--sand);padding:14px;border-radius:12px;white-space:pre-wrap;word-break:break-all;font:.8rem/1.5 monospace;margin:14px 0}
+</style></head>
+<body><div class="wrap" style="padding:30px 20px 60px">
+<div class="eyebrow">สำหรับทีมงาน</div>
+<h1 style="font-size:2rem">ตัวช่วยเพิ่มเนื้อหา</h1>
+<p class="lead">กรอกฟอร์ม แล้วกด “สร้างโค้ด” จากนั้นคัดลอกไปวางใน content.js ตามขั้นตอนด้านล่าง ไม่ต้องเขียนโค้ดเอง</p>
+
+<label for="t">จะเพิ่มอะไร</label>
+<select id="t"><option value="s">เรื่องเล่า / ภูมิปัญญา</option><option value="n">ข่าวประชาสัมพันธ์</option><option value="p">ปักหมุดที่ตั้ง</option></select>
+
+<div id="fa">
+<label>วันที่</label><input id="date" placeholder="เช่น 20 ต.ค. 2569">
+<label>หัวข้อ</label><input id="title">
+<label>สรุปสั้น ๆ (1–2 บรรทัด)</label><textarea id="sum" style="min-height:70px"></textarea>
+<label>เนื้อเรื่องเต็ม</label><small>ขึ้นย่อหน้าใหม่ด้วยการกด Enter วางข้อความจาก Facebook ได้เลย</small><textarea id="body" style="min-height:200px"></textarea>
+<label>รูปประกอบ</label><small>บรรทัดละ 1 รูป รูปแบบ: ชื่อไฟล์|คำบรรยาย เช่น  teh-5.jpg|คุณยายกำลังตำพริก<br>(ต้องเอาไฟล์รูปไปใส่ในโฟลเดอร์ img ก่อน)</small><textarea id="ph"></textarea>
+<label>ลิงก์ (ถ้ามี)</label><small>บรรทัดละ 1 ลิงก์ รูปแบบ: ชื่อปุ่ม|ลิงก์ เช่น  ดูโพสต์ใน Facebook|https://facebook.com/...</small><textarea id="lk" style="min-height:70px"></textarea>
+<label>ชื่อที่ตั้ง (ถ้าอยากให้มีปุ่มแผนที่)</label><small>พิมพ์ให้ตรงกับชื่อที่เพิ่มไว้ใน “ปักหมุดที่ตั้ง” เช่น บ้านตาจวน</small><input id="pl">
+</div>
+
+<div id="fp" class="hide">
+<label>ชื่อที่ตั้ง</label><input id="pn" placeholder="เช่น ศาลาประชาคม">
+<label>หมวด</label><input id="pc" placeholder="เช่น หมู่บ้าน / วัด / ร้านค้า / แจ้งเหตุ">
+<label>ที่อยู่หรือพิกัด</label><small>ใส่ชื่อสถานที่ หรือพิกัดตัวเลข เช่น 14.123456,104.123456<br>วิธีได้พิกัด: เปิด Google Maps ในมือถือ แตะค้างที่จุดนั้น แล้วคัดลอกตัวเลขที่ขึ้นด้านบน</small><input id="pq">
+<label>คำอธิบาย (ถ้ามี)</label><input id="pd">
+</div>
+
+<p style="margin-top:26px"><button class="btn" id="go">สร้างโค้ด</button></p>
+<div id="res" class="hide">
+<div class="out" id="out"></div>
+<button class="btn alt" id="cp">คัดลอกโค้ด</button>
+<h3>นำไปวางอย่างไร</h3>
+<ol class="steps" id="how"></ol>
+</div>
+</div>
+<script>
+const $=i=>document.getElementById(i);
+const L=t=>t.split("\n").map(x=>x.trim()).filter(Boolean).map(x=>x.split("|").map(s=>s.trim()));
+const where={s:"const STORIES = [",n:"const NEWS = [",p:"const PLACES = ["};
+$("t").onchange=()=>{const p=$("t").value==="p";$("fa").classList.toggle("hide",p);$("fp").classList.toggle("hide",!p)};
+$("go").onclick=()=>{const t=$("t").value;let a;
+ if(t==="p")a=[$("pn").value.trim(),$("pc").value.trim(),$("pq").value.trim(),$("pd").value.trim()];
+ else a=[$("date").value.trim(),$("title").value.trim(),$("sum").value.trim(),$("body").value.trim(),
+  L($("ph").value).map(x=>[/^(img\/|https?:)/.test(x[0])?x[0]:"img/"+x[0],x[1]||""]),L($("lk").value).map(x=>[x[0],x[1]||""]),$("pl").value.trim()];
+ $("out").textContent=JSON.stringify(a)+",";$("res").classList.remove("hide");
+ $("how").innerHTML="<li>เปิดไฟล์ <b>content.js</b></li><li>หาบรรทัด <b>"+where[t]+"</b></li><li>กด Enter ต่อท้ายบรรทัดนั้น 1 ครั้ง แล้ววางโค้ดที่คัดลอกลงไป (รายการใหม่สุดไว้บนสุด)</li><li>บันทึกไฟล์ แล้วอัปโหลดขึ้นเว็บทับของเดิม (รวมถึงรูปใหม่ในโฟลเดอร์ img)</li>"};
+$("cp").onclick=()=>{const r=document.createRange();r.selectNodeContents($("out"));const s=getSelection();s.removeAllRanges();s.addRange(r);
+ (navigator.clipboard?navigator.clipboard.writeText($("out").textContent):Promise.reject()).catch(()=>document.execCommand("copy")).finally(()=>{$("cp").textContent="คัดลอกแล้ว ✓"})};
+</script></body></html>
