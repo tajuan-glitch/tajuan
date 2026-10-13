@@ -26,28 +26,16 @@
 <body>
 <header>
   <div class="bar">
-    <a class="brand" href="#top"><span id="bn"></span></a>
-    <nav class="top" id="nav" aria-label="เมนูหลัก">
-      <a href="#news">ข่าวสาร</a>
-      <a href="#about">รู้จักบ้านตาจวน</a>
-      <a href="#wisdom">ภูมิปัญญา</a>
-      <a href="#report">แจ้งเรื่อง</a>
-      <a href="#media">คลิปและภาพ</a>
-      <a href="#goods">ของดีบ้านเรา</a>
-      <a href="#map">แผนที่</a>
-    </nav>
+    <a class="brand" href="#top"><span id="bn"></span><small id="bs"></small></a>
     <div class="sz" role="group" aria-label="ปรับขนาดตัวอักษร">
       <button id="zm" aria-label="ตัวอักษรเล็กลง">ก−</button>
       <button id="zp" aria-label="ตัวอักษรใหญ่ขึ้น">ก+</button>
     </div>
-    <button class="mb" id="mb" aria-expanded="false" aria-controls="nav">เมนู</button>
   </div>
 </header>
 
-<a class="notice hide" id="notice" href="#news"></a>
 <main id="top">
   <div class="wrap hero">
-    <div class="eyebrow" id="hs"></div>
     <h1 id="hn"></h1>
     <p id="hi"></p>
     <div class="btns">
@@ -161,9 +149,8 @@ function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
 
 /* หัวและท้ายเว็บ */
 document.title=SITE.name;
-if(SITE.notice){$("notice").textContent="⚠ "+SITE.notice;$("notice").classList.remove("hide")}
-$("bn").textContent=SITE.name;
-$("hs").textContent="ทุกเรื่องราวที่มี ที่...ตาจวนบ้านเรา";$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
+$("bn").textContent=SITE.name;$("bs").textContent="ทุกเรื่องราวที่มี ที่...ตาจวนบ้านเรา";
+$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
 
@@ -247,8 +234,6 @@ HEROES.forEach(h=>{const d=el("div","it"),p=el("div","pic","คนดี");if(h[
  const t=el("h4");put(t,h[0]);const s=el("p");put(s,h[1]);d.append(p,t,s);$("hero").append(d)});
 
 /* เมนูมือถือ */
-$("mb").onclick=()=>{const o=$("nav").classList.toggle("open");$("mb").setAttribute("aria-expanded",o)};
-$("nav").onclick=e=>{if(e.target.tagName==="A"){$("nav").classList.remove("open");$("mb").setAttribute("aria-expanded","false")}};
 
 /* ขนาดตัวอักษร */
 (function(){const Z=[1,1.15,1.3,1.5],K="tj2_zoom";let i=0;try{const v=parseInt(localStorage.getItem(K),10);if(v>=0&&v<Z.length)i=v}catch(e){}
