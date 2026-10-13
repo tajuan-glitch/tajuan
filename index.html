@@ -32,6 +32,7 @@
   </div>
 </header>
 
+<a class="notice hide" id="notice" href="#news"></a>
 <main id="top">
   <div class="wrap hero">
     <div class="eyebrow" id="hs"></div>
@@ -131,15 +132,18 @@ function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
 
 /* หัวและท้ายเว็บ */
 document.title=SITE.name+" | "+SITE.slogan;
+if(SITE.notice){$("notice").textContent="⚠ "+SITE.notice;$("notice").classList.remove("hide")}
 $("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan;
 $("hs").textContent=SITE.slogan;$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
 $("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
 $("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
 
 /* ข่าว (กดเปิดอ่านเต็มในหน้าเดียว) */
-NEWS.forEach(n=>{const d=el("details","row"),s=el("summary"),b=el("div"),h=el("h4");
+NEWS.forEach((n,i)=>{const d=el("details","row"),s=el("summary"),b=el("div"),h=el("h4");
  s.append(el("div","d",n[0]));put(h,n[1]);b.append(h,el("p","",n[2]));s.append(b);
- const f=el("div","full");String(n[3]||n[2]).split("\n").forEach(x=>f.append(put(el("p"),x)));d.append(s,f);$("newsList").append(d)});
+ const f=el("div","full");String(n[3]||n[2]).split("\n").forEach(x=>f.append(put(el("p"),x)));
+ (n[4]||[]).forEach(p=>{const g=el("figure","ph");g.append(img(p[0],p[1]));if(p[1])g.append(el("figcaption","",p[1]));f.append(g)});
+ d.append(s,f);if(i===0)d.open=true;$("newsList").append(d)});
 CAL.forEach(c=>{const r=el("div","row"),d=el("div","d");put(d,c[0]);const b=el("div"),h=el("h4");put(h,c[1]);b.append(h,el("p","",c[2]));r.append(d,b);$("calList").append(r)});
 
 /* รู้จักบ้าน */

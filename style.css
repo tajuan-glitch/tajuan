@@ -109,3 +109,9 @@ footer{background:var(--green);color:#e9f0ea;padding:36px 0;margin-top:20px;font
 footer a{color:#fff}
 @media(prefers-color-scheme:dark){footer{background:#0f1411}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.notice{display:block;background:var(--clay);color:#fff;text-decoration:none;text-align:center;padding:10px 20px;font-weight:700;font-size:.95rem;line-height:1.5}
+.notice:hover{filter:brightness(1.08)}
+details.row .full figure.ph{margin:16px 0 0;max-width:560px}
+details.row .full figure.ph img{width:100%;height:auto;border-radius:14px;display:block;max-height:640px;object-fit:contain;background:var(--sand)}
+details.row .full figcaption{font-size:.88rem;color:var(--mute);margin-top:6px}
