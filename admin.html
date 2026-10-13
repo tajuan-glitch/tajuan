@@ -118,8 +118,6 @@ details.step[open] summary{margin-bottom:12px}
 <label for="lpw"><b>รหัสผ่าน</b></label>
 <div class="pw"><input id="lpw" name="password" type="password" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false"><button type="button" class="eye">👁 แสดง</button></div>
 <p class="pwn" aria-live="polite"></p>
-<label class="chk" for="lrem"><input type="checkbox" id="lrem" checked> จำฉันไว้ในเครื่องนี้ (30 วัน ต่ออายุให้ทุกครั้งที่เข้า)</label>
-<p class="help" style="margin-top:-8px">ใช้เฉพาะมือถือหรือคอมของตัวเอง ไม่ควรติ๊กในเครื่องที่ใช้ร่วมกับคนอื่น (iPhone/Safari อาจล้างค่าที่จำไว้ถ้าไม่ได้เปิดเว็บเกิน 7 วัน)</p>
 <div id="lerr" class="alert" hidden role="alert"></div>
 <button class="btn big" id="lgo" type="submit">เข้าสู่ระบบ</button>
 <button type="button" class="linkb" id="reqlink">ยังไม่มีบัญชี? ขอเป็นผู้ดูแลใหม่ →</button></form></div>
@@ -359,15 +357,12 @@ $("oldf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{
 $("adf").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{parseA(t);route()}catch(x){alert("ไฟล์นี้ไม่ใช่ admins.js ของเว็บ")}})};
 
 /* ---------- เข้าสู่ระบบ / จำรหัส ---------- */
-function setSess(a,rem){try{sessionStorage.setItem("tj_me",a.id)}catch(e){}
- try{localStorage.setItem("tj_last",a.id);if(rem)localStorage.setItem("tj_rem",JSON.stringify({id:a.id,h:a.hash,exp:Date.now()+30*864e5}));else localStorage.removeItem("tj_rem")}catch(e){}}
-function clrSess(){try{sessionStorage.removeItem("tj_me");localStorage.removeItem("tj_rem")}catch(e){}}
-function stored(){let id="",a;try{id=sessionStorage.getItem("tj_me")}catch(e){}a=admins.find(x=>x.id===id);if(a)return a;
- try{const r=JSON.parse(localStorage.getItem("tj_rem")||"null");if(r&&r.exp>Date.now()){a=admins.find(x=>x.id===r.id&&x.hash===r.h);if(a){try{sessionStorage.setItem("tj_me",a.id);localStorage.setItem("tj_rem",JSON.stringify({id:a.id,h:a.hash,exp:Date.now()+30*864e5}))}catch(e){}return a}}}catch(e){}return null}
-function route(){if(!admins.length){let seen=false;try{seen=!!localStorage.getItem("tj_last")}catch(e){}
- if(seen){show("login");lerr("โหลดรายชื่อผู้ดูแล (admins.js) ไม่ได้ ลองรีเฟรชหน้า หรือตรวจว่าไฟล์ admins.js อยู่บนเว็บ (ไม่ใช่เปิดไฟล์จากเครื่องโดยตรง)");return}show("setup");return}
+function setSess(){}
+function clrSess(){}
+function stored(){return null}
+function route(){if(!admins.length){show("setup");return}
  $("lname").replaceChildren(...admins.map(a=>{const o=mk("option","",a.name);o.value=a.id;return o}));
- try{const l=localStorage.getItem("tj_last");if(l&&admins.some(a=>a.id===l))$("lname").value=l}catch(e){}
+
  syncUser();me=stored();me?enter():show("login")}
 function syncUser(){const a=byId($("lname").value);$("luser").value=a?a.name:""}
 $("lname").onchange=syncUser;
@@ -384,7 +379,7 @@ $("lf").onsubmit=async e=>{e.preventDefault();if(!okCrypto())return;const a=byId
  if(!pw){lerr("กรอกรหัสผ่านก่อนนะครับ");return}
  $("lgo").disabled=true;$("lgo").textContent="กำลังตรวจสอบ…";lerr("");
  const h=await hp(pw,a.salt);
- if(h===a.hash){fails=0;me=a;setSess(a,$("lrem").checked);$("lpw").value="";$("lpw").type="password";document.querySelector("#lf .eye").textContent="👁 แสดง";document.querySelector("#lf .pwn").textContent="";$("lgo").disabled=false;$("lgo").textContent="เข้าสู่ระบบ";enter();return}
+ if(h===a.hash){fails=0;me=a;setSess();$("lpw").value="";$("lpw").type="password";document.querySelector("#lf .eye").textContent="👁 แสดง";document.querySelector("#lf .pwn").textContent="";$("lgo").disabled=false;$("lgo").textContent="เข้าสู่ระบบ";enter();return}
  fails++;await wait(Math.min(600*fails,4000));
  const d=await diagnose(a,pw);
  const M={th:["✗ รหัสถูกต้อง แต่คุณพิมพ์ตอนคีย์บอร์ดเป็นภาษาไทย สลับเป็น EN (Alt+Shift หรือ ⌘+Space หรือปุ่มโลกบนมือถือ) แล้วพิมพ์ใหม่","ok"],
