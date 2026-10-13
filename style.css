@@ -1,0 +1,111 @@
+/* ตาจวนบ้านเรา — โทนกระดาษครีม + เขียวเข้ม อ่านง่าย เว้นระยะกว้าง */
+:root{
+  --paper:#faf6ee; --card:#ffffff; --ink:#26302a; --mute:#5f6b63; --line:#e3dccd;
+  --green:#2f4a3a; --green-2:#3f6350; --clay:#b5532f; --sand:#f0e8d6;
+  --fs:1;
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme=light]){--paper:#171b18;--card:#1f2521;--ink:#eef0ea;--mute:#a7b0a8;--line:#2f372f;--green:#9cc3ad;--green-2:#b7d6c4;--clay:#e08a63;--sand:#232a25}
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px;font-size:calc(19px * var(--fs))}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;line-height:1.85}
+h1,h2,h3{font-family:"Noto Serif Thai","Noto Sans Thai",serif;line-height:1.4;margin:0;color:var(--green)}
+a{color:var(--green);text-underline-offset:3px}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--clay);outline-offset:3px}
+.hide{display:none!important}
+.wrap{max-width:940px;margin:0 auto;padding:0 20px}
+.mute{color:var(--mute);font-size:.85em}
+
+/* หัวเว็บ */
+header{position:sticky;top:0;z-index:10;background:var(--paper);border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:12px;max-width:940px;margin:0 auto;padding:10px 20px}
+.brand{font:700 1.2rem/1.2 "Noto Serif Thai",serif;color:var(--green);text-decoration:none;margin-right:auto}
+.brand small{display:block;font:400 .7rem "Noto Sans Thai",sans-serif;color:var(--mute)}
+nav.top{display:flex;gap:2px}
+nav.top a{padding:8px 14px;border-radius:99px;text-decoration:none;color:var(--ink);font-size:.95rem}
+nav.top a:hover{background:var(--sand)}
+.sz{display:flex;gap:6px}
+.sz button,.mb{min-width:44px;min-height:44px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;font-weight:700}
+.sz button[disabled]{opacity:.35}
+.mb{display:none}
+@media(max-width:820px){
+  nav.top{display:none;position:absolute;left:0;right:0;top:100%;flex-direction:column;background:var(--paper);border-bottom:1px solid var(--line);padding:6px 20px 14px}
+  nav.top.open{display:flex}
+  nav.top a{padding:14px 6px;border-radius:0;border-top:1px solid var(--line);font-size:1.05rem}
+  .mb{display:inline-block}
+}
+
+/* หน้าแรก */
+.hero{padding:72px 20px 56px}
+.hero .eyebrow{color:var(--clay);font-weight:700;letter-spacing:.04em}
+.hero h1{font-size:clamp(2.4rem,8vw,4rem);margin:6px 0 14px}
+.hero p{font-size:1.15rem;max-width:30em;color:var(--mute);margin:0 0 26px}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;min-height:52px;padding:10px 24px;border-radius:12px;text-decoration:none;font-weight:700;border:2px solid var(--green);background:var(--green);color:#fff}
+.btn.alt{background:transparent;color:var(--green)}
+@media(prefers-color-scheme:dark){.btn{color:#10150f}.btn.alt{color:var(--green)}}
+
+/* ส่วนเนื้อหา */
+section{padding:56px 0;border-top:1px solid var(--line)}
+.eyebrow{font-size:.85rem;color:var(--clay);font-weight:700}
+section h2{font-size:clamp(1.7rem,5vw,2.3rem);margin:2px 0 8px}
+.lead{color:var(--mute);margin:0 0 28px;max-width:34em}
+h3{font-size:1.25rem;margin:34px 0 10px}
+
+/* รายการแบบแถว (ข่าว / ปฏิทิน) */
+.rows{border-top:1px solid var(--line)}
+.row{display:grid;grid-template-columns:130px 1fr;gap:6px 20px;padding:20px 0;border-bottom:1px solid var(--line)}
+.row .d{color:var(--clay);font-weight:700}
+.row h4{margin:0;font:700 1.12rem/1.5 "Noto Sans Thai",sans-serif}
+.row p{margin:4px 0 0;color:var(--mute)}
+details.row{display:block}
+details.row summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:130px 1fr;gap:6px 20px}
+details.row summary::-webkit-details-marker{display:none}
+details.row summary::after{content:"อ่านต่อ ▾";grid-column:2;color:var(--green);font-weight:700;font-size:.9rem}
+details[open].row summary::after{content:"ซ่อน ▴"}
+details.row .full{margin:14px 0 0 150px}
+details.row .full p{margin:0 0 12px;color:var(--ink)}
+@media(max-width:620px){.row,details.row summary{grid-template-columns:1fr}details.row summary::after{grid-column:1}details.row .full{margin-left:0}}
+
+/* ข้อมูลพื้นฐาน */
+dl.facts{display:grid;grid-template-columns:150px 1fr;gap:10px 20px;margin:0;padding:18px 20px;background:var(--sand);border-radius:14px}
+dl.facts dt{color:var(--mute)}dl.facts dd{margin:0;font-weight:700}
+@media(max-width:620px){dl.facts{grid-template-columns:1fr;gap:2px}dl.facts dd{margin-bottom:10px}}
+.prose p{margin:0 0 16px;max-width:36em}
+.ppl{list-style:none;margin:0;padding:0;display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.ppl li{display:flex;gap:14px;align-items:center}
+.av{flex:none;width:64px;height:64px;border-radius:50%;background:var(--sand);display:grid;place-items:center;color:var(--green);font-weight:700;overflow:hidden}
+.av img{width:100%;height:100%;object-fit:cover}
+.ppl b{display:block;line-height:1.4}
+
+/* เบอร์โทร */
+.tel{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.tel li{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:16px 0;border-bottom:1px solid var(--line)}
+.tel a,.tel b.n{font-weight:700;font-size:1.2rem;color:var(--clay);text-decoration:none;white-space:nowrap}
+.alert{background:var(--sand);border-left:5px solid var(--clay);border-radius:8px;padding:14px 18px;margin:0 0 24px}
+ol.steps{padding-left:1.3em;margin:0 0 20px}ol.steps li{margin:8px 0}
+
+/* กริดภาพ (คลิป อัลบั้ม ของดี) — เรียบ ไม่ใส่เงาและกรอบเยอะ */
+.gal{display:grid;gap:26px 20px;grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+.it .pic{aspect-ratio:4/3;border-radius:14px;background:var(--sand);display:grid;place-items:center;color:var(--mute);overflow:hidden;position:relative}
+.it .pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.it h4{margin:10px 0 2px;font:700 1.05rem/1.5 "Noto Sans Thai",sans-serif}
+.it p{margin:0;color:var(--mute);font-size:.92rem}
+.it .pr{color:var(--clay);font-weight:700;margin-top:4px;display:block}
+a.it{text-decoration:none;color:inherit}
+.play{position:absolute;inset:auto auto 10px 10px;background:#fff;color:#c00;border-radius:8px;padding:0 10px;font-weight:700;font-size:.85rem}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.tabs button{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:6px 18px}
+.tabs button.on{background:var(--green);border-color:var(--green);color:#fff}
+@media(prefers-color-scheme:dark){.tabs button.on{color:#10150f}}
+
+.sample{display:inline-block;background:#fff1c2;color:#7a5b00;font-size:.68rem;font-weight:700;padding:0 8px;border-radius:6px;margin-right:6px;vertical-align:middle;line-height:1.6}
+.callout{background:var(--sand);border-radius:16px;padding:24px 26px}
+.callout p{margin:0 0 14px;max-width:34em}
+
+footer{background:var(--green);color:#e9f0ea;padding:36px 0;margin-top:20px;font-size:.95rem}
+footer a{color:#fff}
+@media(prefers-color-scheme:dark){footer{background:#0f1411}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

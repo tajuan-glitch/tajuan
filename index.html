@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตาจวนบ้านเรา | เว็บชุมชนบ้านตาจวน</title>
+<meta name="description" content="ตาจวนบ้านเรา เว็บชุมชนบ้านตาจวน ข่าวสาร ปฏิทินงานบุญ แจ้งเรื่อง คลิป ภาพ และของดีของบ้านเรา">
+<meta property="og:title" content="ตาจวนบ้านเรา">
+<meta property="og:description" content="ข่าวสาร ปฏิทินงานบุญ เรื่องเล่า และของดีของคนบ้านตาจวน">
+<meta name="theme-color" content="#2f4a3a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700&family=Noto+Serif+Thai:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <div class="bar">
+    <a class="brand" href="#top"><span id="bn"></span><small id="bs"></small></a>
+    <nav class="top" id="nav" aria-label="เมนูหลัก">
+      <a href="#news">ข่าวสาร</a>
+      <a href="#about">รู้จักบ้านตาจวน</a>
+      <a href="#report">แจ้งเรื่อง</a>
+      <a href="#media">คลิปและภาพ</a>
+      <a href="#goods">ของดีบ้านเรา</a>
+    </nav>
+    <div class="sz" role="group" aria-label="ปรับขนาดตัวอักษร">
+      <button id="zm" aria-label="ตัวอักษรเล็กลง">ก−</button>
+      <button id="zp" aria-label="ตัวอักษรใหญ่ขึ้น">ก+</button>
+    </div>
+    <button class="mb" id="mb" aria-expanded="false" aria-controls="nav">เมนู</button>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap hero">
+    <div class="eyebrow" id="hs"></div>
+    <h1 id="hn"></h1>
+    <p id="hi"></p>
+    <div class="btns">
+      <a class="btn" href="#news">ดูข่าวล่าสุด</a>
+      <a class="btn alt" href="#report">แจ้งเรื่องเดือดร้อน</a>
+    </div>
+  </div>
+
+  <section id="news"><div class="wrap">
+    <div class="eyebrow">ข่าวและกิจกรรม</div>
+    <h2>ข่าวสารหมู่บ้าน</h2>
+    <p class="lead">ประกาศของหมู่บ้านและหน่วยงาน กดที่ข่าวเพื่ออ่านเต็ม</p>
+    <div class="rows" id="newsList"></div>
+    <h3>ปฏิทินกิจกรรม</h3>
+    <div class="rows" id="calList"></div>
+  </div></section>
+
+  <section id="about"><div class="wrap">
+    <div class="eyebrow">รู้จักบ้านเรา</div>
+    <h2>บ้านตาจวน</h2>
+    <p class="lead">ประวัติ ข้อมูลพื้นฐาน และผู้ที่ช่วยกันดูแลหมู่บ้าน</p>
+    <dl class="facts" id="facts"></dl>
+    <h3>ประวัติความเป็นมา</h3>
+    <div class="prose" id="history"></div>
+    <h3>ผู้นำและบุคคลสำคัญ</h3>
+    <ul class="ppl" id="ppl"></ul>
+    <p style="margin-top:26px"><a class="btn alt" id="mapA" target="_blank" rel="noopener">ดูแผนที่หมู่บ้าน</a></p>
+  </div></section>
+
+  <section id="report"><div class="wrap">
+    <div class="eyebrow">ดูแลกันและกัน</div>
+    <h2>แจ้งเรื่องและเบอร์สำคัญ</h2>
+    <div class="alert"><b>เหตุฉุกเฉินให้โทรก่อนเสมอ</b> ตำรวจ 191 • แพทย์ฉุกเฉิน 1669 • ดับเพลิง 199 เว็บนี้ไม่ใช่สายด่วน</div>
+    <p>ไฟทางดับ ขยะไม่เก็บ น้ำประปาไม่ไหล ถนนพัง หรือเรื่องเดือดร้อนอื่น ๆ แจ้งได้ตามขั้นตอนนี้</p>
+    <ol class="steps">
+      <li>จดว่าเกิดอะไรขึ้น ที่ไหน (บอกจุดสังเกต เช่น หน้าวัด ใกล้ศาลา)</li>
+      <li>ถ่ายรูปไว้ 1–2 รูป (ไม่ให้ติดใบหน้าคนโดยไม่จำเป็น)</li>
+      <li>แจ้งผู้ใหญ่บ้าน หรือส่งให้ทีมดูแลเว็บตามช่องทางด้านล่าง</li>
+    </ol>
+    <div class="btns" id="rep"></div>
+    <h3>เบอร์โทรสำคัญ</h3>
+    <ul class="tel" id="tel"></ul>
+  </div></section>
+
+  <section id="media"><div class="wrap">
+    <div class="eyebrow">คิดถึงบ้าน</div>
+    <h2>คลิปและภาพ</h2>
+    <p class="lead">บรรยากาศงานบุญ เรื่องเล่าของผู้เฒ่า และภาพกิจกรรมของหมู่บ้าน</p>
+    <h3 style="margin-top:0">คลิป</h3>
+    <div class="gal" id="vids"></div>
+    <h3>อัลบั้มภาพ</h3>
+    <div class="gal" id="albs"></div>
+    <h3>เล่าเรื่องเก่า ย้อนวันวาน</h3>
+    <p class="lead">ภาพเก่าของหมู่บ้าน ใครจำได้ว่าเป็นใคร งานอะไร ปีไหน บอกทีมงานได้</p>
+    <div class="gal" id="mem"></div>
+  </div></section>
+
+  <section id="goods"><div class="wrap">
+    <div class="eyebrow">เศรษฐกิจชุมชน</div>
+    <h2>ของดีบ้านตาจวน</h2>
+    <p class="lead">สินค้าชุมชน พืชผล จุดเช็คอิน และร้านในหมู่บ้าน ติดต่อเจ้าของโดยตรง ไม่ผ่านคนกลาง</p>
+    <div class="tabs" id="gtabs"></div>
+    <div class="gal" id="ggal"></div>
+    <h3>คนดีศรีตาจวน</h3>
+    <p class="lead">ชื่นชมคนบ้านเรา เด็กเรียนดี นักกีฬา และผู้ที่ทำความดีให้ชุมชน</p>
+    <div class="gal" id="hero"></div>
+  </div></section>
+
+  <section><div class="wrap">
+    <div class="callout">
+      <h2 style="font-size:1.5rem">ฝากเรื่องราวถึงชุมชน</h2>
+      <p>มีภาพเก่า เรื่องเล่าผู้เฒ่า ข่าวดีของลูกหลาน สินค้าที่อยากฝากขาย หรืออยากให้ลงประกาศ ส่งมาที่ทีมงานได้ ทีมงานจะขออนุญาตเจ้าของเรื่องก่อนเผยแพร่ทุกครั้ง</p>
+      <div class="btns" id="send"></div>
+    </div>
+  </div></section>
+</main>
+
+<footer><div class="wrap">
+  <b id="fn"></b> • <span id="fs"></span>
+  <p id="fc" style="margin:8px 0 0"></p>
+  <p style="margin:8px 0 0">เหตุฉุกเฉิน โทรก่อนเสมอ: <a href="tel:191">191</a> · <a href="tel:1669">1669</a> · <a href="tel:199">199</a></p>
+</div></footer>
+
+<noscript><div class="wrap" style="padding:30px 20px">กรุณาเปิด JavaScript เพื่อดูเนื้อหาของเว็บนี้</div></noscript>
+
+<script src="content.js"></script>
+<script>
+const $=i=>document.getElementById(i);
+function el(t,c,x){const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+const isS=t=>/^ตัวอย่าง:/.test(t);
+function put(n,t){if(isS(t)){n.append(el("span","sample","ตัวอย่าง"),document.createTextNode(t.replace(/^ตัวอย่าง:\s*/,"")))}else n.append(document.createTextNode(t));return n}
+function img(src,alt){const i=new Image();i.src=src;i.alt=alt||"";i.loading="lazy";i.onerror=()=>i.remove();return i}
+function ext(a,u){a.href=u;a.target="_blank";a.rel="noopener";return a}
+
+/* หัวและท้ายเว็บ */
+document.title=SITE.name+" | "+SITE.slogan;
+$("bn").textContent=SITE.name;$("bs").textContent=SITE.slogan;
+$("hs").textContent=SITE.slogan;$("hn").textContent=SITE.name;$("hi").textContent=SITE.intro;
+$("fn").textContent=SITE.name;$("fs").textContent=SITE.address;
+$("fc").textContent=[SITE.phone&&"โทร "+SITE.phone,SITE.email].filter(Boolean).join(" • ");
+
+/* ข่าว (กดเปิดอ่านเต็มในหน้าเดียว) */
+NEWS.forEach(n=>{const d=el("details","row"),s=el("summary"),b=el("div"),h=el("h4");
+ s.append(el("div","d",n[0]));put(h,n[1]);b.append(h,el("p","",n[2]));s.append(b);
+ const f=el("div","full");String(n[3]||n[2]).split("\n").forEach(x=>f.append(put(el("p"),x)));d.append(s,f);$("newsList").append(d)});
+CAL.forEach(c=>{const r=el("div","row"),d=el("div","d");put(d,c[0]);const b=el("div"),h=el("h4");put(h,c[1]);b.append(h,el("p","",c[2]));r.append(d,b);$("calList").append(r)});
+
+/* รู้จักบ้าน */
+FACTS.forEach(f=>{const dt=el("dt","",f[0]),dd=el("dd");put(dd,f[1]);$("facts").append(dt,dd)});
+HISTORY.forEach(t=>$("history").append(put(el("p"),t)));
+LEADERS.forEach(l=>{const li=el("li"),a=el("div","av",l[0].replace(/^ตัวอย่าง:\s*/,"").trim().charAt(0)||"–");
+ if(l[2]){a.textContent="";a.append(img(l[2],l[0]))}
+ const t=el("div"),n=el("b");put(n,l[0]);t.append(n,el("span","mute",l[1]));li.append(a,t);$("ppl").append(li)});
+SITE.mapUrl?ext($("mapA"),SITE.mapUrl):$("mapA").classList.add("hide");
+
+/* แจ้งเรื่อง / ติดต่อ */
+function contacts(box){
+ if(SITE.formUrl)box.append(ext(el("a","btn","กรอกแบบฟอร์ม"),SITE.formUrl));
+ if(SITE.phone)box.append(Object.assign(el("a","btn alt","โทร "+SITE.phone),{href:"tel:"+SITE.phone.replace(/[^\d+]/g,"")}));
+ if(SITE.email)box.append(Object.assign(el("a","btn alt","ส่งอีเมล"),{href:"mailto:"+SITE.email}));
+ if(SITE.facebookUrl)box.append(ext(el("a","btn alt","Facebook"),SITE.facebookUrl));
+ if(SITE.youtubeUrl)box.append(ext(el("a","btn alt","YouTube"),SITE.youtubeUrl));
+ if(!box.children.length)box.append(el("p","mute","ยังไม่ได้ตั้งช่องทางติดต่อ ติดต่อผู้ใหญ่บ้านโดยตรงได้เลย (ทีมดูแลเว็บใส่เบอร์/อีเมลในไฟล์ content.js)"))}
+contacts($("rep"));contacts($("send"));
+TEL.forEach(t=>{const li=el("li");li.append(el("span","",t[0]));const num=isS(t[1])?"":t[1].replace(/[^\d+]/g,"");
+ if(num){const a=el("a","",t[1]);a.href="tel:"+num;li.append(a)}else{const b=el("b","n");put(b,t[1]);li.append(b)}$("tel").append(li)});
+
+/* คลิป อัลบั้ม ภาพเก่า */
+if(!VIDEOS.length)$("vids").append(el("p","mute","กำลังรวบรวมคลิป ส่งคลิปงานบุญหรือสัมภาษณ์ผู้เฒ่ามาให้ทีมงานได้"));
+VIDEOS.forEach(v=>{const a=el("a","it"),p=el("div","pic");p.append(img("https://i.ytimg.com/vi/"+v[0]+"/mqdefault.jpg",v[1]),el("span","play","▶ ดูคลิป"));
+ ext(a,"https://www.youtube.com/watch?v="+v[0]);a.append(p,el("h4","",v[1]));$("vids").append(a)});
+ALBUMS.forEach(x=>{const a=el(x[1]?"a":"div","it"),p=el("div","pic","ภาพ");if(x[2]){p.textContent="";p.append(img(x[2],x[0]))}
+ const h=el("h4");put(h,x[0]);a.append(p,h);if(x[1]){ext(a,x[1]);a.append(el("p","","เปิดอัลบั้ม →"))}$("albs").append(a)});
+MEMORY.forEach(m=>{const d=el("div","it"),p=el("div","pic","ภาพเก่า");if(m[0]){p.textContent="";p.append(img(m[0],m[1]))}const c=el("p");put(c,m[1]);d.append(p,c);$("mem").append(d)});
+
+/* ของดี + คนดี */
+let gf="ทั้งหมด";
+function rG(){const cats=["ทั้งหมด",...new Set(GOODS.map(g=>g[0]))];
+ $("gtabs").replaceChildren(...cats.map(k=>{const b=el("button",k===gf?"on":"",k);b.onclick=()=>{gf=k;rG()};return b}));
+ $("ggal").replaceChildren(...GOODS.filter(g=>gf==="ทั้งหมด"||g[0]===gf).map(g=>{const d=el("div","it"),p=el("div","pic",g[0]);
+  if(g[4]){p.textContent="";p.append(img(g[4],g[1]))}const h=el("h4");put(h,g[1]);const s=el("p");put(s,g[2]);d.append(p,h,s);
+  if(g[3]){const pr=el("span","pr");put(pr,g[3]);d.append(pr)}return d}))}
+rG();
+HEROES.forEach(h=>{const d=el("div","it"),p=el("div","pic","คนดี");if(h[2]){p.textContent="";p.append(img(h[2],h[0]))}
+ const t=el("h4");put(t,h[0]);const s=el("p");put(s,h[1]);d.append(p,t,s);$("hero").append(d)});
+
+/* เมนูมือถือ */
+$("mb").onclick=()=>{const o=$("nav").classList.toggle("open");$("mb").setAttribute("aria-expanded",o)};
+$("nav").onclick=e=>{if(e.target.tagName==="A"){$("nav").classList.remove("open");$("mb").setAttribute("aria-expanded","false")}};
+
+/* ขนาดตัวอักษร */
+(function(){const Z=[1,1.15,1.3,1.5],K="tj2_zoom";let i=0;try{const v=parseInt(localStorage.getItem(K),10);if(v>=0&&v<Z.length)i=v}catch(e){}
+ function ap(){document.documentElement.style.setProperty("--fs",Z[i]);$("zm").disabled=i===0;$("zp").disabled=i===Z.length-1;try{localStorage.setItem(K,i)}catch(e){}}
+ $("zm").onclick=()=>{if(i>0){i--;ap()}};$("zp").onclick=()=>{if(i<Z.length-1){i++;ap()}};ap()})();
+</script>
+</body>
+</html>
